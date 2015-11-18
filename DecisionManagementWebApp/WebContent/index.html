@@ -11,21 +11,13 @@
 
         <title>PR Service Engineering Web App</title>
 
-        <!-- Bootstrap Core CSS -->
-        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- CSS  -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/metisMenu.min.css" rel="stylesheet">
+        <link href="css/timeline.css" rel="stylesheet">
+        <link href="css/sb-admin-2.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
 
-        <!-- MetisMenu CSS -->
-        <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
-
-        <!-- Timeline CSS -->
-        <link href="dist/css/timeline.css" rel="stylesheet">
-
-        <!-- Custom CSS -->
-        <link href="dist/css/sb-admin-2.css" rel="stylesheet">
-
-
-        <!-- Custom Fonts -->
-        <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -34,23 +26,31 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+        <!-- JS  -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/metisMenu.min.js"></script>
+        <script src="js/sb-admin-2.js"></script>
 
         <!-- Vendor: Angular, followed by our custom Javascripts -->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.min.js"></script>
 
-        <!-- Our Website Javascripts -->
-        <script src="js/app.js"></script>
 
         <script src="js/go.js"></script>
-        <!--<script src="js/graph.js"></script>
-        <script src="js/stateChart.js"></script>-->
+        <script src="js/Main.js"></script>
+        <script src="js/RouteController.js"></script>
+        <script src="js/CreateDecisionController.js"></script>
+        <script src="js/EditDecisionController.js"></script>
+        <script src="js/RelateDecisionController.js"></script>
+        <script src="js/ShowDependencyController.js"></script>
+        <script src="js/ShowGroupController.js"></script>
 
 
 
     </head>
 
-    <body ng-app="myapp">
+    <body ng-app="decisionApp">
 
         <div id="wrapper">
 
@@ -72,12 +72,13 @@
 
                     <!-- /.dropdown -->
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                
+                        <a class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                            </li>
+                            <li><a href="#login"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                            <li><a href="#userProfile"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
                         </ul>
                         <!-- /.dropdown-user -->
                     </li>
@@ -89,22 +90,22 @@
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a href="#home"><i class="fa fa-dashboard fa-fw"></i> Home</a>
+                                <a href="#home"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-edit fa-fw"></i> Entscheidungen verwalten<span class="fa arrow"></span></a>
+                                <a href="#"><i class="fa fa-edit fa-fw"></i> Administrate Decisions<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="#createDecision">Entscheidung erfassen</a>
+                                        <a href="#createDecision">New Decision</a>
                                     </li>
                                     <li>
-                                        <a href="#editDecision">Entscheidung bearbeiten</a>
+                                        <a href="#editDecision">Edit Decision</a>
                                     </li>
                                     <li>
-                                        <a href="#completeDecision">Entscheidungen vervollständigen</a>
+                                        <a href="#completeDecision">Complete Decision</a>
                                     </li>
                                     <li>
-                                        <a href="#relateDecision">Entscheidungen verknüpfen</a>
+                                        <a href="#relateDecision">Connect Decision</a>
                                     </li>
                                 </ul>
                                 <!-- /.nav-second-level -->
@@ -117,42 +118,39 @@
                                         <a href="#timeline">Timeline</a>
                                     </li>
                                     <li>
-                                        <a href="#showDependency">Abhängigkeiten</a>
+                                        <a href="#showDependency">Dependencies</a>
                                     </li>
                                     <li>
-                                        <a href="#showGroup">Gruppen</a>
+                                        <a href="#showGroup">Groups</a>
                                     </li>
                                     <li>
-                                        <a href="#showCriteria">Kriterien</a>
+                                        <a href="#showCriteria">Criteria</a>
                                     </li>
                                 </ul>
-                                <!-- /.nav-second-level -->
+                            </li>
+                            <li>
+                                <a href="#"><i class="glyphicon glyphicon-user"></i> User Administration<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="#userAdministration">User Administration</a>
+                                    </li>
+                                    <li>
+                                        <a href="#teamAdministration">Team Administration</a>
+                                    </li>
+                                    <li>
+                                        <a href="#userProfile">User Profile</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
-                    <!-- /.sidebar-collapse -->
                 </div>
-                <!-- /.navbar-static-side -->
             </nav>
 
             <div id="page-wrapper">
                 <div ng-view></div>
             </div>
-        </div>
-        <!-- /#wrapper -->
-
-        <!-- jQuery -->
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
-
-        <!-- Bootstrap Core JavaScript -->
-        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-        <!-- Metis Menu Plugin JavaScript -->
-        <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
-
-
-        <!-- Custom Theme JavaScript -->
-        <script src="dist/js/sb-admin-2.js"></script>
+        </div>      
 
     </body>
 

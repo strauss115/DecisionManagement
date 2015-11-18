@@ -1,73 +1,58 @@
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Entscheidungsgruppen</h1>
-                </div>
-                <!-- /.col-lg-12 -->
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Groups</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Search				
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-							Suche				
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-							<div class="form-group">
-							<div class="col-lg-2">
-							<label class="control-label" for="">Gruppe suchen</label>
-							</div>
-											<div class="col-lg-4">
-												
-												<select class="form-control">
-													<option>Architekturentscheidung</option>									
-												</select>
-											</div>
-											
-											<div class="col-lg-2">
-											<button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
-											</div>
-                                        </div>
-										</div>
-
-                        </div>
-                        <!-- /.panel-body -->
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-lg-2">
+                        <label class="control-label" for="">Search Group</label>
                     </div>
-                    <!-- /.panel -->
+                    <div class="col-lg-4">
+
+                        <select class="form-control">
+                            <option>Architecture</option>									
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
                 </div>
-				
-	 <div class="panel panel-default">
-                        <div class="panel-heading">
-							Architekturentscheidung				
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">			              
-<div id="sample">
-  <div id="myDiagram" style="background-color: whitesmoke; border: solid 1px black; width: 100%; height: 400px"></div>
+            </div>
 
-  <button id="SaveButton" onclick="save()">Save</button>
-  <button onclick="load()">Load</button>
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>
 
-  <textarea id="mySavedModel" style="width:100%;height:300px;display:none;">{ "nodeKeyProperty": "id",
-  "nodeDataArray": [
- 
-    { "id": 1, "loc": "330 120", "text": "Entscheidung 2" },
-    { "id": 2, "loc": "226 376", "text": "Entscheidung 3" }
-  ],
-  "linkDataArray": [
-    { "from": 0, "to": 1, "text": "#influences", "curviness": 20 },
-    { "from": 1, "to": 2, "text": "#hasSubDecision" },
-    { "from": 2, "to": 3, "text": "#changeDecision" }
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Architecture Decisions				
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">			              
+        <div id="sample">
+            <go-diagram-state go-model="model" style="border: solid 1px blue; width:100%; height:400px"></go-diagram-state>
+
+            <button id="SaveButton" onclick="save()">Save</button>
+            <button onclick="load()">Load</button>
+
+        </div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
 
 
-  ]
-}
-</textarea></div>
-             </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-        
-
-            
