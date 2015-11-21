@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html >
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>PR Service Engineering Web App</title>
+
+        <!-- CSS  -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/metisMenu.min.css" rel="stylesheet">
+        <link href="css/timeline.css" rel="stylesheet">
+        <link href="css/sb-admin-2.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- JS  -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/metisMenu.min.js"></script>
+        <script src="js/sb-admin-2.js"></script>
+
+        <!-- Vendor: Angular, followed by our custom Javascripts -->
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.min.js"></script>
+
+
+        <script src="js/go.js"></script>
+        <script src="js/Main.js"></script>
+        <script src="js/RouteController.js"></script>
+        <script src="js/CreateDecisionController.js"></script>
+        <script src="js/EditDecisionController.js"></script>
+        <script src="js/RelateDecisionController.js"></script>
+        <script src="js/ShowDependencyController.js"></script>
+        <script src="js/ShowGroupController.js"></script>
+
+
+
+    </head>
+
+    <body ng-app="decisionApp">
+
+        <div id="wrapper">
+
+            <!-- Navigation -->
+            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">PR Service Engineering Web App</a>
+                </div>
+                <!-- /.navbar-header -->
+
+                <ul class="nav navbar-top-links navbar-right">
+                    <!-- /.dropdown -->
+
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+                                
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#login"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                            <li><a href="#userProfile"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                </ul>
+                <!-- /.navbar-top-links -->
+
+                <div class="navbar-default sidebar" role="navigation">
+                    <div class="sidebar-nav navbar-collapse">
+                        <ul class="nav" id="side-menu">
+                            <li>
+                                <a href="#home"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-edit fa-fw"></i> Administrate Decisions<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="#createDecision">New Decision</a>
+                                    </li>
+                                    <li>
+                                        <a href="#editDecision">Edit Decision</a>
+                                    </li>
+                                    <li>
+                                        <a href="#completeDecision">Complete Decision</a>
+                                    </li>
+                                    <li>
+                                        <a href="#relateDecision">Connect Decision</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+
+                            <li>
+                                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Reporting<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="#timeline">Timeline</a>
+                                    </li>
+                                    <li>
+                                        <a href="#showDependency">Dependencies</a>
+                                    </li>
+                                    <li>
+                                        <a href="#showGroup">Groups</a>
+                                    </li>
+                                    <li>
+                                        <a href="#showCriteria">Criteria</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="glyphicon glyphicon-user"></i> User Administration<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="#userAdministration">User Administration</a>
+                                    </li>
+                                    <li>
+                                        <a href="#teamAdministration">Team Administration</a>
+                                    </li>
+                                    <li>
+                                        <a href="#userProfile">User Profile</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="page-wrapper">
+                <div ng-view></div>
+            </div>
+        </div>      
+
+    </body>
+
+</html>
