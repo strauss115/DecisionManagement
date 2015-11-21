@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import at.jku.se.dm.rest.SessionManager;
 import at.jku.se.dm.rest.pojos.*;
 
 /**
@@ -33,11 +34,16 @@ public class SampleObjectProvider {
 		users.add(u2);
 		users.add(u3);
 		users.add(u4);
+		
+		// --
+		
+		SessionManager.addSession("1", u1);
+		SessionManager.addSession("2", u2);
 
 		// --
 
-		Team t1 = new Team("Team 1");
-		Team t2 = new Team("Team 2");
+		Team t1 = new Team("T1", "Team 1");
+		Team t2 = new Team("T2", "Team 2");
 
 		teams.add(t1);
 		teams.add(t2);
@@ -56,13 +62,13 @@ public class SampleObjectProvider {
 
 		// --
 
-		Decision d1 = new Decision("Decision 1 Team 1", u1, t1);
-		Decision d2 = new Decision("Decision 2 Team 1", u1, t1);
-		Decision d3 = new Decision("Decision 3 Team 1", u1, t1);
-		Decision d4 = new Decision("Decision 4 Team 1", u1, t1);
+		Decision d1 = new Decision("D1", "Decision 1 Team 1", u1, t1);
+		Decision d2 = new Decision("D2", "Decision 2 Team 1", u1, t1);
+		Decision d3 = new Decision("D3", "Decision 3 Team 1", u1, t1);
+		Decision d4 = new Decision("D4", "Decision 4 Team 1", u1, t1);
 
-		Decision d5 = new Decision("Decision 5 Team 2", u3, t2);
-		Decision d6 = new Decision("Decision 5 Team 2", u3, t2);
+		Decision d5 = new Decision("D5", "Decision 5 Team 2", u3, t2);
+		Decision d6 = new Decision("D6", "Decision 5 Team 2", u3, t2);
 
 		decisions.add(d1);
 		decisions.add(d2);
@@ -73,6 +79,26 @@ public class SampleObjectProvider {
 
 		// --
 
+		Rationale r1 = new Rationale("RA1", "rationale 1", "rationale 1 description");
+		Rationale r2 = new Rationale("RA2", "rationale 2", "rationale 2 description");
+		Rationale r3 = new Rationale("RA4", "rationale 3", "rationale 3 description");
+		
+		d1.addRationale(r1);
+		d1.addRationale(r2);
+		d2.addRationale(r3);
+		
+		// --
+		
+		Alternative a1 = new Alternative("ALT1", "Alternative 1", "Alternative 1 description");
+		Alternative a2 = new Alternative("ALT1", "Alternative 2", "Alternative 2 description");
+		Alternative a3 = new Alternative("ALT1", "Alternative 3", "Alternative 3 description");
+		
+		d1.addAlternative(a1);
+		d2.addAlternative(a2);
+		d5.addAlternative(a3);
+		
+		// --
+		
 		Group g1 = new Group("Decision Group 1", t1);
 		Group g2 = new Group("Decision Group 2", t1); // Empty group
 		Group g3 = new Group("Decision Group 3", t2);

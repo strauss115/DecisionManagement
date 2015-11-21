@@ -19,6 +19,8 @@ import org.apache.logging.log4j.Logger;
 import at.jku.se.dm.data.SampleObjectProvider;
 import at.jku.se.dm.rest.HttpCode;
 import at.jku.se.dm.rest.RestResponse;
+import at.jku.se.dm.rest.SessionManager;
+import at.jku.se.dm.rest.pojos.Token;
 import at.jku.se.dm.rest.pojos.User;
 
 @Path("/user")
@@ -71,7 +73,17 @@ public class UserResource {
 						  @QueryParam("password") String password) {
 		log.debug("Login user: " + eMail);
 		
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+		List<User> users = SampleObjectProvider.getAllUsers();
+		for (User u : users) {
+			if (u.getEMail().equals(eMail) && u.getPassword().equals(password)) {
+				log.debug("Login of user '" + u.getEMail() + "' successful");
+				Token token = new Token(SessionManager.addSession(u));
+				log.info("Returing session '" + token.getSession() + "'");
+				return RestResponse.getSuccessResponse(token);
+			}
+		}
+		log.info("Unable to authorize user '" + eMail + "'");
+		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 	}
 	
 	@POST

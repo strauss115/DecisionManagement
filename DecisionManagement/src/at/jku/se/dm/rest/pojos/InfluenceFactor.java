@@ -1,11 +1,8 @@
 package at.jku.se.dm.rest.pojos;
 
-import at.jku.se.dm.rest.ResponseData;
-
-public class InfluenceFactor extends ResponseData {
+public class InfluenceFactor extends AttributeValuePair {
 	
-	private String hashTag;
-	private String value;
+	public static final String ID_PREFIX = "IF";
 	
 	// ------------------------------------------------------------------------
 	
@@ -13,27 +10,12 @@ public class InfluenceFactor extends ResponseData {
 		
 	}
 	
-	public InfluenceFactor(String hashTag, String value) {
-		this.hashTag = hashTag;
-		this.value = value;
+	public InfluenceFactor(String id, String name, String description) {
+		super(name, description);
+		setId(generateId(id, ID_PREFIX));
 	}
 	
 	// ------------------------------------------------------------------------
 
-	public String getHashTag() {
-		return hashTag;
-	}
-
-	public void setHashTag(String hashTag) {
-		this.hashTag = hashTag;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
 
 }

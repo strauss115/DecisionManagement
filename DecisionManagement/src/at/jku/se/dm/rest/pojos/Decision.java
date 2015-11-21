@@ -7,17 +7,21 @@ import at.jku.se.dm.rest.ResponseData;
 
 public class Decision extends ResponseData {
 
-	/**
-	 * Unique name of decision
-	 */
+	public static final String ID_PREFIX = "D";
+	
+	// ------------------------------------------------------------------------
+	
 	private String name;
+	private String description;
 	private Date creationDate;
 	private String author;
-	private String alternatives, rationale, consequences;
 	private LinkedList<InfluenceFactor> influenceFactors;
-	private String team; // just team name
-	private String group;
+	private LinkedList<Rationale> rationales;
+	private LinkedList<Alternative> alternatives;
+	private LinkedList<Consequence> consequences;
 	private LinkedList<QualityAttribute> qualityAttributes;
+	private String team; // just team IDs
+	private String group;
 	private LinkedList<String> relatedDecisions;
 	private LinkedList<String> responsibles;
 	private LinkedList<String> documents;
@@ -28,17 +32,41 @@ public class Decision extends ResponseData {
 		
 	}
 	
-	public Decision(String name, User author, Team team) {
+	/**
+	 * Constructor used by backend for existing decision in database
+	 * 
+	 * @param id
+	 * @param name
+	 * @param author
+	 * @param team
+	 */
+	public Decision(String id, String name, User author, Team team) {
+		setId(id);
 		this.name = name;
 		this.author = author.getEMail();
 		this.team = team.getName();
 		this.creationDate = new Date();
 		
 		this.influenceFactors = new LinkedList<InfluenceFactor>();
+		this.rationales = new LinkedList<Rationale>();
+		this.alternatives = new LinkedList<Alternative>();
+		this.consequences = new LinkedList<Consequence>();
 		this.qualityAttributes = new LinkedList<QualityAttribute>();
 		this.relatedDecisions = new LinkedList<String>();
 		this.responsibles = new LinkedList<String>();
 		this.documents = new LinkedList<String>();
+	}
+	
+	
+	/**
+	 * Constructor used by API for new decision objects
+	 * 
+	 * @param name
+	 * @param author
+	 * @param team
+	 */
+	public Decision(String name, User author, Team team) {
+		this (generateId(name, ID_PREFIX), name, author, team);
 	}
 	
 	// ------------------------------------------------------------------------
@@ -48,6 +76,12 @@ public class Decision extends ResponseData {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public Date getCreationDate() {
 		return creationDate;
@@ -61,29 +95,29 @@ public class Decision extends ResponseData {
 	public void setAuthor(User author) {
 		this.author = author.getEMail();
 	}
-	public String getAlternatives() {
+	public LinkedList<Alternative> getAlternatives() {
 		return alternatives;
 	}
-	public void setAlternatives(String alternatives) {
-		this.alternatives = alternatives;
+	public void addAlternative(Alternative alternative) {
+		alternatives.add(alternative);
 	}
-	public String getRationale() {
-		return rationale;
+	public LinkedList<Rationale> getRationales() {
+		return rationales;
 	}
-	public void setRationale(String rationale) {
-		this.rationale = rationale;
+	public void addRationale(Rationale rationale) {
+		rationales.add(rationale);
 	}
-	public String getConsequences() {
+	public LinkedList<Consequence> getConsequences() {
 		return consequences;
 	}
-	public void setConsequences(String consequences) {
-		this.consequences = consequences;
+	public void addConsequence(Consequence consequence) {
+		consequences.add(consequence);
 	}
 	public LinkedList<InfluenceFactor> getInfluenceFactors() {
 		return influenceFactors;
 	}
-	public void setInfluenceFactors(LinkedList<InfluenceFactor> influenceFactors) {
-		this.influenceFactors = influenceFactors;
+	public void addInfluenceFactor(InfluenceFactor influenceFactor) {
+		influenceFactors.add(influenceFactor);
 	}
 	public String getTeam() {
 		return team;

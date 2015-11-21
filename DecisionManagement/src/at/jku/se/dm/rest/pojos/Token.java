@@ -1,8 +1,8 @@
 package at.jku.se.dm.rest.pojos;
 
-import at.jku.se.dm.rest.RestResponse;
+import at.jku.se.dm.rest.ResponseData;
 
-public class Token extends RestResponse {
+public class Token extends ResponseData {
 	
 	private String token;
 	
@@ -14,7 +14,7 @@ public class Token extends RestResponse {
 	
 	// ------------------------------------------------------------------------
 	
-	public String getToket() {
+	public String getToken() {
 		return token;
 	}
 

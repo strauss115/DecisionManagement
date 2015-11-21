@@ -94,5 +94,13 @@ public class User extends ResponseData {
 		}
 		return false;
 	}
+	
+	// ------------------------------------------------------------------------
+
+	@Override
+	public String toString() {
+		return eMail;
+	}
+	
 
 }

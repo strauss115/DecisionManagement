@@ -9,10 +9,11 @@ import at.jku.se.dm.rest.ResponseData;
  * Data class for teams used by REST service
  */
 public class Team extends ResponseData {
+	
+	public static final String ID_PREFIX = "T";
 
-	/**
-	 * Unique team name 
-	 */
+	// ------------------------------------------------------------------------
+	
 	private String name;
 	private LinkedList<String> users;
 	
@@ -22,8 +23,16 @@ public class Team extends ResponseData {
 		
 	}
 	
+	public Team(String id, String name) {
+		this.name = name;
+		setId(ID_PREFIX + name);
+		
+		users = new LinkedList<String>();
+	}
+	
 	public Team(String name) {
 		this.name = name;
+		setId(ID_PREFIX + name);
 		
 		users = new LinkedList<String>();
 	}
