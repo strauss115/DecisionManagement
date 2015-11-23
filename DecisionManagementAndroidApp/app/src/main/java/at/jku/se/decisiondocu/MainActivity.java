@@ -18,6 +18,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import at.jku.se.decisiondocu.fragments.SearchFragment;
+import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
@@ -114,10 +116,15 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            if(position==0){
-                return new TeamFragment_.FragmentBuilder_().build();
+
+            switch (position) {
+                case 0:
+                    return new TeamFragment_.FragmentBuilder_().build();
+                case 1:
+                    return new SearchFragment_.FragmentBuilder_().build();
+                default:
+                    return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
             }
-            return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
         }
 
         @Override

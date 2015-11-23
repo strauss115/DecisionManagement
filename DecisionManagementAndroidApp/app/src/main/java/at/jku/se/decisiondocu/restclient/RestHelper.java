@@ -27,6 +27,11 @@ public class RestHelper {
 
     private static Client client, client2;
 
+    /**
+     * Returniert das WebTarget des Backends inkl. der Registrierung des
+     * AndroidFriendlyFeatures.
+     * @return
+     */
     protected static WebTarget getWebTarget() {
         if (client == null) {
             try {
@@ -36,6 +41,11 @@ public class RestHelper {
         return client.target((DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE));
     }
 
+    /**
+     * Returniert das WebTarget des Backends inkl. der Registrierung des
+     * AndroidFriendlyFeatures. (Backend kann auch Dokumente hochladen,...)
+     * @return
+     */
     protected static WebTarget getWebTargetWithMultiFeature() {
         if (client2 == null) {
             try {
@@ -47,6 +57,9 @@ public class RestHelper {
         return client2.target((DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE));
     }
 
+    /**
+     * Diese Klasse wird benötigt, um Jersey mit Android kompatibel zu machen.
+     */
     public static class AndroidFriendlyFeature implements Feature{
 
         @Override

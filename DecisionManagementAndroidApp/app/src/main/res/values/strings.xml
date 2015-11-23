@@ -26,7 +26,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="new_existing_picture">Take new or use existing Picutre?</string>
+    <string name="new_existing_picture">Take new or use existing Picture?</string>
     <string name="existing_picture">Use picture from media center</string>
     <string name="new_picture">Take new picture</string>
     <string name="cancel">Cancel</string>
@@ -38,5 +38,10 @@
         <item>Use picture from media center</item>
         <item>Take new picture</item>
     </string-array>
+    <string-array name="sort_options">
+        <item>Sortieren nach: Name</item>
+        <item>Sortieren nach: Preis</item>
+    </string-array>
+    <string name="sort_prompt">Sortierstrategie auswählen</string>
 
 </resources>
