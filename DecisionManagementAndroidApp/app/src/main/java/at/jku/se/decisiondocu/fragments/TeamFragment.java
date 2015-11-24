@@ -23,6 +23,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.SearchAdapter;
+import at.jku.se.decisiondocu.beans.Team;
 import at.jku.se.decisiondocu.beans.TeamAdapter;
 
 @EFragment(R.layout.fragment_team)
@@ -46,7 +47,7 @@ public class TeamFragment extends Fragment {
     }
 
     @ItemClick(R.id.list_view_teams)
-    protected void itemClicked(String item) {
-        Log.i("ListView", "Item " + item + " clicked!");
+    protected void itemClicked(Team item) {
+        Log.i("ListView", "Item " + item.toString() + " clicked!");
     }
 }

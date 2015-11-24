@@ -1,21 +1,23 @@
 package at.jku.se.decisiondocu.beans;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
-import com.fasterxml.jackson.databind.deser.Deserializers;
+import android.widget.ImageView;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.jku.se.decisiondocu.views.ListItemView;
-import at.jku.se.decisiondocu.views.ListItemView_;
 import at.jku.se.decisiondocu.views.TeamItemView;
 import at.jku.se.decisiondocu.views.TeamItemView_;
 
@@ -25,17 +27,29 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
 @EBean
 public class TeamAdapter extends BaseAdapter {
 
-    private List<String> mItems;
+    private List<Team> mItems;
 
     @AfterInject
     void initAdapter() {
         mItems = new ArrayList<>();
-        mItems.add("Team xyz");
-        mItems.add("Team 334");
+
+        Team t1 = new Team("Team 1");
+        t1.setTeamDecisionCount(21);
+        t1.setTeamImageUrl("http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg");
+        Team t2 = new Team("Team 2");
+        t2.setTeamDecisionCount(2);
+        t2.setTeamImageUrl("http://www.menucool.com/slider/jsImgSlider/images/image-slider-2.jpg");
+
+        mItems.add(t1);
+        mItems.add(t2);
     }
 
     @RootContext
     Context context;
+
+    private void getData() {
+
+    }
 
     @Override
     public int getCount() {
@@ -43,7 +57,7 @@ public class TeamAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Team getItem(int position) {
         return mItems.get(position);
     }
 
@@ -62,7 +76,7 @@ public class TeamAdapter extends BaseAdapter {
             view = (TeamItemView) convertView;
         }
 
-        view.bind((String)getItem(position));
+        view.bind(getItem(position));
         return view;
     }
 }

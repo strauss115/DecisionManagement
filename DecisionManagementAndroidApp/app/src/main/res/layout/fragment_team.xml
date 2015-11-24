@@ -29,8 +29,6 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp" >
             </LinearLayout>
-
-            <View style="@style/Divider" />
         </LinearLayout>
 
         <!-- List View -->

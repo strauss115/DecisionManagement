@@ -3,9 +3,7 @@ package at.jku.se.decisiondocu.views;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Parcel;
 import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -15,12 +13,10 @@ import android.widget.TextView;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
 
 import at.jku.se.decisiondocu.R;
+import at.jku.se.decisiondocu.beans.Team;
 
 /**
  * Created by martin on 23.11.15.
@@ -45,11 +41,16 @@ public class TeamItemView extends LinearLayout {
         this(context);
     }
 
-    public void bind(String item) {
-        mTeamName.setText(item);
+    public void bind(Team item) {
+        Log.i("bind called", item.toString());
+        mTeamName.setText(item.getTeamName());
+        mTeamDescCnt.setText((String.valueOf(item.getTeamDecisionCount())));
 
-        new DownloadImageTask(mImageView)
-                .execute("http://www.menucool.com/slider/jsImgSlider/images/image-slider-2.jpg");
+        if (!item.isImgDownloaded()) {
+            new DownloadImageTask(mImageView)
+                    .execute(item.getTeamImageUrl());
+            item.setImgDownloaded(true);
+        }
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
