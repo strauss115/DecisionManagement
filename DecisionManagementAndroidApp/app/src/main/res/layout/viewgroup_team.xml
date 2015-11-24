@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wrapper"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1.0" >
+
+    <at.jku.se.decisiondocu.views.SquareImageView
+        android:layout_width="0dp"
+        android:background="#888"
+        android:layout_height="32dp"
+        android:scaleType="centerCrop"
+        android:layout_weight=".10"
+        android:id="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/team_name"
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_weight=".60"
+        android:textAlignment="viewStart"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:id="@+id/team_desc_cnt"
+        android:text="right"
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_weight=".20" />
+
+    <at.jku.se.decisiondocu.views.SquareImageView
+        android:layout_height="32dp"
+        android:layout_width="0dp"
+        android:background="#333"
+        android:scaleType="centerCrop"
+        android:layout_weight=".10"
+        android:id="@+id/imageView22" />
+</LinearLayout>

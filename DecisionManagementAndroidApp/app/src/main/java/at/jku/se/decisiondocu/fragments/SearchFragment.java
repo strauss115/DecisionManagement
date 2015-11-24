@@ -91,7 +91,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
                 mAdapter.setComparator(SearchAdapter.sComparatorName);
                 break;
             case 1:
-                mAdapter.setComparator(SearchAdapter.sComparatorName);
+                mAdapter.setComparator(SearchAdapter.sComparatorReverseName);
                 break;
         }
     }
