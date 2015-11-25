@@ -37,8 +37,8 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <button type="button" class="col-lg-2 btn btn-lg btn-default">Save</button>
-                    <button type="button" class="col-lg-3 btn btn-lg btn-default">Clear</button>
+                    <button type="button" class="col-lg-2 btn btn-lg btn-default" id="userAdministrationSave">Save</button>
+                    <button type="button" class="col-lg-3 btn btn-lg btn-default" id="userAdministrationClear">Clear</button>
                 </div>
             </div>
             <!-- /.panel-body -->
@@ -63,17 +63,19 @@
                                 <th>Nachname</th>
                                 <th>E-Mail</th>
                                 <th>User Picture</th>
-                                <th>Active</th>
+                                <th>Role</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="u in users" class="odd gradeX">
-                                <td>u.firstname</td>
-                                <td>u.lastname</td>
-                                <td align="center"> <img src="img/userImg.png" height="50" width="50"> </td>
-                                <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-ok"></i></button></td>
-                                <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
+                                <td>{{ u.firstName }}</td>
+                                <td>{{ u.lastName }}</td>
+                                <td>{{ u.eMail }}</td>
+                                <td align="center"><div ng-show="u.urlProfilePicture == null"><img src="img/userImg.png" height="50" width="50"></div><div ng-show="u.urlProfilePicture != null"><img src="{{ u.urlProfilePicture }}" height="50" width="50"></div></td>
+                                <td align="center"><div ng-show="u.admin == true">Admin</div><div ng-show="u.admin == false">User</div></td>
+                                <td align="center"><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
+                            
                             </tr>
                             <!--<tr class="even gradeX">
                                 <td>user2</td>

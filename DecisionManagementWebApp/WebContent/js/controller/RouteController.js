@@ -4,7 +4,7 @@
 app.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
                 // Home
-                .when("/", {templateUrl: "pages/login.html", controller: "Home"})
+                .when("/", {templateUrl: "pages/login.html", controller: "LoginController"})
                 .when("/home", {templateUrl: "pages/home.html", controller: "Home"})
                 // Pages
                 .when("/createDecision", {templateUrl: "pages/createDecision.html", controller: "CreateDecisionController"})
@@ -18,7 +18,7 @@ app.config(['$routeProvider', function ($routeProvider) {
                 .when("/userAdministration", {templateUrl: "pages/userAdministration.html", controller: "UserAdministrationController"})
                 .when("/teamAdministration", {templateUrl: "pages/teamAdministration.html", controller: "PageCtrl"})
                 .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "PageCtrl"})
-                .when("/login", {templateUrl: "pages/login.html", controller: "PageCtrl"})
+                .when("/login", {templateUrl: "pages/login.html", controller: "LoginController"})
 
 
                 .otherwise("/login", {templateUrl: "login.html", controller: "Home"});

@@ -1,5 +1,5 @@
 var app = angular.module('decisionApp', ['ngRoute','ngResource','userServices']);
-
+app.value('usertoken', null);
 
 app.directive('goDiagramMindMap', function () {
     return {
