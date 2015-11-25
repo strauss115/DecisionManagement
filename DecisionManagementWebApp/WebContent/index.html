@@ -35,7 +35,8 @@
         <!-- Vendor: Angular, followed by our custom Javascripts -->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-resource.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-resource.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-cookies.min.js"></script>
 
 
         <script src="js/libs/go.js"></script>
@@ -43,6 +44,7 @@
 
         <script src="js/services/userService.js"></script>
         <script src="js/services/loginService.js"></script>
+        
         <script src="js/controller/RouteController.js"></script>
         <script src="js/controller/CreateDecisionController.js"></script>
         <script src="js/controller/EditDecisionController.js"></script>
@@ -61,7 +63,7 @@
         <div id="wrapper" >
 
             <!-- Navigation -->
-            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <nav id="navigation" class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" >
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>

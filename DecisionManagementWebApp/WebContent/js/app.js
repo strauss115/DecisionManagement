@@ -1,5 +1,12 @@
-var app = angular.module('decisionApp', ['ngRoute','ngResource','userServices', 'loginServices']);
-app.value('usertoken', null);
+var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices']);
+
+app.run(function ($rootScope, $cookies, $location) {
+    $rootScope.$on("$locationChangeStart", function (event, next, current) {
+        if (!$cookies['Token']) {
+          $location.path("/login");
+        }
+    });
+});
 
 app.directive('goDiagramMindMap', function () {
     return {
@@ -224,7 +231,7 @@ app.directive('goDiagramMindMap', function () {
 
             function layoutTree(node) {
                 if (node.data.key === 0) {  // adding to the root?
-                    layoutAll();  // lay out everything
+                    layoutAll(); // lay out everything
                 } else {  // otherwise lay out only the subtree starting at this parent node
                     var parts = node.findTreeParts();
                     layoutAngle(parts, node.data.dir === "left" ? 180 : 0);
@@ -251,11 +258,11 @@ app.directive('goDiagramMindMap', function () {
                 root.findLinksConnected().each(function (link) {
                     var child = link.toNode;
                     if (child.data.dir === "left") {
-                        leftward.add(root);  // the root node is in both collections
+                        leftward.add(root); // the root node is in both collections
                         leftward.add(link);
                         leftward.addAll(child.findTreeParts());
                     } else {
-                        rightward.add(root);  // the root node is in both collections
+                        rightward.add(root); // the root node is in both collections
                         rightward.add(link);
                         rightward.addAll(child.findTreeParts());
                     }
@@ -274,10 +281,6 @@ app.directive('goDiagramMindMap', function () {
         }
     };
 });
-
-
-
-
 app.directive('goDiagramState', function () {
     return {
         restrict: 'E',
@@ -404,7 +407,6 @@ app.directive('goDiagramState', function () {
                         document.title = document.title.substr(0, idx);
                 }
             });
-
             // clicking the button inserts a new node to the right of the selected node,
             // and adds a link to that new node
             function addNodeAndLink(e, obj) {
@@ -412,7 +414,6 @@ app.directive('goDiagramState', function () {
                 e.handled = true;
                 var diagram = adorn.diagram;
                 diagram.startTransaction("Add State");
-
                 // get the node data for which the user clicked the button
                 var fromNode = adorn.adornedPart;
                 var fromData = fromNode.data;
@@ -420,11 +421,10 @@ app.directive('goDiagramState', function () {
                 var toData = {text: "new"};
                 var p = fromNode.location.copy();
                 p.x += 200;
-                toData.loc = go.Point.stringify(p);  // the "loc" property is a string, not a Point object
+                toData.loc = go.Point.stringify(p); // the "loc" property is a string, not a Point object
                 // add the new node data to the model
                 var model = diagram.model;
                 model.addNodeData(toData);
-
                 // create a link data from the old node data to the new node data
                 var linkdata = {
                     from: model.getKeyForNodeData(fromData), // or just: fromData.id
@@ -433,13 +433,10 @@ app.directive('goDiagramState', function () {
                 };
                 // and add the link data to the model
                 model.addLinkData(linkdata);
-
                 // select the new Node
                 var newnode = diagram.findNodeForData(toData);
                 diagram.select(newnode);
-
                 diagram.commitTransaction("Add State");
-
                 // if the new node is off-screen, scroll the diagram to show the new node
                 diagram.scrollToRect(newnode.actualBounds);
             }

@@ -5,7 +5,7 @@ app.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
                 // Home
                 .when("/", {templateUrl: "pages/login.html", controller: "LoginController"})
-                .when("/home", {templateUrl: "pages/home.html", controller: "Home"})
+                .when("/home", {templateUrl: "pages/home.html", controller: "HomeController"})
                 // Pages
                 .when("/createDecision", {templateUrl: "pages/createDecision.html", controller: "CreateDecisionController"})
                 .when("/editDecision", {templateUrl: "pages/editDecision.html", controller: "EditDecisionController"})
@@ -17,11 +17,7 @@ app.config(['$routeProvider', function ($routeProvider) {
                 .when("/showCriteria", {templateUrl: "pages/showCriteria.html", controller: "PageCtrl"})
                 .when("/userAdministration", {templateUrl: "pages/userAdministration.html", controller: "UserAdministrationController"})
                 .when("/teamAdministration", {templateUrl: "pages/teamAdministration.html", controller: "PageCtrl"})
-                .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "PageCtrl"}, {resolve: {
-                        access: ["Access", function (Access) {
-                                return Access.isAnonymous();
-                            }]}
-                })
+                .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "PageCtrl"})
                 .when("/login", {templateUrl: "pages/login.html", controller: "LoginController"})
 
 
