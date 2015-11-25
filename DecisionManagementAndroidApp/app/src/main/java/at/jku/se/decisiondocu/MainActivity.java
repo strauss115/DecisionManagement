@@ -18,13 +18,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
-import at.jku.se.decisiondocu.fragments.SearchFragment;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+
+    //Test Commit
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
