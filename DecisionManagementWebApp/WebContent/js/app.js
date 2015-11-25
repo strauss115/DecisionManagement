@@ -1,6 +1,4 @@
-var app = angular.module('decisionApp', [
-    'ngRoute'
-]);
+var app = angular.module('decisionApp', ['ngRoute','ngResource','userServices']);
 
 
 app.directive('goDiagramMindMap', function () {
