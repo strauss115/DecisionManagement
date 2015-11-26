@@ -78,6 +78,23 @@ public class RestResponse {
 	public static Response getResponse(HttpCode code, List<? extends ResponseData> data) {
 		return getResponseWithData(code, data);
 	}
+	/**
+	 * 
+	 * @param response
+	 * 			response to which the header is added
+	 * @return response
+	 * 			response with the added header
+	 */
+	public static Response addResponseHeader(Response response){
+		response.getHeaders().add("Access-Control-Allow-Origin", "*");
+		response.getHeaders().add("Access-Control-Allow-Headers",
+				"origin, content-type, accept, authorization");
+		response.getHeaders().add("Access-Control-Allow-Credentials",
+				"true");
+		response.getHeaders().add("Access-Control-Allow-Methods",
+				"GET, POST, PUT, DELETE, OPTIONS, HEAD");
+		return response;
+	}
 
 	// ------------------------------------------------------------------------
 
@@ -94,5 +111,6 @@ public class RestResponse {
 			return Response.status(HttpCode.HTTP_500_SERVER_ERROR.getCode()).build();
 		}
 	}
+	
 
 }

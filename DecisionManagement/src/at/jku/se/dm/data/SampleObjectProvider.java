@@ -25,11 +25,15 @@ public class SampleObjectProvider {
 	// ------------------------------------------------------------------------
 
 	static {
-		User u1 = new User("user1@u1.com", "U1first", "U1last", DEFAULT_PASSWORD);
-		User u2 = new User("user2@u2.com", "U2first", "U2last", DEFAULT_PASSWORD);
-		User u3 = new User("user2@u3.com", "u3first", "u3last", DEFAULT_PASSWORD);
-		User u4 = new User("user2@u4.com", "u4first", "u4last", DEFAULT_PASSWORD);
-
+		User u1 = new User("peter.aichinger@jku.at", "Peter", "Aichinger", DEFAULT_PASSWORD);
+		User u2 = new User("thomas.hochgatterer@jku.at", "Thomas", "Hochgatterer", DEFAULT_PASSWORD);
+		User u3 = new User("alexey.pastuschenko@jku.at", "Alexey", "Pastuschenko", DEFAULT_PASSWORD);
+		User u4 = new User("michael.strauss@jku.at", "Michael", "Strauﬂ", DEFAULT_PASSWORD);
+		/// Profile picture url not null!
+		u1.setUrlProfilePicture("img/userImg.png");
+		u2.setUrlProfilePicture("https://scontent-vie1-1.xx.fbcdn.net/hphotos-xfa1/v/t1.0-9/644391_10204671569381054_8656277940229938364_n.jpg?oh=4a3387f74b111e096aa744ee576cd267&oe=56DC816F");
+		u3.setUrlProfilePicture("https://scontent-vie1-1.xx.fbcdn.net/hprofile-xat1/v/t1.0-1/c0.22.160.160/p160x160/12106828_458755630970683_8909953079279626491_n.jpg?oh=340500360d79cc54f464707f3a8861fd&oe=56DBEE32");
+		u4.setUrlProfilePicture("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/c33.33.412.412/s160x160/1933927_1229594150156_8079993_n.jpg?oh=352d29018914cf8f04a9c440de75e754&oe=56B23BCB&__gda__=1454364973_744dad36852b796b7f6987853a46625c");
 		users.add(u1);
 		users.add(u2);
 		users.add(u3);
