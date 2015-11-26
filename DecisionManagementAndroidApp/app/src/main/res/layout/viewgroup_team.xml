@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
+    android:descendantFocusability="blocksDescendants"
     android:weightSum="1.0" >
 
     <at.jku.se.decisiondocu.views.SquareImageView
         android:layout_width="0dp"
-        android:background="#888"
-        android:layout_height="32dp"
+        android:layout_height="40dp"
         android:scaleType="centerCrop"
         android:layout_weight=".10"
         android:id="@+id/imageView" />
@@ -19,23 +19,23 @@
         android:id="@+id/team_name"
         android:layout_width="0dp"
         android:gravity="center"
+        android:textAlignment="viewStart"
         android:layout_height="match_parent"
         android:layout_weight=".60"
-        android:textAlignment="viewStart"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:id="@+id/team_desc_cnt"
-        android:text="right"
         android:layout_width="0dp"
         android:gravity="center"
         android:layout_height="match_parent"
         android:layout_weight=".20" />
 
-    <at.jku.se.decisiondocu.views.SquareImageView
-        android:layout_height="32dp"
+    <CheckBox
+        android:id="@+id/team_favourite"
         android:layout_width="0dp"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/btn_star_big_on"
-        android:layout_weight=".10" />
+        android:layout_height="wrap_content"
+        android:button="@drawable/star"
+        android:layout_weight=".10"
+        android:text="" />
 </LinearLayout>

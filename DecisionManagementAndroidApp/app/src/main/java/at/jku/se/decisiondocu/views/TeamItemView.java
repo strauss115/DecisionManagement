@@ -3,9 +3,12 @@ package at.jku.se.decisiondocu.views;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,48 +36,52 @@ public class TeamItemView extends LinearLayout {
     @ViewById(R.id.imageView)
     ImageView mImageView;
 
+    @ViewById(R.id.team_favourite)
+    CheckBox mTeamFavourite;
+
+    private BaseAdapter mAdapter;
+    private Team mTeam;
+
     public TeamItemView(Context context) {
         super(context);
     }
 
     public TeamItemView(Context context, BaseAdapter adapter) {
         this(context);
+        this.mAdapter = adapter;
     }
 
     public void bind(Team item) {
-        Log.i("bind called", item.toString());
+        mTeam = item;
         mTeamName.setText(item.getTeamName());
         mTeamDescCnt.setText((String.valueOf(item.getTeamDecisionCount())));
+        if (item.getBitmap() != null) {
+            mImageView.setImageBitmap(item.getBitmap());
+        }
+        mTeamFavourite.setChecked(item.isFavourite());
 
-        if (!item.isImgDownloaded()) {
-            new DownloadImageTask(mImageView)
-                    .execute(item.getTeamImageUrl());
-            item.setImgDownloaded(true);
+        setCheckboxOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                notifyTeamOnChanges();
+            }
+        });
+
+    }
+
+    private void notifyTeamOnChanges() {
+        if (mTeam != null) {
+            mTeam.setFavourite(mTeamFavourite.isChecked());
+        }
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+    public void setCheckboxOnClickListener(OnClickListener listener) {
+        if (mTeamFavourite != null) {
+            mTeamFavourite.setOnClickListener(listener);
         }
     }
 }

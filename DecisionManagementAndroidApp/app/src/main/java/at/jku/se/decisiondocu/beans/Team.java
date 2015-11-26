@@ -1,5 +1,7 @@
 package at.jku.se.decisiondocu.beans;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by martin on 24.11.15.
  */
@@ -8,8 +10,8 @@ public class Team {
     private String mTeamImageUrl;
     private String mTeamName;
     private int mTeamDecisionCount;
-
-    private boolean mImgDownloaded;
+    private Bitmap mBitmap;
+    private boolean mIsFavourite;
 
     public Team() {}
 
@@ -41,20 +43,29 @@ public class Team {
         this.mTeamDecisionCount = mTeamDecisionCount;
     }
 
-    public boolean isImgDownloaded() {
-        return mImgDownloaded;
-    }
-
-    public void setImgDownloaded(boolean mImgDownloaded) {
-        this.mImgDownloaded = mImgDownloaded;
-    }
-
     @Override
     public String toString() {
         return "Team{" +
-                "mTeamImageUrl='" + mTeamImageUrl + '\'' +
                 ", mTeamName='" + mTeamName + '\'' +
                 ", mTeamDecisionCount=" + mTeamDecisionCount +
+                ", mBitmap=" + mBitmap +
+                ", mIsFavourite=" + mIsFavourite +
                 '}';
+    }
+
+    public void setBitmap(Bitmap mBitmap) {
+        this.mBitmap = mBitmap;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public boolean isFavourite() {
+        return mIsFavourite;
+    }
+
+    public void setFavourite(boolean mIsFavourite) {
+        this.mIsFavourite = mIsFavourite;
     }
 }
