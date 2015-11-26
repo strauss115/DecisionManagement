@@ -1,5 +1,6 @@
 package at.jku.se.dm.data;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class SampleObjectProvider {
 	private static List<User> users = new LinkedList<User>();
 	private static List<Team> teams = new LinkedList<Team>();
 	private static List<Decision> decisions = new LinkedList<Decision>();
+	private static List<Chat> chats = new LinkedList<Chat>();
 
 	// ------------------------------------------------------------------------
 
@@ -81,6 +83,18 @@ public class SampleObjectProvider {
 		decisions.add(d5);
 		decisions.add(d6);
 
+		// --
+		
+		Chat c1 = new Chat("D1", "Decision 1 chat message 1", u1, new Date());
+		Chat c2 = new Chat("D1", "Decision 1 chat message 2", u2, new Date());
+		Chat c3 = new Chat("D2", "Decision 2 chat message 1", u1, new Date());
+		Chat c4 = new Chat("D1", "Decision 1 chat message 3", u1, new Date());
+		
+		chats.add(c1);
+		chats.add(c2);
+		chats.add(c3);
+		chats.add(c4);
+		
 		// --
 
 		Rationale r1 = new Rationale("RA1", "rationale 1", "rationale 1 description");
@@ -210,4 +224,29 @@ public class SampleObjectProvider {
 
 	// ------------------------------------------------------------------------
 
+	public static List<Chat> getAllChats() {
+		log.debug("Get all chats returning '" + chats.size() + "' elements");
+		return chats;
+	}
+	
+	public static List<Chat> getChatsByRelatedObject(String relatedObjectId) {
+		log.debug("Get chats by related object id '" + relatedObjectId + "'");
+		List<Chat> result = new LinkedList<Chat>();
+		
+		for (Chat c : chats) {
+			if (c.getRelatedObjectId().equals(relatedObjectId))
+					result.add(c);
+		}
+		
+		log.debug("'" + result.size() + "' found by related object id.");
+		return result;
+	}
+	
+	public static void addChat(Chat c) {
+		log.debug("Adding chat '" + c.getMessage() + "' to list");
+		chats.add(c);
+	}
+	
+	// ------------------------------------------------------------------------
+	
 }

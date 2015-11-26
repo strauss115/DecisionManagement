@@ -2,5 +2,7 @@ syntax: glob
 .metadata/
 RemoteSystemsTempFiles/.project
 DecisionManagement/bin/
+.recommenders/
+Servers
 syntax: regexp
 [A-Za-z0-9]*.class
