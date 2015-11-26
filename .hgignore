@@ -1,0 +1,6 @@
+syntax: glob
+.metadata/
+RemoteSystemsTempFiles/.project
+DecisionManagement/bin/
+syntax: regexp
+[A-Za-z0-9]*.class
