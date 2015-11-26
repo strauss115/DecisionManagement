@@ -44,7 +44,8 @@
 
         <script src="js/services/userService.js"></script>
         <script src="js/services/loginService.js"></script>
-        
+        <script src="js/services/teamService.js"></script>
+
         <script src="js/controller/RouteController.js"></script>
         <script src="js/controller/CreateDecisionController.js"></script>
         <script src="js/controller/EditDecisionController.js"></script>
@@ -52,7 +53,10 @@
         <script src="js/controller/ShowDependencyController.js"></script>
         <script src="js/controller/ShowGroupController.js"></script>
         <script src="js/controller/UserAdministrationController.js"></script>
+        <script src="js/controller/TeamAdministrationController.js"></script>
         <script src="js/controller/LoginController.js"></script>
+        <script src="js/controller/LogoutController.js"></script>
+        <script src="js/controller/HomeController.js"></script>
 
 
 
@@ -85,7 +89,7 @@
                             <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#login"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                            <li><a href="#logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
                             <li><a href="#userProfile"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
                         </ul>
                         <!-- /.dropdown-user -->
@@ -157,7 +161,25 @@
             <div id="page-wrapper">
                 <div ng-view></div>
             </div>
-        </div>      
+        </div>  
+
+        <!-- Modal -->
+        <div class="modal fade" id="loginErrorModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Login error</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please check you user data</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </body>
 

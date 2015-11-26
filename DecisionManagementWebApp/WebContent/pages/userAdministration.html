@@ -72,7 +72,7 @@
                                 <td>{{ u.firstName }}</td>
                                 <td>{{ u.lastName }}</td>
                                 <td>{{ u.eMail }}</td>
-                                <td align="center"><div ng-show="u.urlProfilePicture == null"><img src="img/userImg.png" height="50" width="50"></div><div ng-show="u.urlProfilePicture != null"><img src="{{ u.urlProfilePicture }}" height="50" width="50"></div></td>
+                                <td align="center"><img src="{{ u.urlProfilePicture }}" height="50" width="50"></td>
                                 <td align="center"><div ng-show="u.admin == true">Admin</div><div ng-show="u.admin == false">User</div></td>
                                 <td align="center"><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
                             

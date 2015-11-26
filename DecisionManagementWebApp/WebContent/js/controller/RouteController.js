@@ -16,10 +16,10 @@ app.config(['$routeProvider', function ($routeProvider) {
                 .when("/showGroup", {templateUrl: "pages/showGroup.html", controller: "ShowGroupController"})
                 .when("/showCriteria", {templateUrl: "pages/showCriteria.html", controller: "PageCtrl"})
                 .when("/userAdministration", {templateUrl: "pages/userAdministration.html", controller: "UserAdministrationController"})
-                .when("/teamAdministration", {templateUrl: "pages/teamAdministration.html", controller: "PageCtrl"})
+                .when("/teamAdministration", {templateUrl: "pages/teamAdministration.html", controller: "TeamAdministrationController"})
                 .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "PageCtrl"})
                 .when("/login", {templateUrl: "pages/login.html", controller: "LoginController"})
-
+                .when("/logout", {templateUrl: "pages/logout.html", controller: "LogoutController"})
 
                 .otherwise("/login", {templateUrl: "login.html", controller: "Home"});
     }]);

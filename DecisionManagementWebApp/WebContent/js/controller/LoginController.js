@@ -8,7 +8,7 @@ app.controller('LoginController', ['$scope', '$cookies', '$location' ,'Login',  
                 $scope.loginResponse = (data);
                 $cookies.Token = $scope.loginResponse.token;
                 
-                $location.path("/createDecision");
+                $location.path("/home");
      
             });        
         }

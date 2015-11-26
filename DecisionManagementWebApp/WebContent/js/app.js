@@ -1,9 +1,10 @@
-var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices']);
+var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices']);
 
 app.run(function ($rootScope, $cookies, $location) {
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
         if (!$cookies['Token']) {
           $location.path("/login");
+          $("#loginErrorModal").modal();
         }
     });
 });

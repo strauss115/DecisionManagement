@@ -75,18 +75,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd gradeX">
-                                <td>team1</td>
+                          <tr ng-repeat="t in teams" class="odd gradeX">
+                                <td>{{ t.name }}</td>
                                 <td>5</td>
                                 <td align="center"> <img src="img/teamImg.png" height="60" width="100"> </td>
                                 <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
                             </tr>
-                            <tr class="even gradeX">
-                                <td>team2</td>
-                                <td>15</td>
-                                <td align="center"><img src="img/teamImg.png" height="60" width="100"></td>
-                                <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
-                            </tr>        
                         </tbody>
                     </table>
                 </div>

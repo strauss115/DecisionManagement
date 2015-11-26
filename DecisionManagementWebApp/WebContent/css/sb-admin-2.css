@@ -352,3 +352,9 @@ table.dataTable thead .sorting:after {
 .panel-yellow a:hover {
     color: #df8a13;
 }
+
+#loginErrorModal .modal-header{
+    background-color: #FF4450;
+    color: #ffffff;
+    font-weight: bold;
+}
