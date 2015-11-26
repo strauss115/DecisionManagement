@@ -45,8 +45,15 @@ public class TeamResource {
 		
 		List<Team> users = SampleObjectProvider.getAllTeams();
 		log.info("GET all teams returning '" + users.size() + "' elements");
-		
-		return RestResponse.getSuccessResponse(users);
+		Response response = RestResponse.getSuccessResponse(users);
+		response.getHeaders().add("Access-Control-Allow-Origin", "*");
+		response.getHeaders().add("Access-Control-Allow-Headers",
+				"origin, content-type, accept, authorization");
+		response.getHeaders().add("Access-Control-Allow-Credentials",
+				"true");
+		response.getHeaders().add("Access-Control-Allow-Methods",
+				"GET, POST, PUT, DELETE, OPTIONS, HEAD");
+		return response;
 	}
 	
 	@GET

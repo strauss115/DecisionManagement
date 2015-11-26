@@ -27,36 +27,36 @@ import at.jku.se.dm.rest.pojos.User;
 public class UserResource {
 
 	private static final Logger log = LogManager.getLogger(UserResource.class);
-	
+
 	// not needed so far
 	// @Context
 	// UriInfo ui;
-	
+
 	// ------------------------------------------------------------------------
-	
+
 	public UserResource() {
-		
+
 	}
-	
+
 	// ------------------------------------------------------------------------
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
 		log.debug("GET all users");
-		
+
 		List<User> users = SampleObjectProvider.getAllUsers();
 		log.info("GET all users returning '" + users.size() + "' elements");
-		
-		return RestResponse.getSuccessResponse(users);
+		Response response = RestResponse.getSuccessResponse(users);
+		return RestResponse.addResponseHeader(response);
 	}
-	
+
 	@GET
 	@Path("/{mail}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("mail") String eMail) {
 		log.debug("GET user '" + eMail + "'");
-		
+
 		User u = SampleObjectProvider.getUserByEMail(eMail);
 		if (u != null) {
 			log.info("GET user returning '" + u.getEMail() + "'");
@@ -65,75 +65,78 @@ public class UserResource {
 			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 		}
 	}
-	
+
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(@QueryParam("eMail") String eMail,
-						  @QueryParam("password") String password) {
+			@QueryParam("password") String password) {
 		log.debug("Login user: " + eMail);
-		
+
 		List<User> users = SampleObjectProvider.getAllUsers();
 		for (User u : users) {
 			if (u.getEMail().equals(eMail) && u.getPassword().equals(password)) {
 				log.debug("Login of user '" + u.getEMail() + "' successful");
 				Token token = new Token(SessionManager.addSession(u));
 				log.info("Returing session '" + token.getSession() + "'");
-				return RestResponse.getSuccessResponse(token);
+				Response response = RestResponse.getSuccessResponse(token);
+				return RestResponse.addResponseHeader(response);
 			}
 		}
 		log.info("Unable to authorize user '" + eMail + "'");
-		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+		Response response = RestResponse
+				.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+		return RestResponse.addResponseHeader(response);
 	}
-	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
 		log.debug("CREATE user: " + json);
-		
+
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 	}
-	
+
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response register(@QueryParam("firstName") String firstName,
-							 @QueryParam("lastName") String lastName,
-							 @QueryParam("password") String password,
-							 @QueryParam("eMail") String eMail) {
+			@QueryParam("lastName") String lastName,
+			@QueryParam("password") String password,
+			@QueryParam("eMail") String eMail) {
 		log.debug("Register '" + eMail + "'");
-		
+
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 	}
-	
+
 	@PUT
 	@Path("/{mail}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response edit(@PathParam("eMail") String mail, String json) {
 		log.debug("EDIT user '" + mail + "': " + json);
-		
+
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 	}
-	
+
 	@DELETE
 	@Path("/{mail}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("eMail") String mail) {
 		log.debug("DELETE user '" + mail + "'");
-		
+
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 	}
-	
+
 	@PUT
 	@Path("/{mail}/setPermisssion/{admin}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setPermission(@PathParam("mail") String mail,
-								  @PathParam("admin") boolean admin) {
+			@PathParam("admin") boolean admin) {
 		log.debug("Set admin user '" + mail + "' to '" + admin + "'");
-		
+
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 	}
-	
+
 	// TODO Upload user picture
-	
+
 }
