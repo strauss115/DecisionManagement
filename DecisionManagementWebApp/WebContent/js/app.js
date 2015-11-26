@@ -2,7 +2,7 @@ var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', '
 
 app.run(function ($rootScope, $cookies, $location) {
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-        if (!$cookies['Token']) {
+        if (!$cookies['Token'] && $location.path() != "/login") {
           $location.path("/login");
           $("#loginErrorModal").modal();
         }
