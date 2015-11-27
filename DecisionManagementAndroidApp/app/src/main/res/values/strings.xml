@@ -43,5 +43,7 @@
         <item>Sortieren nach: Preis</item>
     </string-array>
     <string name="sort_prompt">Sortierstrategie auswählen</string>
+    <string name="add_select_team">Select project</string>
+    <string name="add_select_desc_name">Specify decision name</string>
 
 </resources>
