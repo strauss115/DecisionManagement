@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -18,14 +20,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
-import at.jku.se.decisiondocu.fragments.AddFragment;
-import at.jku.se.decisiondocu.fragments.AddFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+
+    public static MainActivity Instance;
 
     //Test Commit
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     @ViewById(R.id.container)
-    ViewPager mViewPager;
+    public ViewPager mViewPager;
 
     @ViewById(R.id.tabs)
     TabLayout tabLayout;
@@ -71,11 +73,11 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout.setupWithViewPager(mViewPager);
-
+        Instance = this;
     }
 
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     //Eventuell Fenster indem man schnell eine Enscheidung erstellen kann
     @Click(R.id.fab)
@@ -125,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
                     return new TeamFragment_.FragmentBuilder_().build();
                 case 1:
                     return new SearchFragment_.FragmentBuilder_().build();
-                case 2:
-                    return new AddFragment_.FragmentBuilder_().build();
                 default:
                     return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
             }
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 4;
+            return 2;
         }
 
         @Override
@@ -145,10 +145,6 @@ public class MainActivity extends AppCompatActivity {
                     return "Projects";
                 case 1:
                     return "Search";
-                case 2:
-                    return "Add";
-                case 3:
-                    return "Profile";
             }
             return null;
         }

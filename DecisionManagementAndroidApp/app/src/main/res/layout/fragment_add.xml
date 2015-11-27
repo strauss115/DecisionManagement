@@ -47,7 +47,8 @@
 
             android:text="author"
             android:textSize="15sp"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/abc_search_url_text" />
 
         <!-- Service price -->
 
@@ -60,6 +61,7 @@
             android:layout_marginRight="5dp"
             android:gravity="right"
             android:text="date"
+            android:textColor="@color/abc_search_url_text"
             android:textSize="15sp" />
 
     </RelativeLayout>
@@ -76,8 +78,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/add_desc_name"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:hint="Enter decision name here"
         android:layout_marginBottom="5dp" />
 
     <LinearLayout
