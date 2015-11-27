@@ -4,5 +4,7 @@ RemoteSystemsTempFiles/.project
 DecisionManagement/bin/
 .recommenders/
 Servers
+DecisionManagement/.settings
+DecisionManagement/target/m2e-wtp/
 syntax: regexp
 [A-Za-z0-9]*.class
