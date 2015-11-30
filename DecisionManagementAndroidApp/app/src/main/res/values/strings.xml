@@ -39,11 +39,12 @@
         <item>Take new picture</item>
     </string-array>
     <string-array name="sort_options">
-        <item>Sortieren nach: Name</item>
-        <item>Sortieren nach: Preis</item>
+        <item>sort by: name</item>
+        <item>sort by: ...</item>
     </string-array>
-    <string name="sort_prompt">Sortierstrategie auswählen</string>
+    <string name="sort_prompt">select sort strategy</string>
     <string name="add_select_team">Select project</string>
     <string name="add_select_desc_name">Specify decision name</string>
+    <string name="search_hint">fulltext search ...</string>
 
 </resources>

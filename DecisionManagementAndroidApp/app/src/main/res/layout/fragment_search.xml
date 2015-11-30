@@ -50,7 +50,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_edittext"
-                    android:textColor="@android:color/holo_green_dark" />
+                    android:hint="@string/search_hint"
+                    android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
 
             <View style="@style/Divider" />

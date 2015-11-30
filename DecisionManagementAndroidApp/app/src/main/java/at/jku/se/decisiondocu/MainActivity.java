@@ -20,6 +20,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import at.jku.se.decisiondocu.fragments.ChatFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
@@ -127,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
                     return new TeamFragment_.FragmentBuilder_().build();
                 case 1:
                     return new SearchFragment_.FragmentBuilder_().build();
+                case 2:
+                    return new ChatFragment_.FragmentBuilder_().build();
                 default:
                     return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
             }
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -145,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
                     return "Projects";
                 case 1:
                     return "Search";
+                case 2:
+                    return "Chat";
             }
             return null;
         }

@@ -11,31 +11,24 @@ import org.androidannotations.annotations.ViewById;
 import at.jku.se.decisiondocu.R;
 
 /**
- * Created by martin on 23.11.15.
+ * Created by martin on 30.11.15.
  */
-@EViewGroup(R.layout.viewgroup_listitem)
-public class ListItemView extends LinearLayout {
+@EViewGroup(R.layout.list_item)
+public class ChatListItemView extends LinearLayout {
 
-    @ViewById(R.id.decision_name)
+    @ViewById(R.id.list_item_text_view)
     TextView tv_headline;
 
-    @ViewById(R.id.decision_author)
-    TextView tv_author;
 
-    @ViewById(R.id.decision_creation_date)
-    TextView tv_date;
-
-    public ListItemView(Context context) {
+    public ChatListItemView(Context context) {
         super(context);
     }
 
-    public ListItemView(Context context, BaseAdapter adapter) {
+    public ChatListItemView(Context context, BaseAdapter adapter) {
         this(context);
     }
 
     public void bind(String item) {
-        tv_author.setText("Author: me");
-        tv_date.setText("Date: 2015-01-14");
         tv_headline.setText(item);
     }
 }
