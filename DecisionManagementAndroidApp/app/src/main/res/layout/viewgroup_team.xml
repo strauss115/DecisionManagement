@@ -1,41 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/wrapper"
-    android:layout_width="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:descendantFocusability="blocksDescendants"
+android:orientation="horizontal"
+android:padding="5dp">
+
+<at.jku.se.decisiondocu.views.SquareImageView
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:scaleType="centerCrop"
+    android:layout_marginRight="10dp"
+    android:id="@+id/imageView" />
+
+<TextView
+    android:id="@+id/team_desc_cnt"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_toEndOf="@+id/imageView"
+    android:text="Decisions: 27"
+    android:textSize="12sp"
+    android:textStyle="italic" />
+
+<TextView
+    android:id="@+id/team_members"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toEndOf="@id/team_desc_cnt"
+
+    android:text="Members: 6"
+    android:textSize="12sp"
+    android:textStyle="italic"
+    android:layout_alignParentRight="true"
+    android:gravity="right"
+    />
+
+
+<TextView
+    android:id="@+id/team_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/team_desc_cnt"
+    android:layout_toEndOf="@+id/imageView"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    android:descendantFocusability="blocksDescendants"
-    android:weightSum="1.0" >
+    android:text="Decision xyz"
+    android:textSize="18sp" />
 
-    <at.jku.se.decisiondocu.views.SquareImageView
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:scaleType="centerCrop"
-        android:layout_weight=".10"
-        android:id="@+id/imageView" />
-
-    <TextView
-        android:id="@+id/team_name"
-        android:layout_width="0dp"
-        android:gravity="center"
-        android:textAlignment="viewStart"
-        android:layout_height="match_parent"
-        android:layout_weight=".60"
-        android:layout_marginLeft="10dp" />
-
-    <TextView
-        android:id="@+id/team_desc_cnt"
-        android:layout_width="0dp"
-        android:gravity="center"
-        android:layout_height="match_parent"
-        android:layout_weight=".20" />
-
-    <CheckBox
-        android:id="@+id/team_favourite"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/star"
-        android:layout_weight=".10"
-        android:text="" />
-</LinearLayout>
+        android:layout_below="@id/team_members"
+        android:layout_alignParentRight="true"
+        android:id="@+id/linearLayout123">
+
+        <!--<Button
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/decision_startChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/ic_menu_send"
+            android:text=""/>-->
+
+        <CheckBox
+            android:id="@+id/team_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/star" />
+    </LinearLayout>
+
+</RelativeLayout>

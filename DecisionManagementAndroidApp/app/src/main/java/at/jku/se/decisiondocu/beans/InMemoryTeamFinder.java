@@ -11,8 +11,10 @@ import java.util.List;
 @EBean
 public class InMemoryTeamFinder implements TeamFinder {
 
-    @Override
-    public List<Team> findAll() {
+    private static List<Team> sTeams;
+
+    static {
+        sTeams = new ArrayList<>();
 
         Team t1 = new Team("Project 1");
         t1.setTeamDecisionCount(21);
@@ -25,13 +27,13 @@ public class InMemoryTeamFinder implements TeamFinder {
         t3.setTeamDecisionCount(0);
         t3.setTeamImageUrl("http://crackberry.com/sites/crackberry.com/files/styles/large/public/topic_images/2013/ANDROID.png");
 
+        sTeams.add(t1);
+        sTeams.add(t2);
+        sTeams.add(t3);
+    }
 
-        List<Team> mItems = new ArrayList<>();
-
-        mItems.add(t1);
-        mItems.add(t2);
-        mItems.add(t3);
-
-        return mItems;
+    @Override
+    public List<Team> findAll() {
+        return sTeams;
     }
 }

@@ -25,12 +25,17 @@ public class TeamIconDownloader extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... urls) {
         String mUrl = mTeam.getTeamImageUrl();
         Bitmap mIcon = null;
-        try {
-            InputStream in = new java.net.URL(mUrl).openStream();
-            mIcon = BitmapFactory.decodeStream(in);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
+
+        if (mTeam.getBitmap() == null) {
+            try {
+                InputStream in = new java.net.URL(mUrl).openStream();
+                mIcon = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            mIcon = mTeam.getBitmap();
         }
         return mIcon;
     }
