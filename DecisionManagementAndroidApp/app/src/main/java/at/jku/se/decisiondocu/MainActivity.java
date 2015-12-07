@@ -2,6 +2,7 @@ package at.jku.se.decisiondocu;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -64,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
     @AfterViews
     protected void init() {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -94,7 +99,15 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
+        }
+
+        if (id == R.id.action_logout) {
+            SaveSharedPreference.clearUserName(this);
+            Intent intent = new Intent(this, LoginActivity_.class);
+            startActivity(intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

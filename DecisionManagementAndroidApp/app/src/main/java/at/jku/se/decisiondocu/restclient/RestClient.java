@@ -3,11 +3,22 @@ package at.jku.se.decisiondocu.restclient;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +35,9 @@ public class RestClient {
 
     //private final static String httpURL = "http://localhost:8080/DecisionDocu/api/document/upload";
 
+    private static String accessToken = "g0up9ej1egkmrtveig59ke0adf";
+    private static ObjectMapper mapper = new ObjectMapper();
+
     public static List<String> USERS = new ArrayList<String>();
     static{
         if(USERS.size()==0) {
@@ -34,11 +48,29 @@ public class RestClient {
 
     public static String getToken(String email, String password){
         try {
-            // Simulate network access.
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            return null;
+            WebTarget target = RestHelper.getWebTarget()
+                    .path("user/login")
+                    .queryParam("eMail", email)
+                    .queryParam("password", password);
+            Invocation.Builder builder =
+                    target.request()
+                            .accept(MediaType.APPLICATION_JSON);
+            Response res = builder.get();
+            if (res.getStatusInfo() == Response.Status.OK) {
+                String json = res.readEntity(String.class);
+                TokenResponse tokenResponse = mapper.readValue(json, TokenResponse.class);
+                Log.d("java", tokenResponse.toString());
+                //return tokenResponse.getAccess_token();
+            }
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         for (String credential : USERS) {
             String[] pieces = credential.split(":");
             if (pieces[0].equals(email)) {
@@ -52,6 +84,29 @@ public class RestClient {
 
     public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap profil){
         try {
+            WebTarget target = RestHelper.getWebTarget()
+                    .path("user/register")
+                    .queryParam("firstName", firstname)
+                    .queryParam("lastName", lastname)
+                    .queryParam("password", password)
+                    .queryParam("eMail", email);
+            Invocation.Builder builder =
+                    target.request()
+                            .accept(MediaType.APPLICATION_JSON);
+
+            Entity<String> entity = Entity.entity("", MediaType.APPLICATION_JSON);
+            Response res = builder.post(entity);
+
+            String json = res.readEntity(String.class);
+            Log.d("user", "created! (" + json + ")");
+
+            if (res.getStatusInfo() == Response.Status.CREATED) {
+
+            }
+
+
+
+
             USERS.add(email + ":" + password);
             if(profil!=null) {
                 RestClient.safeProfilePicture(profil, USERS.size());
@@ -63,6 +118,29 @@ public class RestClient {
         }
     }
 
+    public static boolean getAllProjects() {
+        WebTarget target = RestHelper.getWebTarget().path("project");
+        Invocation.Builder builder = target.request().accept(MediaType.APPLICATION_JSON);
+        Response res = addAuthHeader(builder).get();
+        String json = res.readEntity(String.class);
+        Log.d("json", json);
+        ObjectMapper mapper = new ObjectMapper();
+
+        return false;
+    }
+
+
+    /**
+     *
+     * @param builder
+     * @return
+     */
+    private static Invocation.Builder addAuthHeader(Invocation.Builder builder) {
+        if (accessToken == null) {
+            return builder;
+        }
+        return builder.header("Token", accessToken);
+    }
 
     private static void safeProfilePicture(Bitmap image, int id){
         try {

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DeDoc</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
 <!-- TODO: Remove or change this placeholder text -->
