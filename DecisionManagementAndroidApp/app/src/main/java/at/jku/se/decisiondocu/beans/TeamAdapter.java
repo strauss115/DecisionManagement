@@ -32,7 +32,7 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     private List<Team> mItems;
 
-    @Bean(InMemoryTeamFinder.class)
+    @Bean(RESTProjectFinder.class)
     TeamFinder mTeamFinder;
 
     @AfterInject

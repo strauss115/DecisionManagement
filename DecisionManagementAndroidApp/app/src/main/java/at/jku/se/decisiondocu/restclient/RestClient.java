@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,6 +28,12 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import at.jku.se.decisiondocu.restclient.client.ApiException;
+import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
+import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
+import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 /**
  * Created by Benjamin on 18.11.2015.
@@ -117,6 +124,31 @@ public class RestClient {
             return false;
         }
     }
+
+
+    // -----------------------------------------------------------------------------------------
+    // DECISION PART
+    // -----------------------------------------------------------------------------------------
+
+    public static void getAllDecisions() {
+        DecisionApi api = new DecisionApi();
+        api.setBasePath("http://192.168.0.15:8080/DecisionDocu/api");
+        try {
+            String json = api.getAllDecisions(accessToken);
+            ObjectMapper mapper = new ObjectMapper();
+            //Decision[] dec = mapper.readValue(json, Decision[].class);
+            NodeInterface[] dec = mapper.readValue(json, NodeInterface[].class);
+            Log.d("debug", dec.length+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
 
     public static boolean getAllProjects() {
         WebTarget target = RestHelper.getWebTarget().path("project");

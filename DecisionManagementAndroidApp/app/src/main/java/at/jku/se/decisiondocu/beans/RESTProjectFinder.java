@@ -1,6 +1,7 @@
 package at.jku.se.decisiondocu.beans;
 
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.rest.Rest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,8 @@ public class RESTProjectFinder implements TeamFinder {
 
     @Override
     public List<Team> findAll() {
-        RestClient.getAllProjects();
+        RestClient.getAllDecisions();
+        //RestClient.getAllProjects();
         return new ArrayList<>();
     }
 }
