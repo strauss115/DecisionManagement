@@ -21,8 +21,12 @@ public class RestHelper {
 
     private static boolean DEBUG_MODE = true;
 
-    public static final String BASEURL_OFFLINE = "http://140.78.230.52:8080/DecisionDocu/api/";
+    public static final String BASEURL_OFFLINE = "http://192.168.0.15:8080/DecisionDocu/api/";
     private static final String BASEURL_ONLINE = "http://ubuntu.mayerb.net:8080/DecisionDocu/api/";
+
+    public static String GetBaseURL() {
+        return (DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE);
+    }
 
     //private static final String BASEURL_OFFLINE = "http://www.oracle.com";
     //private static final String BASEURL_ONLINE = "http://www.oracle.com";

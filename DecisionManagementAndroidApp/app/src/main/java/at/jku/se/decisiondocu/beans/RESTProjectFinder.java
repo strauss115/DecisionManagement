@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 /**
  * Created by martin on 07.12.15.
@@ -15,9 +16,7 @@ import at.jku.se.decisiondocu.restclient.RestClient;
 public class RESTProjectFinder implements TeamFinder {
 
     @Override
-    public List<Team> findAll() {
-        RestClient.getAllDecisions();
-        //RestClient.getAllProjects();
-        return new ArrayList<>();
+    public List<Project> findAll() {
+        return RestClient.getAllProjects();
     }
 }

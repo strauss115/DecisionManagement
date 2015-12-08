@@ -4,10 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Project extends Node {
+
+	public int getNrOfDecisions() {
+		return nrOfDecisions;
+	}
+
+	public void setNrOfDecisions(int nrOfDecisions) {
+		this.nrOfDecisions = nrOfDecisions;
+	}
+
+	private int nrOfDecisions = -1;
+
+
 
 	public Project(String name, User admin, String password) {
 		super(name);

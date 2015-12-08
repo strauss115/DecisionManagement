@@ -8,6 +8,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.views.ListItemView;
 import at.jku.se.decisiondocu.views.ListItemView_;
 
@@ -26,9 +28,12 @@ import at.jku.se.decisiondocu.views.ListItemView_;
 public class SearchAdapter extends BaseAdapter implements Filterable {
 
     private Filter mSearchFilter;
-    private List<String> mItems;
-    private List<String> mItemsOrig;
-    private Comparator<String> mComparator;
+    private List<Decision> mItems;
+    private List<Decision> mItemsOrig;
+    private Comparator<Decision> mComparator;
+
+    @Bean(RESTDecisionFinder.class)
+    DecisionFinder mDecisionFinder;
 
     @RootContext
     Context context;
@@ -36,10 +41,8 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     @AfterInject
     void initAdapter() {
         mComparator = sComparatorName;
-        mItems = mItemsOrig = new ArrayList<>();
+        mItems = mItemsOrig = mDecisionFinder.findAll();
         mSearchFilter = new SearchFilter();
-        mItems.add("Decision xyz");
-        mItems.add("Decision 334");
         getData();
     }
 
@@ -53,7 +56,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Decision getItem(int position) {
         return mItems.get(position);
     }
 
@@ -72,7 +75,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             view = (ListItemView) convertView;
         }
 
-        view.bind((String)getItem(position));
+        view.bind(getItem(position));
         return view;
     }
 
@@ -82,17 +85,17 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
 
-    public static Comparator<String> sComparatorName = new Comparator<String>() {
+    public static Comparator<Decision> sComparatorName = new Comparator<Decision>() {
         @Override
-        public int compare(String lhs, String rhs) {
-            return lhs.compareTo(rhs);
+        public int compare(Decision lhs, Decision rhs) {
+            return lhs.getName().compareTo(rhs.getName());
         }
     };
 
-    public static Comparator<String> sComparatorReverseName = new Comparator<String>() {
+    public static Comparator<Decision> sComparatorReverseName = new Comparator<Decision>() {
         @Override
-        public int compare(String lhs, String rhs) {
-            return rhs.compareTo(lhs);
+        public int compare(Decision lhs, Decision rhs) {
+            return rhs.getName().compareTo(lhs.getName());
         }
     };
 
@@ -101,7 +104,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         notifyDataSetChanged();
     }
 
-    public void setComparator(Comparator<String> c) {
+    public void setComparator(Comparator<Decision> c) {
         this.mComparator = c;
         refresh();
     }
@@ -113,16 +116,12 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             if (constraint != null && constraint.length() > 0) {
-                List<String> filterList = new ArrayList<>();
+                List<Decision> filterList = new ArrayList<>();
                 String constraintStr = constraint.toString().toLowerCase();
                 for (int i = 0; i < mItems.size(); i++) {
-                    String headline = mItems.get(i);
-                    String desc = mItems.get(i);
+                    String headline = mItems.get(i).getName();
 
                     if (headline != null && headline.toLowerCase().contains(constraintStr)) {
-                        filterList.add(mItems.get(i));
-                    }
-                    else if (desc != null && desc.toLowerCase().contains(constraintStr)) {
                         filterList.add(mItems.get(i));
                     }
                 }
@@ -142,7 +141,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             if (results.count == 0)
                 notifyDataSetInvalidated();
             else {
-                mItems = (List<String>) results.values;
+                mItems = (List<Decision>) results.values;
                 notifyDataSetChanged();
             }
         }

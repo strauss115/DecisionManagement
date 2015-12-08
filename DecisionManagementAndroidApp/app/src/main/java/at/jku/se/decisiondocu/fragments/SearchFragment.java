@@ -23,6 +23,7 @@ import org.androidannotations.annotations.ViewById;
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.SearchAdapter;
 import at.jku.se.decisiondocu.fragments.dummy.DummyContent;
+import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 /**
  * A fragment representing a list of Items.
@@ -66,7 +67,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     @ItemClick(R.id.list_view)
-    protected void itemClicked(String item) {
+    protected void itemClicked(Decision item) {
         Log.i("ListView", "Item " + item + " clicked!");
     }
 

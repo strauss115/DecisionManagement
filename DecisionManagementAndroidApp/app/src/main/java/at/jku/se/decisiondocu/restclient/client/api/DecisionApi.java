@@ -2,24 +2,29 @@ package at.jku.se.decisiondocu.restclient.client.api;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.Pair;
-import at.jku.se.decisiondocu.restclient.client.TypeRef;
 import at.jku.se.decisiondocu.restclient.client.model.Body;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 public class DecisionApi {
-    String basePath = "http://localhost:8080/DecisionDocu/api";
+    String basePath = RestHelper.GetBaseURL();
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
+    ObjectMapper mapper = new ObjectMapper();
 
     public void addHeader(String key, String value) {
         getInvoker().addDefaultHeader(key, value);
@@ -43,9 +48,9 @@ public class DecisionApi {
      * Returns a list of all available decisions
      *
      * @param token token
-     * @return List<String>
+     * @return List<Decision>
      */
-    public String getAllDecisions(String token) throws ApiException {
+    public List<Decision> getAllDecisions(String token) throws ApiException {
         Object postBody = null;
 
         // verify the required parameter 'token' is set
@@ -82,19 +87,21 @@ public class DecisionApi {
             postBody = httpEntity;
         } else {
             // normal form params
-
         }
 
         try {
             String response = apiInvoker.invokeAPI(basePath, path, "GET", queryParams, postBody, headerParams, formParams, contentType);
             if (response != null) {
                 Log.d("tag", response);
-                return response;
+                return mapper.readValue(response, new TypeReference<List<Decision>>() {
+                });
             } else {
                 return null;
             }
         } catch (ApiException ex) {
             throw ex;
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -103,9 +110,9 @@ public class DecisionApi {
      *
      * @param token token
      * @param body  Decision to insert/update as JSON
-     * @return String
+     * @return Decision
      */
-    public String updateDecision(String token, Body body) throws ApiException {
+    public Decision updateDecision(String token, Body body) throws ApiException {
         Object postBody = body;
 
         // verify the required parameter 'token' is set
@@ -153,7 +160,11 @@ public class DecisionApi {
         try {
             String response = apiInvoker.invokeAPI(basePath, path, "PUT", queryParams, postBody, headerParams, formParams, contentType);
             if (response != null) {
-                return "";
+                try {
+                    return mapper.readValue(response, Decision.class);
+                } catch (IOException e) {
+                    return null;
+                }
             } else {
                 return null;
             }
@@ -167,9 +178,9 @@ public class DecisionApi {
      *
      * @param token token
      * @param id    ID of the project to fetch
-     * @return List<String>
+     * @return List<Decision>
      */
-    public String getByProjectName(String token, Long id) throws ApiException {
+    public List<Decision> getByProjectName(String token, Long id) throws ApiException {
         Object postBody = null;
 
         // verify the required parameter 'token' is set
@@ -217,7 +228,12 @@ public class DecisionApi {
         try {
             String response = apiInvoker.invokeAPI(basePath, path, "GET", queryParams, postBody, headerParams, formParams, contentType);
             if (response != null) {
-                return "";
+                try {
+                    return mapper.readValue(response, new TypeReference<List<Decision>>() {
+                    });
+                } catch (IOException e) {
+                    return null;
+                }
             } else {
                 return null;
             }
@@ -233,7 +249,7 @@ public class DecisionApi {
      * @param id    ID of the decision to fetch
      * @return String
      */
-    public String getDecision(String token, Long id) throws ApiException {
+    public Decision getDecision(String token, Long id) throws ApiException {
         Object postBody = null;
 
         // verify the required parameter 'token' is set
@@ -281,7 +297,11 @@ public class DecisionApi {
         try {
             String response = apiInvoker.invokeAPI(basePath, path, "GET", queryParams, postBody, headerParams, formParams, contentType);
             if (response != null) {
-                return "";
+                try {
+                    return mapper.readValue(response, Decision.class);
+                } catch (IOException e) {
+                    return null;
+                }
             } else {
                 return null;
             }
@@ -295,9 +315,9 @@ public class DecisionApi {
      *
      * @param token token
      * @param id    ID of the decision to delete
-     * @return String
+     * @return Decision
      */
-    public String deleteDecision(String token, Long id) throws ApiException {
+    public Decision deleteDecision(String token, Long id) throws ApiException {
         Object postBody = null;
 
         // verify the required parameter 'token' is set
@@ -345,7 +365,11 @@ public class DecisionApi {
         try {
             String response = apiInvoker.invokeAPI(basePath, path, "DELETE", queryParams, postBody, headerParams, formParams, contentType);
             if (response != null) {
-                return "";
+                try {
+                    return mapper.readValue(response, Decision.class);
+                } catch (IOException e) {
+                    return null;
+                }
             } else {
                 return null;
             }

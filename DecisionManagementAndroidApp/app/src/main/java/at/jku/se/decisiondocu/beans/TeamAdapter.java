@@ -21,6 +21,7 @@ import java.util.List;
 
 import at.jku.se.decisiondocu.asynctask.OnAsyncTaskFinished;
 import at.jku.se.decisiondocu.asynctask.TeamIconDownloader;
+import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.views.TeamItemView;
 import at.jku.se.decisiondocu.views.TeamItemView_;
 
@@ -30,7 +31,7 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
 @EBean
 public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
-    private List<Team> mItems;
+    private List<Project> mItems;
 
     @Bean(RESTProjectFinder.class)
     TeamFinder mTeamFinder;
@@ -38,8 +39,8 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
     @AfterInject
     void initAdapter() {
         mItems = mTeamFinder.findAll();
-        for (Team t : mItems) {
-            new TeamIconDownloader(t, this).execute();
+        for (Project t : mItems) {
+            //new TeamIconDownloader(t, this).execute();
         }
     }
 
@@ -52,7 +53,7 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
     }
 
     @Override
-    public Team getItem(int position) {
+    public Project getItem(int position) {
         return mItems.get(position);
     }
 

@@ -9,6 +9,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
+import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 /**
  * Created by martin on 23.11.15.
@@ -33,9 +34,9 @@ public class ListItemView extends LinearLayout {
         this(context);
     }
 
-    public void bind(String item) {
-        tv_author.setText("Author: me");
-        tv_date.setText("Date: 2015-01-14");
-        tv_headline.setText(item);
+    public void bind(Decision item) {
+        tv_author.setText("Author: " + item.getId());
+        tv_date.setText("Date: " + item.getCreationDate().toString());
+        tv_headline.setText(item.getName());
     }
 }

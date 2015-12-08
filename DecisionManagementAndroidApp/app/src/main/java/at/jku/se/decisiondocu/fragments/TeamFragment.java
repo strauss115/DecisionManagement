@@ -14,6 +14,7 @@ import at.jku.se.decisiondocu.MainActivity;
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.Team;
 import at.jku.se.decisiondocu.beans.TeamAdapter;
+import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 @EFragment(R.layout.fragment_team)
 public class TeamFragment extends Fragment {
@@ -36,7 +37,7 @@ public class TeamFragment extends Fragment {
     }
 
     @ItemClick(R.id.list_view_teams)
-    protected void itemClicked(Team item) {
+    protected void itemClicked(Project item) {
         Log.i("ListView", "Item " + item.toString() + " clicked!");
         MainActivity.Instance.mViewPager.setCurrentItem(1);
     }

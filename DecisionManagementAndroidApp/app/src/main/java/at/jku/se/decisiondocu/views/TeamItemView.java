@@ -17,9 +17,14 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.InputStream;
+import java.util.List;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.Team;
+import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
+import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 /**
  * Created by martin on 23.11.15.
@@ -40,7 +45,7 @@ public class TeamItemView extends LinearLayout {
     CheckBox mTeamFavourite;
 
     private BaseAdapter mAdapter;
-    private Team mTeam;
+    private Project mTeam;
 
     public TeamItemView(Context context) {
         super(context);
@@ -51,15 +56,34 @@ public class TeamItemView extends LinearLayout {
         this.mAdapter = adapter;
     }
 
-    public void bind(Team item) {
+    public void bind(Project item) {
         mTeam = item;
-        mTeamName.setText(item.getTeamName());
-        mTeamDescCnt.setText((String.valueOf(item.getTeamDecisionCount())));
-        if (item.getBitmap() != null) {
+        mTeamName.setText(item.getName());
+
+        if (item.getNrOfDecisions() == -1) {
+            DecisionApi api = new DecisionApi();
+            api.setBasePath("http://192.168.0.15:8080/DecisionDocu/api");
+            try {
+                List<Decision> list = api.getByProjectName(RestClient.accessToken, item.getId());
+                if (list != null) {
+                    item.setNrOfDecisions(list.size());
+                } else {
+                    item.setNrOfDecisions(0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                item.setNrOfDecisions(0);
+            }
+        }
+
+        mTeamDescCnt.setText("Decisions: " + item.getNrOfDecisions());
+
+
+        /*if (item.getBitmap() != null) {
             mImageView.setImageBitmap(item.getBitmap());
         }
         mTeamFavourite.setChecked(item.isFavourite());
-
+*/
         setCheckboxOnClickListener(new OnClickListener() {
 
             @Override
@@ -71,12 +95,14 @@ public class TeamItemView extends LinearLayout {
     }
 
     private void notifyTeamOnChanges() {
+        /*
         if (mTeam != null) {
             mTeam.setFavourite(mTeamFavourite.isChecked());
         }
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+        */
     }
 
     public void setCheckboxOnClickListener(OnClickListener listener) {
