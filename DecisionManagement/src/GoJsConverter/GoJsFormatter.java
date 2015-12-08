@@ -1,23 +1,31 @@
 package GoJsConverter;
 
+
+
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
 
 
+/**
+ * @author apa
+ *
+ */
+
 
 public class GoJsFormatter {
 	
 	//private String[] colors ={"green", "orange", "black", "red"}; //used later for color rotation
-	private static JSONArray goJSConnects = new JSONArray();
-	private static JSONArray goJSNodes = new JSONArray();
-	private static String drawDirection = "";
-	private static int xPosFactor = 1;
+	private  JSONArray goJSConnects = new JSONArray();
+	private  JSONArray goJSNodes = new JSONArray();
+	private  String drawDirection = "";
+	private  int xPosFactor = 1;
+	private static String resultJSON = "";
 	
 	
-	
+
 	@SuppressWarnings("unchecked")
-	private static void addConnection(int from, int to){
+	private void addConnection(int from, int to){
 		JSONObject obj = new JSONObject();
 		  obj.put("from", from);
 		  obj.put("to", to);
@@ -25,8 +33,18 @@ public class GoJsFormatter {
 		  //System.out.println(obj);
 	}
 		
+	/**
+	 * Adds a parametrized node to the Go JS graph with location attibutes and parent dependency.
+	 * Also adds the connections between nodes.
+	 * Parameters brush and dir are added automatically, not by passing as arguments  
+	 * 
+	 * @param id 		id of the Node which is added to the json array 
+	 * @param parent	references parent node, omitted for the root node with id 0 
+	 * @param name		text description of the graph node
+	 * @param pos		position of the node in absolute format in pixels "x y". Center "0 0" is the center of the screen.
+	 */
 	@SuppressWarnings("unchecked")
-	private static void addNode(int id, int parent, String name, String pos) {
+	private void addNode(int id, int parent, String name, String pos) {
 
 		JSONObject obj = new JSONObject();
 		obj.put("loc", pos);
@@ -41,7 +59,7 @@ public class GoJsFormatter {
 		
 	}
 	
-	private static JSONObject getSampleData(){
+	private JSONObject getSampleData(){
 		JSONParser parser=new JSONParser();
 		JSONObject array = new JSONObject();
 		
@@ -67,24 +85,53 @@ public class GoJsFormatter {
 	}
 	
 	
-	public static void setDrawDirection(int level, int n){
+	/**
+	 * Resets the drawing direction after 2nd node of first level.
+	 * First two nodes are drawn on the right side of the root,
+	 * others on the left side.
+	 * 
+	 * @param level
+	 * @param n
+	 */
+	public void setDrawDirection(int level, int n){
 		if (level == 1 && n > 1) {
 			xPosFactor = -1; // draw on left side
 			drawDirection = "left";
-		
 		}
 	}
 	
-	public static int getXposition(String name, int xpos, int level, int n, int levelsize){
-		int x = xpos + xPosFactor * (50 + name.length() * 5);
+	/**
+	 * Sets the horizontal position of the node depending on the previous parent node.
+	 * 
+	 * 
+	 * @param name
+	 * @param xpos
+	 * @param level
+	 * @param n
+	 * @param levelsize
+	 * @return
+	 */
+	public int getXposition(String name, int xpos, int level, int n, int levelsize){
+		int x = xpos + xPosFactor * (100 + name.length()*5);
 		
-		if (level == 0 && (n == 0 || n == 1)) x = 50 + name.length() * 5;
-		if (level == 0 && (n == 2 || n == 3)) x = -50;
+		if (level == 0 && (n == 0 || n == 1)) x = 80 + name.length() * 6;
+		if (level == 0 && (n == 2 || n == 3)) x = -80;
 		
 		//System.out.println("name:" + name + " length:" + name.length() * 5 + " xpos:");
 		return x;
 	}
 	
+	/**
+	 * Sets the vertical position of the node depending on the previous parent node.
+	 * First 4-8 except the root are placed hard-coded, all following nodes are placed automatically
+	 * 
+	 * @param name
+	 * @param ypos
+	 * @param level
+	 * @param n
+	 * @param levelsize
+	 * @return
+	 */
 	public static int getYposition(String name, int ypos, int level, int n, int levelsize){
 		
 		int y = ypos - (levelsize * 10) + (30 * n);
@@ -99,7 +146,19 @@ public class GoJsFormatter {
 	}
 	
 	
-	public static void printJsonObject(JSONObject jsonObj, int level, int parent, int nodeid, int xpos, int ypos, int arraylength, int nth) {
+	/**
+	 * Recursive iterator which traverses the tree structure of the input data and generates a list of nodes with according positions.
+	 * 
+	 * @param jsonObj recursively the next node with its dependencies
+	 * @param level	for internal use, the level of hierarchy. Root is 0, its children are 1, etc.
+	 * @param parent	references the id of the parent node. Not available for the root element.
+	 * @param nodeid	unique node id, generated automatically. 
+	 * @param xpos		calculated horizontal position, depending on the parent's node position
+	 * @param ypos		calculated vertical  position, depending on the parent's node position
+	 * @param arraylength	number of children of a node
+	 * @param nth		for internal use, the number of the node within the group
+	 */
+	public void printJsonObject(JSONObject jsonObj, int level, int parent, int nodeid, int xpos, int ypos, int arraylength, int nth) {
 
 		String name = (String) jsonObj.get("name");
 		JSONArray children = (JSONArray) jsonObj.get("children");
@@ -131,7 +190,14 @@ public class GoJsFormatter {
 		}
 	}
 	
-	public static String formatGoJs(JSONObject jsonObj) {
+	/**
+	 * Initiation procedure for the transformation algorithm.
+	 * Resets containers and calls the recursive iterator. 
+	 * 
+	 * @param jsonObj input data which contains the tree structure of the graph
+	 * @return	Returns graph nodes with positioning data and connectors between nodes.
+	 */
+	public String formatGoJs(JSONObject jsonObj) {
 		drawDirection = "right";
 		goJSConnects = new JSONArray(); //reset arrays
 		goJSNodes = new JSONArray();
@@ -141,7 +207,13 @@ public class GoJsFormatter {
 		return result;
 	}
 	
-	public static JSONObject getGoJsObject(String json) {
+	/**
+	 * Converts a text representation of a json object to a JSONObject.
+	 * The text must contain the graph nodes in a specific format.
+	 * @param json
+	 * @return
+	 */
+	public String formatGoJsString(String json) {
 		
 		JSONParser parser=new JSONParser();
 		JSONObject array = new JSONObject();
@@ -155,31 +227,24 @@ public class GoJsFormatter {
 		    System.out.println("position: " + pe.getPosition());
 		    System.out.println(pe);
 		  }
-		return (JSONObject) array;
+		
+		String result = formatGoJs(array);
+		
+		return result;
 	}
 	
 	
-	public static void main(String[] args) {
+	public String getGoJsString(){
+		return resultJSON;
+	}
+	
+	
+	public GoJsFormatter(){
 		
-		
-		//usage example 1 with jsonObj
-		JSONObject jsonObj = getSampleData();
-		String json = formatGoJs(jsonObj);
-		System.out.println(json);
-		
-		
-		//usage example 2 with json string as input
-		String jsonstring = "{\"name\":\"decision1 very very long name\", \"children\": ["+ 
-				"{\"name\":\"factor 1\", \"children\":[{\"name\":\"f1 child 1\"},{\"name\":\"f1 child 2\"},{\"name\":\"f1 child 3\"},{\"name\":\"f1 child 4\"} ]},"+
-				"{\"name\":\"factor 2 longname\", \"children\":[{\"name\":\"f2 child 1 very long name\"},{\"name\":\"f2 child 2\"},{\"name\":\"f2 child 3\"} ]},"+
-				"{\"name\":\"factor 3\", \"children\":[{\"name\":\"f3 child 1\"},{\"name\":\"f3 child 2\"},{\"name\":\"f3 child 3\"} ]},"+
-				"{\"name\":\"factor 4 very long name loooong\", \"children\":[{\"name\":\"shorty\"},{\"name\":\"f4 child 2\"},{\"name\":\"f4 child 3\","+ 
-				"	\"children\":[{\"name\":\"f4 child 3 level3 1\"}, {\"name\":\"f4 child 3 level3 2\"}, {\"name\":\"f4 child 3 level3 3\"}]} ]}"+
-				"]}";
-		JSONObject jsonObj2 = getGoJsObject(jsonstring);
-		json = formatGoJs(jsonObj2);
-		System.out.println(json);
-		
-    }
+	}
+	
+	public GoJsFormatter(String s){
+		resultJSON = formatGoJsString(s);
+	}
 	
 }
