@@ -12,9 +12,12 @@ public class launcher_how_to_use {
 				"	\"children\":[{\"name\":\"f4 child 3 level3 1\"}, {\"name\":\"f4 child 3 level3 2\"}, {\"name\":\"f4 child 3 level3 3\"}]} ]}"+
 				"]}";
 		
-		GoJsFormatter f = new GoJsFormatter();
-		String result = f.formatGoJsString(jsonstring);
+		GoJsFormatter f1 = new GoJsFormatter();
+		String result = f1.formatGoJsString(jsonstring);
+		System.out.println(result);
 		
+		GoJsFormatter f2 = new GoJsFormatter(jsonstring);
+		result = f2.getGoJsString();
 		System.out.println(result);
 		
     }

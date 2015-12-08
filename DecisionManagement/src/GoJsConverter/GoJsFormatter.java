@@ -59,6 +59,7 @@ public class GoJsFormatter {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private JSONObject getSampleData(){
 		JSONParser parser=new JSONParser();
 		JSONObject array = new JSONObject();
@@ -93,7 +94,7 @@ public class GoJsFormatter {
 	 * @param level
 	 * @param n
 	 */
-	public void setDrawDirection(int level, int n){
+	private void setDrawDirection(int level, int n){
 		if (level == 1 && n > 1) {
 			xPosFactor = -1; // draw on left side
 			drawDirection = "left";
@@ -111,7 +112,7 @@ public class GoJsFormatter {
 	 * @param levelsize
 	 * @return
 	 */
-	public int getXposition(String name, int xpos, int level, int n, int levelsize){
+	private int getXposition(String name, int xpos, int level, int n, int levelsize){
 		int x = xpos + xPosFactor * (100 + name.length()*5);
 		
 		if (level == 0 && (n == 0 || n == 1)) x = 80 + name.length() * 6;
@@ -132,7 +133,7 @@ public class GoJsFormatter {
 	 * @param levelsize
 	 * @return
 	 */
-	public static int getYposition(String name, int ypos, int level, int n, int levelsize){
+	private int getYposition(String name, int ypos, int level, int n, int levelsize){
 		
 		int y = ypos - (levelsize * 10) + (30 * n);
 		//System.out.println("debug: levellen" + levelsize + " n:" + n + " level:" + level +" ypos:" + ypos + " name: " + name);
@@ -158,7 +159,7 @@ public class GoJsFormatter {
 	 * @param arraylength	number of children of a node
 	 * @param nth		for internal use, the number of the node within the group
 	 */
-	public void printJsonObject(JSONObject jsonObj, int level, int parent, int nodeid, int xpos, int ypos, int arraylength, int nth) {
+	private void printJsonObject(JSONObject jsonObj, int level, int parent, int nodeid, int xpos, int ypos, int arraylength, int nth) {
 
 		String name = (String) jsonObj.get("name");
 		JSONArray children = (JSONArray) jsonObj.get("children");
