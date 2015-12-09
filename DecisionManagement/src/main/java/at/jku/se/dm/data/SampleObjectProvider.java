@@ -30,7 +30,7 @@ public class SampleObjectProvider {
 		User u1 = new User("peter.aichinger@jku.at", "Peter", "Aichinger", DEFAULT_PASSWORD);
 		User u2 = new User("thomas.hochgatterer@jku.at", "Thomas", "Hochgatterer", DEFAULT_PASSWORD);
 		User u3 = new User("alexey.pastuschenko@jku.at", "Alexey", "Pastuschenko", DEFAULT_PASSWORD);
-		User u4 = new User("michael.strauss@jku.at", "Michael", "Strauß", DEFAULT_PASSWORD);
+		User u4 = new User("michael.strauss@jku.at", "Michael", "Strauï¿½", DEFAULT_PASSWORD);
 		/// Profile picture url not null!
 		u1.setUrlProfilePicture("img/userImg.png");
 		u2.setUrlProfilePicture("https://scontent-vie1-1.xx.fbcdn.net/hphotos-xfa1/v/t1.0-9/644391_10204671569381054_8656277940229938364_n.jpg?oh=4a3387f74b111e096aa744ee576cd267&oe=56DC816F");
@@ -203,7 +203,16 @@ public class SampleObjectProvider {
 		log.debug("'" + decisions.size() + "' found by team name.");
 		return result;		
 	}
-
+	public static Decision getDecisionById(String id) {
+		for (Decision d : decisions) {
+			if (d.getId().equals(id)) {
+				log.debug("Decision '" + id + "' found by id.");
+				return d;
+			}
+		}
+		log.warn("Decision '" + id + "' not found. Returning null.");
+		return null;
+	}
 	// ------------------------------------------------------------------------
 
 	public static List<Group> getAllGroups() {

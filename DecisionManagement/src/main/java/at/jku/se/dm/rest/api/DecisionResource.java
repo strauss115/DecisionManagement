@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -75,5 +76,21 @@ public class DecisionResource {
 			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 		}
 	}
-	
+	@GET
+	@Path("/byId")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getById(@QueryParam("id") String id) {
+		log.debug("GET decisions by id '" + id + "'");
+		
+		Decision decision = SampleObjectProvider.getDecisionById(id);
+		Response response = null;
+		if (decision != null) {
+			response = RestResponse.getSuccessResponse(decision);
+
+		} else {
+			response = RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+		}
+		RestResponse.addResponseHeader(response);
+		return response;
+	}
 }
