@@ -2,6 +2,7 @@ package at.jku.se.dm.rest.pojos;
 
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import at.jku.se.dm.rest.ResponseData;
 
@@ -25,6 +26,7 @@ public class Decision extends ResponseData {
 	private LinkedList<String> relatedDecisions;
 	private LinkedList<String> responsibles;
 	private LinkedList<String> documents;
+	private DecisionGraph decisionGraph;
 	
 	// ------------------------------------------------------------------------
 	
@@ -55,6 +57,7 @@ public class Decision extends ResponseData {
 		this.relatedDecisions = new LinkedList<String>();
 		this.responsibles = new LinkedList<String>();
 		this.documents = new LinkedList<String>();
+		this.decisionGraph = new DecisionGraph();
 	}
 	
 	
@@ -155,6 +158,66 @@ public class Decision extends ResponseData {
 	public void setDocuments(LinkedList<String> documents) {
 		this.documents = documents;
 	}
-	
-	
+	/**
+	 * Calculation of the graph
+	 * @return decision as graph
+	 */
+	public DecisionGraph getDecisionGraph() {
+		LinkedList<DecisionGraphNode> decisionNodes = new LinkedList<DecisionGraphNode>();
+		LinkedList<DecisionGraphAssociation> decisionAssociation = new LinkedList<DecisionGraphAssociation>();
+		DecisionGraphNode dn1 = new DecisionGraphNode();
+		dn1.setKey(0);
+		dn1.setText("Entscheidung 1");
+		dn1.setLoc("0 0");
+		decisionNodes.add(dn1);
+		decisionNodes.add(new DecisionGraphNode(1,0,"Gruppe","skyblue","right","107 -22"));		
+		decisionNodes.add(new DecisionGraphNode(11,1,"Architekturentscheidung","skyblue","right","200 -48"));
+		decisionNodes.add(new DecisionGraphNode(2,0,"Lösungsalternative","darkseagreen","right","107 43"));
+		decisionNodes.add(new DecisionGraphNode(21,2,"Fat-Client","darkseagreen","right","253 30"));
+		decisionNodes.add(new DecisionGraphNode(3,0,"Einflussfaktor","palevioletred","left","-20 -31.75"));
+		decisionNodes.add(new DecisionGraphNode(31,3,"Know How","palevioletred","left","-117 -64.25"));
+		decisionNodes.add(new DecisionGraphNode(32,3,"Costs","palevioletred","left","-117 -25.25"));
+
+		decisionAssociation.add(new DecisionGraphAssociation(0,1));
+		decisionAssociation.add(new DecisionGraphAssociation(0,2));
+		decisionAssociation.add(new DecisionGraphAssociation(0,3));
+		decisionAssociation.add(new DecisionGraphAssociation(1,11));
+		decisionAssociation.add(new DecisionGraphAssociation(2,21));
+		decisionAssociation.add(new DecisionGraphAssociation(3,31));
+		decisionAssociation.add(new DecisionGraphAssociation(3,32));
+		
+		this.decisionGraph.setDecisionNodes(decisionNodes);
+		this.decisionGraph.setDecisionAssociation(decisionAssociation);
+		return decisionGraph;
+	}
+/*
+	public void parseDecisionToJSONData(){
+		List<DecisionGraphNode> dn = new LinkedList<DecisionGraphNode>();
+		List<DecisionGraphAssociation> da = new LinkedList<DecisionGraphAssociation>();
+		DecisionGraphNode dn1 = new DecisionGraphNode();
+		dn1.setKey(0);
+		dn1.setText("Entscheidung 1");
+		dn1.setLoc("0 0");
+		dn.add(dn1);
+		dn.add(new DecisionGraphNode(11,1,"Architekturentscheidung","skyblue","right","200 -48"));
+		dn.add(new DecisionGraphNode(2,0,"Lösungsalternative","darkseagreen","right","107 43"));
+		dn.add(new DecisionGraphNode(21,2,"Fat-Client","darkseagreen","right","253 30"));
+		dn.add(new DecisionGraphNode(3,3,"Know How","palevioletred","left","-20 -31.75"));
+		dn.add(new DecisionGraphNode(32,3,"Costs","palevioletred","left","-117 -25.25"));
+
+		
+		da.add(new DecisionGraphAssociation(0,1));
+		da.add(new DecisionGraphAssociation(0,2));
+		da.add(new DecisionGraphAssociation(0,3));
+		da.add(new DecisionGraphAssociation(1,11));
+		da.add(new DecisionGraphAssociation(2,21));
+		da.add(new DecisionGraphAssociation(3,31));
+		da.add(new DecisionGraphAssociation(3,32));
+		
+		this.decisionGraph.setDecisionNodes((LinkedList)dn);
+		this.decisionGraph.setDecisionAssociation((LinkedList)da);
+	}*/
+	public void setDecisionGraph(DecisionGraph decisionGraph) {
+		this.decisionGraph = decisionGraph;
+	}
 }
