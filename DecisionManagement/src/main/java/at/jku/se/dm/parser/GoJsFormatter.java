@@ -1,6 +1,15 @@
 package at.jku.se.dm.parser;
+import java.util.List;
+
 import org.json.simple.*;
 import org.json.simple.parser.*;
+
+import at.jku.se.dm.rest.pojos.Alternative;
+import at.jku.se.dm.rest.pojos.Consequence;
+import at.jku.se.dm.rest.pojos.Decision;
+import at.jku.se.dm.rest.pojos.InfluenceFactor;
+import at.jku.se.dm.rest.pojos.QualityAttribute;
+import at.jku.se.dm.rest.pojos.Rationale;
 
 
 /**
@@ -17,7 +26,6 @@ public class GoJsFormatter {
 	private  String drawDirection = "";
 	private  int xPosFactor = 1;
 	private static String resultJSON = "";
-	
 	
 
 	@SuppressWarnings("unchecked")
@@ -242,6 +250,88 @@ public class GoJsFormatter {
 	
 	public GoJsFormatter(String s){
 		resultJSON = formatGoJsString(s);
+	}
+	
+	public GoJsFormatter(Decision decision){
+		if (decision != null) {
+			String jsonstring = "{\"name\":\"" + decision.getName() + "\", \"children\": [";
+			// add influence factors
+			jsonstring += "{\"name\":\"Influence Factor\", \"children\":[";
+			List<InfluenceFactor> influenceFactors = decision.getInfluenceFactors();
+			boolean firstElement = true;
+			for(InfluenceFactor inf : influenceFactors){
+				if(firstElement){
+					jsonstring += "{\"name\":\"" + inf.getValue() + "\"}";
+					firstElement = false;
+				}
+				else{
+					jsonstring += ",{\"name\":\"" + inf.getValue() + "\"}";;				
+					
+				}
+			}
+			jsonstring += "]},";
+			// add alternatives
+			jsonstring += "{\"name\":\"Alternatives\", \"children\":[";
+			List<Alternative> alternatives = decision.getAlternatives();
+			firstElement = true;
+			for(Alternative alt : alternatives){
+				if(firstElement){
+					jsonstring += "{\"name\":\"" + alt.getValue() + "\"}";
+					firstElement = false;
+				}
+				else{
+					jsonstring += ",{\"name\":\"" + alt.getValue() + "\"}";;				
+					
+				}
+			}
+			jsonstring += "]},";
+			// add consequences
+			jsonstring += "{\"name\":\"Consequences\", \"children\":[";
+			List<Consequence> consequences = decision.getConsequences();
+			firstElement = true;
+			for(Consequence cons : consequences){
+				if(firstElement){
+					jsonstring += "{\"name\":\"" + cons.getValue() + "\"}";
+					firstElement = false;
+				}
+				else{
+					jsonstring += ",{\"name\":\"" + cons.getValue() + "\"}";;				
+					
+				}
+			}
+			jsonstring += "]},";
+			// add quality attributes
+			jsonstring += "{\"name\":\"Quality Attributes\", \"children\":[";
+			List<QualityAttribute> qualityAttributes = decision.getQualityAttributes();
+			firstElement = true;
+			for(QualityAttribute qualAttr : qualityAttributes){
+				if(firstElement){
+					jsonstring += "{\"name\":\"" + qualAttr.getValue() + "\"}";
+					firstElement = false;
+				}
+				else{
+					jsonstring += ",{\"name\":\"" + qualAttr.getValue() + "\"}";;				
+					
+				}
+			}
+			jsonstring += "]},";
+			// add rationales
+			jsonstring += "{\"name\":\"Rationales\", \"children\":[";
+			List<Rationale> rationales = decision.getRationales();
+			firstElement = true;
+			for(Rationale rat : rationales){
+				if(firstElement){
+					jsonstring += "{\"name\":\"" + rat.getValue() + "\"}";
+					firstElement = false;
+				}
+				else{
+					jsonstring += ",{\"name\":\"" + rat.getValue() + "\"}";;				
+					
+				}
+			}
+			jsonstring += "]} ]}";
+			resultJSON = formatGoJsString(jsonstring);
+		}		
 	}
 	
 }
