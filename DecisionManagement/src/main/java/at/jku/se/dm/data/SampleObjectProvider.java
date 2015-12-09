@@ -23,6 +23,8 @@ public class SampleObjectProvider {
 	private static List<Team> teams = new LinkedList<Team>();
 	private static List<Decision> decisions = new LinkedList<Decision>();
 	private static List<Chat> chats = new LinkedList<Chat>();
+	
+	private static int lastDecisionId = 0;
 
 	// ------------------------------------------------------------------------
 
@@ -48,8 +50,8 @@ public class SampleObjectProvider {
 
 		// --
 
-		Team t1 = new Team("T1", "Team 1");
-		Team t2 = new Team("T2", "Team 2");
+		Team t1 = new Team("T1", "Team 1", u1);
+		Team t2 = new Team("T2", "Team 2", u3);
 
 		teams.add(t1);
 		teams.add(t2);
@@ -68,13 +70,13 @@ public class SampleObjectProvider {
 
 		// --
 
-		Decision d1 = new Decision("D1", "Decision 1 Team 1", u1, t1);
-		Decision d2 = new Decision("D2", "Decision 2 Team 1", u1, t1);
-		Decision d3 = new Decision("D3", "Decision 3 Team 1", u1, t1);
-		Decision d4 = new Decision("D4", "Decision 4 Team 1", u1, t1);
+		Decision d1 = new Decision("D" + lastDecisionId++, "Decision 1 Team 1", u1, t1);
+		Decision d2 = new Decision("D" + lastDecisionId++, "Decision 2 Team 1", u1, t1);
+		Decision d3 = new Decision("D" + lastDecisionId++, "Decision 3 Team 1", u1, t1);
+		Decision d4 = new Decision("D" + lastDecisionId++, "Decision 4 Team 1", u1, t1);
 
-		Decision d5 = new Decision("D5", "Decision 5 Team 2", u3, t2);
-		Decision d6 = new Decision("D6", "Decision 5 Team 2", u3, t2);
+		Decision d5 = new Decision("D" + lastDecisionId++, "Decision 5 Team 2", u3, t2);
+		Decision d6 = new Decision("D" + lastDecisionId++, "Decision 5 Team 2", u3, t2);
 
 		decisions.add(d1);
 		decisions.add(d2);
@@ -154,6 +156,13 @@ public class SampleObjectProvider {
 		log.warn("User '" + eMail + "' not found. RetueMailrning null.");
 		return null;
 	}
+	
+	public static void addUser(String eMail, String firstName, String lastName, String password) {
+		log.debug("Add new user '" + eMail + "'");
+		
+		User u = new User(eMail, firstName, lastName, password);
+		users.add(u);
+	}
 
 	// ------------------------------------------------------------------------
 
@@ -171,6 +180,18 @@ public class SampleObjectProvider {
 		}
 		log.warn("Team '" + name + "' not found. Returning null.");
 		return null;
+	}
+	
+	public static void addTeam(String name, User admin) {
+		log.debug("Adding team '" + name + "'");
+		
+		Team t = new Team(name, admin);
+		teams.add(t);
+	}
+	
+	public static boolean deleteTeam(Team t) {
+		log.debug("Deleting team '" + t.getName() + "'");
+		return teams.remove(t);
 	}
 
 	// ------------------------------------------------------------------------
@@ -203,6 +224,7 @@ public class SampleObjectProvider {
 		log.debug("'" + decisions.size() + "' found by team name.");
 		return result;		
 	}
+	
 	public static Decision getDecisionById(String id) {
 		for (Decision d : decisions) {
 			if (d.getId().equals(id)) {
@@ -213,6 +235,14 @@ public class SampleObjectProvider {
 		log.warn("Decision '" + id + "' not found. Returning null.");
 		return null;
 	}
+	
+	public static void addDecision(String name, User author, Team team) {
+		log.debug("Adding decision '" + name +"'");
+		
+		Decision d = new Decision(name, author, team);
+		decisions.add(d);
+	}
+	
 	// ------------------------------------------------------------------------
 
 	public static List<Group> getAllGroups() {
@@ -229,6 +259,23 @@ public class SampleObjectProvider {
 		}
 		log.warn("Group '" + name + "' not found. Returning null.");
 		return null;
+	}
+	
+	public static void addGroup(String name , Team team) {
+		log.debug("Adding group '" + name + "'");
+		
+		Group g = new Group(name, team);
+		groups.add(g);
+	}
+	
+	public static void addGroup(Group g) {
+		log.debug("Adding group '" + g.getName() + "'");
+		groups.add(g);
+	}
+	
+	public static boolean deleteGroup(Group g) {
+		log.debug("Deleting Group '" + g.getName() + "'");
+		return groups.remove(g);
 	}
 
 	// ------------------------------------------------------------------------

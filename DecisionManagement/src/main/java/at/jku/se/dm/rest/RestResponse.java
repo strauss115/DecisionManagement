@@ -49,6 +49,22 @@ public class RestResponse {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Creates a simple response including a text
+	 * 
+	 * @param code
+	 * 			  HTTP code to generate response
+	 * @param text
+	 * 			  Text which the response should contain
+	 * @return Returns a response for REST service
+	 */
+	public static Response getSimpleTextResponse(HttpCode code, String text) {
+		Response r = Response.status(code.getCode()).entity(text).build();
+		return addResponseHeaders(r);
+	}
+	
+	// ------------------------------------------------------------------------
+	
 	public static Response getSuccessResponse(ResponseData data) {
 		return getResponse(HttpCode.HTTP_200_OK, data);
 	}
@@ -78,6 +94,7 @@ public class RestResponse {
 	public static Response getResponse(HttpCode code, List<? extends ResponseData> data) {
 		return getResponseWithData(code, data);
 	}
+	
 	/**
 	 * 
 	 * @param response
@@ -85,7 +102,7 @@ public class RestResponse {
 	 * @return response
 	 * 			response with the added header
 	 */
-	public static Response addResponseHeader(Response response){
+	public static Response addResponseHeaders(Response response){
 		response.getHeaders().add("Access-Control-Allow-Origin", "*");
 		response.getHeaders().add("Access-Control-Allow-Headers",
 				"origin, content-type, accept, authorization");
@@ -104,11 +121,11 @@ public class RestResponse {
 		try {
 			String jsonData = json.serialize(data);
 			log.debug("Attaching data: " + jsonData);
-			return Response.status(code.getCode()).entity(jsonData).build();
+			return addResponseHeaders(Response.status(code.getCode()).entity(jsonData).build());
 			// --
 		} catch (Exception e) {
 			log.error("Error serializing data: " + e);
-			return Response.status(HttpCode.HTTP_500_SERVER_ERROR.getCode()).build();
+			return addResponseHeaders(Response.status(HttpCode.HTTP_500_SERVER_ERROR.getCode()).build());
 		}
 	}
 	

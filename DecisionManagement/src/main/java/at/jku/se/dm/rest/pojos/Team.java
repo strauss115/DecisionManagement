@@ -16,6 +16,7 @@ public class Team extends ResponseData {
 	
 	private String name;
 	private LinkedList<String> users;
+	private User admin;
 	
 	// ------------------------------------------------------------------------
 	
@@ -23,15 +24,17 @@ public class Team extends ResponseData {
 		
 	}
 	
-	public Team(String id, String name) {
+	public Team(String id, String name, User admin) {
 		this.name = name;
+		this.admin = admin;
 		setId(ID_PREFIX + name);
 		
 		users = new LinkedList<String>();
 	}
 	
-	public Team(String name) {
+	public Team(String name, User admin) {
 		this.name = name;
+		this.admin = admin;
 		setId(ID_PREFIX + name);
 		
 		users = new LinkedList<String>();
@@ -45,6 +48,14 @@ public class Team extends ResponseData {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public User getAdmin() {
+		return admin;
+	}
+	
+	public void setAdmin(User admin) {
+		this.admin = admin;
 	}
 	
 	public boolean addUser(User user) {

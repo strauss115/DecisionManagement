@@ -22,8 +22,14 @@ import at.jku.se.dm.rest.RestResponse;
 import at.jku.se.dm.rest.SessionManager;
 import at.jku.se.dm.rest.pojos.Token;
 import at.jku.se.dm.rest.pojos.User;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/user")
+@Api(value = "user")
 public class UserResource {
 
 	private static final Logger log = LogManager.getLogger(UserResource.class);
@@ -42,19 +48,21 @@ public class UserResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Gets all users", response = User.class, responseContainer = "List")
 	public Response getAll() {
 		log.debug("GET all users");
 
 		List<User> users = SampleObjectProvider.getAllUsers();
 		log.info("GET all users returning '" + users.size() + "' elements");
-		Response response = RestResponse.getSuccessResponse(users);
-		return RestResponse.addResponseHeader(response);
+		return RestResponse.getSuccessResponse(users);
 	}
 
 	@GET
 	@Path("/{mail}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@PathParam("mail") String eMail) {
+	@ApiOperation(value = "Gets user by e-mail address", response = User.class)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No user found with given e-mail address") })
+	public Response get(@ApiParam(value = "E-mail address of user to get") @PathParam("mail") String eMail) {
 		log.debug("GET user '" + eMail + "'");
 
 		User u = SampleObjectProvider.getUserByEMail(eMail);
@@ -69,8 +77,11 @@ public class UserResource {
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response login(@QueryParam("eMail") String eMail,
-			@QueryParam("password") String password) {
+	@ApiOperation(value = "Login a user and get token")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Login successfully"),
+			@ApiResponse(code = 401, message = "Login not successfull, please check username and password") })
+	public Response login(@ApiParam("E-mail address of user") @QueryParam("eMail") String eMail,
+			@ApiParam("Password for login") @QueryParam("password") String password) {
 		log.debug("Login user: " + eMail);
 
 		List<User> users = SampleObjectProvider.getAllUsers();
@@ -79,48 +90,47 @@ public class UserResource {
 				log.debug("Login of user '" + u.getEMail() + "' successful");
 				Token token = new Token(SessionManager.addSession(u));
 				log.info("Returing session '" + token.getSession() + "'");
-				Response response = RestResponse.getSuccessResponse(token);
-				return RestResponse.addResponseHeader(response);
+				return RestResponse.getSuccessResponse(token);
 			}
 		}
 		log.info("Unable to authorize user '" + eMail + "'");
-		Response response = RestResponse
-				.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
-		return RestResponse.addResponseHeader(response);
-	}
-
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(String json) {
-		log.debug("CREATE user: " + json);
-
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 	}
 
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response register(@QueryParam("firstName") String firstName,
-			@QueryParam("lastName") String lastName,
-			@QueryParam("password") String password,
-			@QueryParam("eMail") String eMail) {
-		log.debug("Register '" + eMail + "'");
+	@ApiOperation(value = "Registers a new user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User saved successfully"),
+			@ApiResponse(code = 500, message = "Unable to register user") })
+	public Response register(@ApiParam(value = "First name") @QueryParam("firstName") String firstName,
+			@ApiParam(value = "Last name") @QueryParam("lastName") String lastName,
+			@ApiParam(value = "Password") @QueryParam("password") String password,
+			@ApiParam(value = "E-mail address") @QueryParam("eMail") String eMail) {
+		log.debug("POST register user '" + eMail + "'");
 
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+		try {
+			SampleObjectProvider.addUser(eMail, firstName, lastName, password);
+			return RestResponse.getSuccessResponse();
+		} catch (Exception e) {
+			log.debug("Failed to register new user '" + e + "'");
+			return RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR, e.getMessage());
+		}
 	}
 
-	@PUT
-	@Path("/{mail}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response edit(@PathParam("eMail") String mail, String json) {
-		log.debug("EDIT user '" + mail + "': " + json);
-
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
-	}
+	// @PUT
+	// @Path("/{mail}")
+	// @Produces(MediaType.APPLICATION_JSON)
+	// public Response edit(@PathParam("eMail") String mail, String json) {
+	// log.debug("EDIT user '" + mail + "': " + json);
+	//
+	// return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	// }
 
 	@DELETE
 	@Path("/{mail}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Not yet implemented")
 	public Response delete(@PathParam("eMail") String mail) {
 		log.debug("DELETE user '" + mail + "'");
 
@@ -130,8 +140,8 @@ public class UserResource {
 	@PUT
 	@Path("/{mail}/setPermisssion/{admin}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response setPermission(@PathParam("mail") String mail,
-			@PathParam("admin") boolean admin) {
+	@ApiOperation(value = "Not yet implemented")
+	public Response setPermission(@PathParam("mail") String mail, @PathParam("admin") boolean admin) {
 		log.debug("Set admin user '" + mail + "' to '" + admin + "'");
 
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);

@@ -83,7 +83,7 @@ public class ChatResource {
 			return RestResponse.getSuccessResponse();
 		} catch (Exception e) {
 			log.debug("Failes to create new chat '" + e + "'");
-			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+			return RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR, e.getMessage());
 		}
 	}
 	
