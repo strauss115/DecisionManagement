@@ -2,6 +2,7 @@ package at.jku.se.decisiondocu;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -18,11 +21,17 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import at.jku.se.decisiondocu.fragments.ChatFragment_;
+import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+
+    public static MainActivity Instance;
+
+    //Test Commit
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     @ViewById(R.id.container)
-    ViewPager mViewPager;
+    public ViewPager mViewPager;
 
     @ViewById(R.id.tabs)
     TabLayout tabLayout;
@@ -56,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
     @AfterViews
     protected void init() {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -66,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout.setupWithViewPager(mViewPager);
-
+        Instance = this;
     }
 
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -86,11 +99,19 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
+        if (id == R.id.action_logout) {
+            SaveSharedPreference.clearUserName(this);
+            Intent intent = new Intent(this, LoginActivity_.class);
+            startActivity(intent);
+            finish();
+        }
+
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     //Eventuell Fenster indem man schnell eine Enscheidung erstellen kann
     @Click(R.id.fab)
@@ -114,29 +135,34 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            if(position==0){
-                return new TeamFragment_.FragmentBuilder_().build();
+
+            switch (position) {
+                case 0:
+                    return new TeamFragment_.FragmentBuilder_().build();
+                case 1:
+                    return new SearchFragment_.FragmentBuilder_().build();
+                case 2:
+                    return new ChatFragment_.FragmentBuilder_().build();
+                default:
+                    return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
             }
-            return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
         }
 
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 4;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Teams";
+                    return "Projects";
                 case 1:
                     return "Search";
                 case 2:
-                    return "Add";
-                case 3:
-                    return "Profile";
+                    return "Chat";
             }
             return null;
         }
