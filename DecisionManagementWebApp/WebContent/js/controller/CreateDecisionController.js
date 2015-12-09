@@ -1,23 +1,5 @@
 app.controller('CreateDecisionController', function ($scope) {
-            $scope.model = new go.GraphLinksModel(
-                    [
-                        {"key": 0, "parent":"","text": "Entscheidung 1", "brush":"", "dir":"", "loc": "0 0"},
-                        {"key": 1, "parent": 0, "text": "Gruppe", "brush": "skyblue", "dir": "right", "loc": "107 -22"},
-                        {"key": 11, "parent": 1, "text": "Architekturentscheidung", "brush": "skyblue", "dir": "right", "loc": "200 -48"},
-                        {"key": 2, "parent": 0, "text": "Lösungsalternative", "brush": "darkseagreen", "dir": "right", "loc": "107 43"},
-                        {"key": 21, "parent": 2, "text": "Fat-Client", "brush": "darkseagreen", "dir": "right", "loc": "253 30"},
-                        {"key": 3, "parent": 0, "text": "Einflussfaktor", "brush": "palevioletred", "dir": "left", "loc": "-20 -31.75"},
-                        {"key": 31, "parent": 3, "text": "Know How", "brush": "palevioletred", "dir": "left", "loc": "-117 -64.25"},
-                        {"key": 32, "parent": 3, "text": "Kosten", "brush": "palevioletred", "dir": "left", "loc": "-117 -25.25"}
-                    ],
-                    [
-                        {from: 0, to: 1},
-                        {from: 0, to: 2},
-                        {from: 0, to: 3},
-                        {from: 1, to: 11},
-                        {from: 2, to: 21},
-                        {from: 3, to: 31},
-                        {from: 3, to: 32},
-                    ]);
-            $scope.model.selectedNodeData = null;
-        });
+$scope.model = new go.GraphLinksModel(
+        [{"brush":"black", "loc":"0 0", "text":"decision1 very very long name", "key":0}, {"brush":"black", "loc":"254 -100", "parent":0, "text":"factor 1", "dir":"right", "key":1}, {"brush":"black", "loc":"394 -140", "parent":1, "text":"f1 child 1", "dir":"right", "key":11}, {"brush":"black", "loc":"394 -110", "parent":1, "text":"f1 child 2", "dir":"right", "key":12}, {"brush":"black", "loc":"394 -80", "parent":1, "text":"f1 child 3", "dir":"right", "key":13}, {"brush":"black", "loc":"394 -50", "parent":1, "text":"f1 child 4", "dir":"right", "key":14}, {"brush":"black", "loc":"254 100", "parent":0, "text":"factor 2 longname", "dir":"right", "key":2}, {"brush":"black", "loc":"439 70", "parent":2, "text":"f2 child 1 very long name", "dir":"right", "key":21}, {"brush":"black", "loc":"439 100", "parent":2, "text":"f2 child 2", "dir":"right", "key":22}, {"brush":"black", "loc":"439 130", "parent":2, "text":"f2 child 3", "dir":"right", "key":23}, {"brush":"black", "loc":"-80 -100", "parent":0, "text":"factor 3", "dir":"left", "key":3}, {"brush":"black", "loc":"-220 -130", "parent":3, "text":"f3 child 1", "dir":"left", "key":31}, {"brush":"black", "loc":"-220 -100", "parent":3, "text":"f3 child 2", "dir":"left", "key":32}, {"brush":"black", "loc":"-220 -70", "parent":3, "text":"f3 child 3", "dir":"left", "key":33}, {"brush":"black", "loc":"-80 100", "parent":0, "text":"factor 4 very long name loooong", "dir":"left", "key":4}, {"brush":"black", "loc":"-335 70", "parent":4, "text":"shorty", "dir":"left", "key":41}, {"brush":"black", "loc":"-335 100", "parent":4, "text":"f4 child 2", "dir":"left", "key":42}, {"brush":"black", "loc":"-335 130", "parent":4, "text":"f4 child 3", "dir":"left", "key":43}, {"brush":"black", "loc":"-485 100", "parent":43, "text":"f4 child 3 level3 1", "dir":"left", "key":4301}, {"brush":"black", "loc":"-485 130", "parent":43, "text":"f4 child 3 level3 2", "dir":"left", "key":4302}, {"brush":"black", "loc":"-485 160", "parent":43, "text":"f4 child 3 level3 3", "dir":"left", "key":4303}], [{"from":0, "to":1}, {"from":1, "to":11}, {"from":1, "to":12}, {"from":1, "to":13}, {"from":1, "to":14}, {"from":0, "to":2}, {"from":2, "to":21}, {"from":2, "to":22}, {"from":2, "to":23}, {"from":0, "to":3}, {"from":3, "to":31}, {"from":3, "to":32}, {"from":3, "to":33}, {"from":0, "to":4}, {"from":4, "to":41}, {"from":4, "to":42}, {"from":4, "to":43}, {"from":43, "to":4301}, {"from":43, "to":4302}, {"from":43, "to":4303}]);
+        $scope.model.selectedNodeData = null;
+});

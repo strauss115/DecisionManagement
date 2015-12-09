@@ -17,7 +17,7 @@ app.config(['$routeProvider', function ($routeProvider) {
                 .when("/showCriteria", {templateUrl: "pages/showCriteria.html", controller: "PageCtrl"})
                 .when("/userAdministration", {templateUrl: "pages/userAdministration.html", controller: "UserAdministrationController"})
                 .when("/teamAdministration", {templateUrl: "pages/teamAdministration.html", controller: "TeamAdministrationController"})
-                .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "PageCtrl"})
+                .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "UserProfileController"})
                 .when("/login", {templateUrl: "pages/login.html", controller: "LoginController"})
                 .when("/logout", {templateUrl: "pages/logout.html", controller: "LogoutController"})
 

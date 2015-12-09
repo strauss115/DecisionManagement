@@ -13,7 +13,7 @@ loginServices.factory('Login', ['$resource',
 
 loginServices.factory('Register', ['$resource',
     function ($resource) {
-        return $resource(serverAddress + 'DecisionManagement/rest/user/register', {}, {
+        return $resource(serverAddress + '/DecisionManagement/rest/user/register', {}, {
             query: {method: 'GET', isArray: false}
         });
     }]);
