@@ -25,7 +25,11 @@ public class RestHelper {
     private static final String BASEURL_ONLINE = "http://ubuntu.mayerb.net:8080/DecisionDocu/api/";
 
     public static String GetBaseURL() {
-        return (DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE);
+        String url = (DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE);
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+        return url;
     }
 
     //private static final String BASEURL_OFFLINE = "http://www.oracle.com";

@@ -1,5 +1,7 @@
 package at.jku.se.decisiondocu.restclient.client;
 
+import android.util.Log;
+
 import org.apache.http.*;
 import org.apache.http.client.*;
 import org.apache.http.client.methods.*;
@@ -241,7 +243,7 @@ public class ApiInvoker {
 
     String querystring = b.substring(0, b.length() - 1);
     String url = host + path + querystring;
-
+    Log.d("url", url);
     HashMap<String, String> headers = new HashMap<String, String>();
 
     for(String key : headerParams.keySet()) {
@@ -349,6 +351,7 @@ public class ApiInvoker {
       String responseString = null;
       if(code == 204) {
         responseString = "";
+        Log.d("response", responseString);
         return responseString;
       }
       else if(code >= 200 && code < 300) {
@@ -356,6 +359,7 @@ public class ApiInvoker {
           HttpEntity resEntity = response.getEntity();
           responseString = EntityUtils.toString(resEntity);
         }
+        Log.d("response", responseString);
         return responseString;
       }
       else {

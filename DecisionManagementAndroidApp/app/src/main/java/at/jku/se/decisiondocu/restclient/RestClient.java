@@ -33,9 +33,11 @@ import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
+import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
+import at.jku.se.decisiondocu.restclient.client.model.User;
 
 /**
  * Created by Benjamin on 18.11.2015.
@@ -44,8 +46,7 @@ public class RestClient {
 
     //private final static String httpURL = "http://localhost:8080/DecisionDocu/api/document/upload";
 
-    public static String accessToken = "g0up9ej1egkmrtveig59ke0adf";
-    private static ObjectMapper mapper = new ObjectMapper();
+    public static String accessToken = null; //"g0up9ej1egkmrtveig59ke0adf";
 
     public static List<String> USERS = new ArrayList<String>();
     static{
@@ -55,78 +56,34 @@ public class RestClient {
         }
     }
 
+    // -----------------------------------------------------------------------------------------
+    // USER PART
+    // -----------------------------------------------------------------------------------------
+
     public static String getToken(String email, String password){
+        UserApi api = new UserApi();
         try {
-            WebTarget target = RestHelper.getWebTarget()
-                    .path("user/login")
-                    .queryParam("eMail", email)
-                    .queryParam("password", password);
-            Invocation.Builder builder =
-                    target.request()
-                            .accept(MediaType.APPLICATION_JSON);
-            Response res = builder.get();
-            if (res.getStatusInfo() == Response.Status.OK) {
-                String json = res.readEntity(String.class);
-                TokenResponse tokenResponse = mapper.readValue(json, TokenResponse.class);
-                Log.d("java", tokenResponse.toString());
-                //return tokenResponse.getAccess_token();
-            }
-
-        } catch (JsonMappingException e) {
+            TokenResponse response = api.login(email, password);
+            accessToken = response.getAccess_token();
+            return response.getAccess_token();
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for (String credential : USERS) {
-            String[] pieces = credential.split(":");
-            if (pieces[0].equals(email)) {
-                if(pieces[1].equals(password)){
-                    return "AllowedToken";
-                }
-            }
         }
         return null;
     }
 
     public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap profil){
+        UserApi api = new UserApi();
         try {
-            WebTarget target = RestHelper.getWebTarget()
-                    .path("user/register")
-                    .queryParam("firstName", firstname)
-                    .queryParam("lastName", lastname)
-                    .queryParam("password", password)
-                    .queryParam("eMail", email);
-            Invocation.Builder builder =
-                    target.request()
-                            .accept(MediaType.APPLICATION_JSON);
-
-            Entity<String> entity = Entity.entity("", MediaType.APPLICATION_JSON);
-            Response res = builder.post(entity);
-
-            String json = res.readEntity(String.class);
-            Log.d("user", "created! (" + json + ")");
-
-            if (res.getStatusInfo() == Response.Status.CREATED) {
-
-            }
-
-
-
-
+            User user = api.register(firstname, lastname, password, email);
+            Log.d("user", "created! (" + user.toString() + ")");
             USERS.add(email + ":" + password);
-            if(profil!=null) {
-                RestClient.safeProfilePicture(profil, USERS.size());
-            }
-            //Thread.sleep(2000);
             return true;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
+        return false;
     }
-
 
     // -----------------------------------------------------------------------------------------
     // DECISION PART
@@ -134,13 +91,9 @@ public class RestClient {
 
     public static List<Decision> getAllDecisions() {
         DecisionApi api = new DecisionApi();
-        api.setBasePath("http://192.168.0.15:8080/DecisionDocu/api");
         List<Decision> decs = new ArrayList<>();
         try {
             decs = api.getAllDecisions(accessToken);
-            for(Decision dec:decs){
-                Log.d("tag",dec.getName());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,30 +104,14 @@ public class RestClient {
     public static List<Project> getAllProjects() {
         ProjectApi api = new ProjectApi();
         List<Project> decs = new ArrayList<>();
-        api.setBasePath("http://192.168.0.15:8080/DecisionDocu/api");
         try {
             decs = api.getAll(accessToken);
-            for(Project dec:decs){
-                Log.d("tag",dec.getName());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return decs;
     }
 
-
-    /**
-     *
-     * @param builder
-     * @return
-     */
-    private static Invocation.Builder addAuthHeader(Invocation.Builder builder) {
-        if (accessToken == null) {
-            return builder;
-        }
-        return builder.header("Token", accessToken);
-    }
 
     private static void safeProfilePicture(Bitmap image, int id){
         try {
@@ -200,7 +137,7 @@ public class RestClient {
         try{
             // invoke service after setting necessary parameters
             webTarget = RestHelper.getWebTargetWithMultiFeature();
-            webTarget= webTarget.path("uploadDocument").path("profilePicture");
+            webTarget= webTarget.path("upload").path("profilePicture");
             Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
 
             // set file upload values
