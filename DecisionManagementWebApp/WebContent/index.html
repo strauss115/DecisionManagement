@@ -45,7 +45,8 @@
         <script src="js/services/userService.js"></script>
         <script src="js/services/loginService.js"></script>
         <script src="js/services/teamService.js"></script>
-
+        <script src="js/services/decisionService.js"></script>
+        
         <script src="js/controller/RouteController.js"></script>
         <script src="js/controller/CreateDecisionController.js"></script>
         <script src="js/controller/EditDecisionController.js"></script>
@@ -67,7 +68,7 @@
         <div id="wrapper" >
 
             <!-- Navigation -->
-            <nav id="navigation" class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" >
+            <nav ng-controller="RouteController" id="navigation" class="navbar navbar-default navbar-static-top ng-scope" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -79,7 +80,7 @@
                 </div>
                 <!-- /.navbar-header -->
 
-                <ul class="nav navbar-top-links navbar-right">
+                <ul class="nav navbar-top-links navbar-right" ng-show="login">
                     <!-- /.dropdown -->
 
                     <!-- /.dropdown -->
@@ -98,7 +99,7 @@
                 </ul>
                 <!-- /.navbar-top-links -->
 
-                <div class="navbar-default sidebar" role="navigation">
+                <div class="navbar-default sidebar" role="navigation" ng-show="login">
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
                             <li>

@@ -1,7 +1,7 @@
 app.controller('CreateDecisionController', function ($scope) {
             $scope.model = new go.GraphLinksModel(
                     [
-                        {"key": 0, "text": "Entscheidung 1", "loc": "0 0"},
+                        {"key": 0, "parent":"","text": "Entscheidung 1", "brush":"", "dir":"", "loc": "0 0"},
                         {"key": 1, "parent": 0, "text": "Gruppe", "brush": "skyblue", "dir": "right", "loc": "107 -22"},
                         {"key": 11, "parent": 1, "text": "Architekturentscheidung", "brush": "skyblue", "dir": "right", "loc": "200 -48"},
                         {"key": 2, "parent": 0, "text": "Lösungsalternative", "brush": "darkseagreen", "dir": "right", "loc": "107 43"},

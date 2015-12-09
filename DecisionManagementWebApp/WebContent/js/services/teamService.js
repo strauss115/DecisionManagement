@@ -3,9 +3,9 @@
  */
 var teamServices = angular.module('teamServices', ['ngResource']);
 
-teamServices.factory('Teams', ['$resource',
+teamServices.factory('Teams', ['$resource', 
                                    function($resource){
-                                     return $resource('http://140.78.186.44:8181/DecisionManagement/rest/team/', {}, {
+                                     return $resource(serverAddress + '/DecisionManagement/rest/team/', {}, {
                                        query: {method:'GET', params:{}, isArray:true}
                                      });
                                    }]);

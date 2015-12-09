@@ -1,12 +1,7 @@
-app.controller('LogoutController', ['$scope', '$cookies', '$location', function ($scope, $cookies, $location) {
-
-
-
+app.controller('LogoutController', ['$scope', '$rootScope','$cookies', '$location', function ($scope,$rootScope, $cookies, $location) {
         $cookies.Token = null;
-
+        $rootScope.login = false;
         $location.path("/login");
-
-
     }]);
 
 

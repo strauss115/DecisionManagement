@@ -23,3 +23,8 @@ app.config(['$routeProvider', function ($routeProvider) {
 
                 .otherwise("/login", {templateUrl: "login.html", controller: "Home"});
     }]);
+
+
+app.controller('RouteController', ['$rootScope', '$cookies', function ($rootScope, $cookies) {
+        $rootScope.login = false;
+}]);

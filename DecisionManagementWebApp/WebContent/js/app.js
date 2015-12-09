@@ -1,10 +1,13 @@
-var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices']);
+var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices', 'decisionServices']);
+var serverAddress = "http://ubuntu.mayerb.net:8080";
+
+
 
 app.run(function ($rootScope, $cookies, $location) {
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-        if (!$cookies['Token'] && $location.path() != "/login") {
-          $location.path("/login");
-          $("#loginErrorModal").modal();
+        if (!$cookies['Token'] && $location.path() != "/login" ) {
+            $location.path("/login");
+            $("#loginErrorModal").modal();
         }
     });
 });
@@ -372,7 +375,7 @@ app.directive('goDiagramState', function () {
                 if (e.isTransactionFinished)
                     scope.$apply();
             }
-            // notice when the value of "model" changes: update the Diagram.model
+             // notice when the value of "model" changes: update the Diagram.model
             scope.$watch("model", function (newmodel) {
                 var oldmodel = diagram.model;
                 if (oldmodel !== newmodel) {
@@ -395,6 +398,7 @@ app.directive('goDiagramState', function () {
                 // re-enable normal updates
                 diagram.model.addChangedListener(updateAngular);
             });
+            
             diagram.addDiagramListener("Modified", function (e) {
                 var button = document.getElementById("SaveButton");
                 if (button)

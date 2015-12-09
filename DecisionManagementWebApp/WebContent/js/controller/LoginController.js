@@ -1,4 +1,4 @@
-app.controller('LoginController', ['$scope', '$cookies', '$location', 'Login', 'Register', function ($scope, $cookies, $location, Login, Register) {
+app.controller('LoginController', ['$scope', '$rootScope', '$cookies', '$location', 'Login', 'Register', function ($scope, $rootScope, $cookies, $location, Login, Register) {
         $scope.eMail = "";
         $scope.password = "";
         $scope.loginResponse = "";
@@ -8,14 +8,16 @@ app.controller('LoginController', ['$scope', '$cookies', '$location', 'Login', '
         $scope.password2 = "";
         $scope.firstname = "";
         $scope.lastname = "";
-
+        
         $scope.login = function () {
             $scope.token = Login.query({eMail: $scope.eMail, password: $scope.password}, function (data) {
                 $scope.loginResponse = (data);
                 $cookies.Token = $scope.loginResponse.token;
                 $location.path("/home");
+                $rootScope.login = true;
             }, function (error) {
                 $("#loginErrorModal").modal();
+                $rootScope.login = false;
             });
         };
 
