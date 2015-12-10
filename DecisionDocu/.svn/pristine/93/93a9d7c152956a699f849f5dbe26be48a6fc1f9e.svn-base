@@ -1,0 +1,88 @@
+package at.jku.se.rest.api;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import at.jku.se.auth.SessionManager;
+import at.jku.se.database.DBService;
+import at.jku.se.model.Decision;
+import at.jku.se.model.NodeInterface;
+import at.jku.se.model.User;
+import at.jku.se.rest.response.HttpCode;
+import at.jku.se.rest.response.RestResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(tags = { "decision" })
+@Path("/decision")
+public class DecisionResource {
+	private static final Logger log = LogManager.getLogger(DecisionResource.class);
+	// MasterToken: g0up9ej1egkmrtveig59ke0adf
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a list of all available decisions", notes = "Returns a list of all available decisions", response = Decision.class, responseContainer = "List")
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
+	public Response getAllDecisions(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
+		log.info("Get all Decisions invoked ...");
+
+		try {
+			User user = SessionManager.getUser(token);
+			user = DBService.getUserByEmail(user.getEmail());
+			return RestResponse.getSuccessResponse(DBService.getAllDecisions(user).toArray(new NodeInterface[0]));
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a single decision", response = Decision.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
+	public Response getDecision(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the decision to fetch", required = true) @PathParam("id") int id) {
+		log.info("Get Decision '" + id + "' called");
+
+		try {
+			User user = SessionManager.getUser(token);
+			user = DBService.getUserByEmail(user.getEmail());
+			return RestResponse.getSuccessResponse(DBService.getAllDecisions(user).toArray(new NodeInterface[0]));
+		} catch (Exception e) {
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@GET
+	@Path("/byProject/{projectName}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a list of decisions that belong to a certain project", response = Decision.class, responseContainer = "List")
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
+	public Response getByTeamName(@PathParam("teamName") String projectName) {
+		log.debug("GET decisions by project name '" + projectName + "'");
+		
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	} 
+}

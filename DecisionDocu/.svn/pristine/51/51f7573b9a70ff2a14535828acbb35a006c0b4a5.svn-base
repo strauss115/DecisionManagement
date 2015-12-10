@@ -1,0 +1,71 @@
+package at.jku.se.rest.api;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import at.jku.se.rest.response.HttpCode;
+import at.jku.se.rest.response.RestResponse;
+import io.swagger.annotations.Api;
+
+@Api(tags = {"project"})
+@Path("/project")
+public class ProjectResource {
+
+	private static final Logger log = LogManager.getLogger(ProjectResource.class);
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAll() {
+		log.debug("GET all projects");
+		
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+	
+	@GET
+	@Path("/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response get(@PathParam("name") String name) {
+		log.debug("GET team '" + name + "'");
+		
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+	
+	@POST
+	@Path("/create")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response register(@QueryParam("teamName") String name,
+							 @QueryParam("adminUserId") String adminUserId) {
+		log.debug("Create team '" + name + "'");
+		
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+	
+	@PUT
+	@Path("/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response edit(@PathParam("teamName") String name, String json) {
+		log.debug("EDIT team '" + name + "': " + json);
+		
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+	
+	@DELETE
+	@Path("/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response delete(@PathParam("teamName") String name) {
+		log.debug("DELETE team '" + name + "'");
+		
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+}

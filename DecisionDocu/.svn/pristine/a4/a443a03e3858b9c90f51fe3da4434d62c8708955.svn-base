@@ -1,0 +1,30 @@
+package at.jku.se.rest.api;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import at.jku.se.rest.response.HttpCode;
+import at.jku.se.rest.response.RestResponse;
+
+@Path("/user")
+public class UserResource {
+	
+	
+	@GET
+	@Path("/login")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response login(@HeaderParam("eMail") String eMail,
+						@HeaderParam("password") String password) {
+		System.out.println(eMail+password);
+		if(eMail!=null&&eMail.length()>0&&password!=null&&password.length()>0){
+			//TODO		
+		}
+		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+	}
+	
+
+}

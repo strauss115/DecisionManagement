@@ -1,0 +1,9 @@
+package at.jku.se.database.strings;
+
+public class RelationString {
+	
+	public final static String PASSWORD = "password";
+	public final static String PROJECTAMIN = "projectadmin";
+	public final static String HASDECISION = "hasdecision";
+
+}

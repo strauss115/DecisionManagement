@@ -1,0 +1,156 @@
+package at.jku.se.rest.api;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import at.jku.se.auth.SessionManager;
+import at.jku.se.database.DBService;
+import at.jku.se.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.oltu.oauth2.as.response.OAuthASResponse;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.OAuthResponse;
+
+import at.jku.se.rest.response.HttpCode;
+import at.jku.se.rest.response.RestResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+@Api(tags = {"user"})
+@Path("/user")
+public class UserResource {
+	
+	private static final Logger log = LogManager.getLogger(UserResource.class);
+		
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAll(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
+		log.debug("GET all users");
+
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+
+	@GET
+	@Path("/{mail}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@PathParam("mail") String eMail) {
+		log.debug("GET user '" + eMail + "'");
+
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+
+	@GET
+	@Path("/login")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response login(
+			@QueryParam("eMail") String eMail,
+			@QueryParam("password") String password) {
+		log.debug("Login user: " + eMail);
+		boolean debug = true;
+		if (eMail!=null && password!=null) {
+			User u = DBService.getUserByEmail(eMail);
+			
+			if (debug || u != null && u.getPassword().equals(password)) {
+				if (debug) {
+					u = new User();
+					u.setEmail(eMail);
+					u.setPassword(password);
+				}
+				String token = SessionManager.addSession(u);
+				try {
+					OAuthResponse response = OAuthASResponse
+					        .tokenResponse(HttpServletResponse.SC_OK)
+					        .setAccessToken(token)
+					        .setExpiresIn("3600")
+					        .buildJSONMessage();
+					return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
+				} catch (OAuthSystemException e) {
+					log.error("login error occured", e);
+					RestResponse.getErrorResponse();
+				}
+			}	
+		}
+		return RestResponse.getErrorResponse();
+	}
+
+	@POST
+	@Path("/register")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response register(
+			@QueryParam("firstName") String firstName,
+			@QueryParam("lastName") String lastName,
+			@QueryParam("password") String password,
+			@QueryParam("eMail") String eMail) {
+		log.debug("Register '" + eMail + "'");
+
+        log.debug("firstName: " + firstName);
+        log.debug("lastName: " + lastName);
+        log.debug("password: " + password);
+        log.debug("eMail: " + eMail);
+
+        // TODO: Check properties
+        User user = new User();
+        user.setAdmin(false);
+        user.setEmail(eMail);
+        user.setName(firstName);
+        user.setLastname(lastName);
+        user.setPassword(password);
+
+        log.debug(user.toString());
+
+        URI uri = null;
+        try {
+            uri = new URI("/DecisionDocu/api/user/" + user.getId());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        String json = RestResponse.packData(user);
+        return Response.created(uri).entity(json).build();
+	}
+
+	@PUT
+	@Path("/{mail}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response edit(@PathParam("eMail") String mail, String json) {
+		log.debug("EDIT user '" + mail + "': " + json);
+
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+
+	@DELETE
+	@Path("/{mail}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response delete(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@PathParam("eMail") String mail) {
+		log.debug("DELETE user '" + mail + "'");
+
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+
+	@PUT
+	@Path("/{mail}/setPermission/{admin}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setPermission(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@PathParam("mail") String mail,
+			@PathParam("admin") boolean admin) {
+		log.debug("Set admin user '" + mail + "' to '" + admin + "'");
+
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+	}
+}

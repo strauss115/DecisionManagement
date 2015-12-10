@@ -1,0 +1,401 @@
+package at.jku.se.database;
+
+import java.lang.reflect.Constructor;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.neo4j.jdbc.Driver;
+import org.neo4j.jdbc.internal.Neo4jConnection;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import at.jku.se.database.strings.NodeString;
+import at.jku.se.database.strings.PropertyString;
+import at.jku.se.database.strings.RelationString;
+import at.jku.se.model.Alternative;
+import at.jku.se.model.Comment;
+import at.jku.se.model.CustomDate;
+import at.jku.se.model.Decision;
+import at.jku.se.model.DecisionGroup;
+import at.jku.se.model.InfluenceFactor;
+import at.jku.se.model.NodeInterface;
+import at.jku.se.model.Project;
+import at.jku.se.model.Property;
+import at.jku.se.model.QualityAttribute;
+import at.jku.se.model.Relationship;
+import at.jku.se.model.RelationshipInterface;
+import at.jku.se.model.User;
+
+@SuppressWarnings("unchecked")
+public class DBService {
+	
+	private static final String CONNECT_STRING = "jdbc:neo4j://ubuntu.mayerb.net:7474/";
+	private static Properties properties = new Properties();
+	private static Neo4jConnection con;
+	private static ObjectMapper mapper = new ObjectMapper();
+	private static HashMap<String, Constructor<? extends NodeInterface>> constructors = new HashMap<String, Constructor<? extends NodeInterface>>();
+	
+	static {
+		properties.setProperty("user", "neo4j");
+		properties.setProperty("password", "neose");
+		
+		try{
+			Class[] type = {};
+			constructors.put(NodeString.DECISION, Decision.class.getConstructor(type));
+			constructors.put(NodeString.PROJECT, Project.class.getConstructor(type));
+			constructors.put(NodeString.USER, User.class.getConstructor(type));
+			constructors.put(NodeString.INFLUENCEFACTOR, InfluenceFactor.class.getConstructor(type));
+			constructors.put(NodeString.QUALITYATTRIBUTE, QualityAttribute.class.getConstructor(type));
+			constructors.put(NodeString.DECISIONGROUP, DecisionGroup.class.getConstructor(type));
+			constructors.put(NodeString.ALTERNATIVE, Alternative.class.getConstructor(type));
+			constructors.put(NodeString.PROPERTY, Property.class.getConstructor(type));
+			constructors.put(NodeString.COMMENT, Comment.class.getConstructor(type));
+		}catch (Exception e){}
+	}
+	
+	private static DBService ref;
+	
+	private DBService() {
+	}
+	
+	public static DBService getDBService() {
+		if (ref == null) {
+			ref = new DBService();
+		}
+		return ref;
+	}
+	
+	private Neo4jConnection getConnection(){
+		if(con==null){
+			try {
+				con = new Driver().connect(CONNECT_STRING, properties);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return con;
+	}
+	public static List<Decision> getAllDecisions (User user){
+		return getAllNodes(Decision.class, user, 2);
+	}
+	
+	public static User getUserByEmail(String email){
+		try{
+		return getAllNodes(User.class,0,"{email: \""+email+"\"}",null).get(0);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static List<Decision> getAllDecisionsOfProject(long teamid){
+		try{
+			Project project = getAllNodes(Project.class,3,null," Where id(n1)="+teamid+" ").get(0);
+			List<Decision> decisions = new ArrayList<Decision>();
+			for(RelationshipInterface rel:project.getRelationships().get(RelationString.HASDECISION)){
+				try{
+					decisions.add((Decision) rel.getRelatedNode());
+				}catch (Exception e){}
+			}
+			return decisions;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static <T extends NodeInterface> T getNodeByID(Class<T> type, long nodeid, int level){
+		try{
+			return getAllNodes(type, level, null,"Where id(n1)="+nodeid+" ").get(0);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/*
+	 * AllProjects
+	 * ProjectByUser
+	 */
+	
+
+	/**
+	 * Returns all nodes of a spesific class, where user has access
+	 * @param type type of root nodes
+	 * @param userid id of the user from session
+	 * @param level number of levels from the root node, 0 returns just the node without reletionships,
+	 * 1 returns node with the ids of relationships, 2 returns related nodes and the ids of their relationship ... max 5
+	 * @return
+	 */
+	private static <T extends NodeInterface> List<T> getAllNodes(Class<T> type, User user, int level){
+		return getAllNodes(type, user, level, null, null);
+	}
+	
+	/**
+	 * getAllNodes with full Permission
+	 * @param type
+	 * @param level
+	 * @return
+	 */
+	private static <T extends NodeInterface> List<T> getAllNodes(Class<T> type, int level){
+		return getAllNodes(type, level, null, null);
+	}
+	
+	private static <T extends NodeInterface> List<T> getAllNodes(Class<T> type, int level,
+		String attributfilter, String wherefilter){
+		String query = getQuery(type, -1, level, attributfilter, wherefilter);
+		System.out.println(query);
+		List<T> nodes = getNodesFromQuery(query);
+		
+		return (List<T>) nodes;
+	}
+	
+	private static <T extends NodeInterface> List<T> getAllNodes(Class<T> type, User user, int level, 
+			String attributfilter, String wherefilter){
+		if(user.isAdmin()){
+			return getAllNodes(type, level, attributfilter, wherefilter);
+		}
+		String query = getQuery(type, user.getId(), level, attributfilter, wherefilter);
+		System.out.println(query);
+		List<T> nodes = getNodesFromQuery(query);
+		
+		return (List<T>) nodes;
+		
+	}
+	
+	private static <T extends NodeInterface> List<T> getNodesFromQuery(String query) {
+		try{			
+			ResultSet rs = executeQuery(query);
+			HashMap<Long,NodeInterface> uniqueNodes = new HashMap<Long,NodeInterface>();
+			HashMap<Long,Map<String,List<RelationshipInterface>>> relations = new HashMap<Long, Map<String,List<RelationshipInterface>>>();
+			HashSet<Long> set = new HashSet<Long>();
+			List<T> nodes = new ArrayList<T>();
+			boolean isRootlevelNode = true;
+			while (isRootlevelNode&&rs.next()){
+				if(rs.getString("RelId")==null){
+					NodeInterface rootnode = getNodeFromStrings(rs.getLong(4),rs.getString(5),rs.getString(6));
+					nodes.add((T)rootnode);
+					uniqueNodes.put(rootnode.getId(), rootnode);
+				}else{
+					isRootlevelNode = false;
+				}
+			}
+			while(rs.next()){
+				NodeInterface fullnode=null;
+				//if(rs.getString(4)!=null){
+					if(!uniqueNodes.containsKey(rs.getLong(4))){
+						fullnode = getNodeFromStrings(rs.getLong(4),rs.getString(5),rs.getString(6));
+						uniqueNodes.put(fullnode.getId(), fullnode);
+					}else{
+						fullnode=uniqueNodes.get(rs.getLong(4));
+					}
+				/*}else{
+					
+				}*/
+					
+				Relationship rel = new Relationship(rs.getLong(2),fullnode,true);
+				String reltyp = rs.getString(3);
+				long relnode = rs.getLong(1);
+				if(!set.contains(rel.getId())){
+					set.add(rel.getId());
+				
+					if(relations.containsKey(relnode)){
+						Map<String,List<RelationshipInterface>> relmap = relations.get(relnode);
+						if(relmap.containsKey(reltyp)){
+							relmap.get(reltyp).add(rel);
+						}else{
+							List<RelationshipInterface> rellist = new ArrayList<RelationshipInterface>();
+							rellist.add(rel);
+							relmap.put(reltyp, rellist);
+						}
+					}else{
+						List<RelationshipInterface> rellist = new ArrayList<RelationshipInterface>();
+						rellist.add(rel);
+						Map<String,List<RelationshipInterface>> relmap= new HashMap<String,List<RelationshipInterface>>();
+						relmap.put(reltyp, rellist);
+						relations.put(relnode, relmap);
+					}
+				}
+				
+			}
+			
+			for(long nodeid:relations.keySet()){
+				try{
+				uniqueNodes.get(nodeid).setRelationships(relations.get(nodeid));
+				}catch (Exception e){
+					System.out.println(nodeid);
+					e.printStackTrace();
+				}
+			}
+			
+			return nodes;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static NodeInterface getNodeFromStrings(long nodeId, String nodeLable, String directProps) {
+		try{
+			String[] nodeTypes = mapper.readValue(nodeLable, String[].class);
+			String nodeType=nodeTypes[0];
+			
+			Constructor<? extends NodeInterface> constructor = constructors.get(nodeType);
+			NodeInterface node = constructor.newInstance();
+			node.setId(nodeId);
+			
+			if(directProps!=null){
+				Map<String, Object> directProperties = getDirectPropertiesFromJson(directProps);
+				if(directProperties.containsKey(PropertyString.NAME)){
+					node.setName(directProperties.get(PropertyString.NAME).toString());
+					directProperties.remove(PropertyString.NAME);
+				}
+				try{
+					if(directProperties.containsKey(PropertyString.CREATIONDATE)){
+						node.setCreationDate(new CustomDate((long)directProperties.get(PropertyString.CREATIONDATE)));
+						directProperties.remove(PropertyString.CREATIONDATE);
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				for(String string:directProperties.keySet()){
+					node.addDirectProperty(string, directProperties.get(string).toString());
+				}
+			}
+			return node;
+		
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static Map<String, Object> getDirectPropertiesFromJson(String directProps) {
+		try{
+			Map<String, Object> map;
+			map =mapper.readValue(directProps, HashMap.class);
+			return map;
+			
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static String getQuery (Class<?extends NodeInterface> type, long userid, int level,
+			String afilter, String wfilter){
+		/*
+		    Match (user:User)-[*]->(n1:Decision)
+			Where id(user)=5521
+			Return null as RelNodeId, null as RelId, null as Reltype, id(n1)as NodeId, labels(n1)as NodeLable, n1 as Node
+			Union
+			Match (n1)-[r1]->(n2)
+			Return id(n1)as RelNodeId, id(r1)as RelId, type(r1)as Reltype, id(n2)as NodeId, labels(n2)as NodeLable, n2 as Node
+			Union
+			Match (n2)-[r2]->(n3)
+			Return id(n2)as RelNodeId, id(r2)as RelId, type(r2)as Reltype, id(n3)as NodeId, labels(n3)as NodeLable, null as Node
+		 */
+		String nodetype = type.getSimpleName();
+		String usercontrol = "", where = "";
+		if(userid>0){
+			usercontrol = " (user:User)-[*]-> ";
+			where = " Where id(user)="+userid+" ";
+		}
+		if(afilter==null||afilter.length()==0){
+			afilter="";
+		}
+		if(wfilter==null||wfilter.length()==0){
+			wfilter="";
+		}else{
+			if(where.length()>0){
+				where=where+wfilter;
+			}
+		}
+		StringBuilder query = new StringBuilder();
+		StringBuilder match = new StringBuilder();
+		query.append("Match ").append(usercontrol).append("(n1:");
+		query.append(nodetype).append(afilter).append(")");
+		match.append(query.toString());
+		query.append(where).append(wfilter)
+		.append("Return null as RelNodeId, null as RelId, null as Reltype, id(n1)as NodeId, labels(n1)as NodeLable, n1 as Node");
+		
+		for(int i=2; i<=level; i++){
+			match.append("-[r").append(i-1).append("]->(n").append(i).append(")");
+			query.append(" Union ").append(match.toString()).append(where)
+				.append(" Return id(n").append(i-1).append(")as RelNodeId, id(r")
+				.append(i-1).append(")as RelId, type(r").append(i-1).append(")as Reltype, id(n").append(i)
+				.append(")as NodeId, labels(n").append(i).append(")as NodeLable, n").append(i).append(" as Node");
+		}
+		if(level>0){
+			query.append(" Union ").append(match.toString()).append("-[r").append(level).append("]->(n").append(level+1).append(")").append(where)
+			.append(" Return id(n").append(level).append(")as RelNodeId, id(r").append(level).append(")as RelId, type(r")
+			.append(level).append(")as Reltype, id(n").append(level+1).append(")as NodeId, labels(n").append(level+1)
+			.append(")as NodeLable, null as Node");
+		}
+		return query.toString();
+	}
+	
+	public static void createNode(NodeInterface node){
+		
+		StringBuilder query = new StringBuilder();
+		query.append("Create");
+		query.append("(n:"+node.getNodeType()+"{name: \""+node.getName()+"\",creationDate: TimeStamp()");
+		Map<String,String> directProperties = node.getDirectProperties();
+		if(directProperties!=null){
+			for(String prop:directProperties.keySet()){
+				query.append(","+prop+": "+directProperties.get(prop));
+			}
+		}
+		query.append("})");
+		query.append("Return n, id(n)");
+		System.out.println(query.toString());
+		
+		try{			
+			ResultSet rs = executeQuery(query.toString());
+			while (rs.next()){
+				System.out.println(rs.getString("id(n)")+" "+rs.getString("n"));
+				Map<Object, Object>map=new HashMap<Object, Object>();
+				map =mapper.readValue(rs.getString("n"), map.getClass());
+				for(Object string:map.keySet()){
+					System.out.println(string);
+					System.out.println(map.get(string).toString());
+				}
+			}
+			
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private static ResultSet executeQuery(String query)throws Exception{		
+			Statement stmt = getDBService().getConnection().createStatement();
+			return stmt.executeQuery(query);	
+	}
+	
+	public static void main (String[] args){
+		/*List<Decision>decisions = getAllNodes(Decision.class,2);
+		try {
+			System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(decisions.toArray(new NodeInterface[0])));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		//System.out.println(getUserByEmail("admin@example.com"));
+		/*try {
+			List<Decision> teamDecisions = getAllDecisionsOfProject(5526);
+			System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(teamDecisions.toArray(new NodeInterface[0])));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		System.out.println(getNodeByID(QualityAttribute.class,5563,2));
+	}
+
+}

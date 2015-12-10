@@ -1,0 +1,49 @@
+package at.jku.se.rest.api;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import at.jku.se.auth.SessionManager;
+import at.jku.se.database.DBService;
+import at.jku.se.model.NodeInterface;
+import at.jku.se.model.User;
+import at.jku.se.rest.response.HttpCode;
+import at.jku.se.rest.response.RestResponse;
+import at.jku.se.testdata.SampleObjectProvider;
+
+@Path("/decision")
+public class DecisionResource {
+	
+	//MasterToken: g0up9ej1egkmrtveig59ke0adf
+	
+	private static ObjectMapper mapper = new ObjectMapper();
+	
+	@GET
+	@Path("/alldecisions")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllDecisions(@HeaderParam(value = "token") String token){
+		if(SessionManager.verifySession(token)){
+			try{
+			User user = SessionManager.getUser(token);
+			user = DBService.getUserByEmail(user.getEmail());
+			//String json = mapper.writeValueAsString(DBService.getAllDecisions(user).toArray(new NodeInterface[0]));
+			//return RestResponse.getSuccessResponse(SampleObjectProvider.getAllDecision().toArray(new NodeInterface[0]));
+			return RestResponse.getSuccessResponse(DBService.getAllDecisions(user).toArray(new NodeInterface[0]));
+			}catch (Exception e){
+				return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+			}
+		}
+		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+		//return RestResponse.getSuccessResponse(SampleObjectProvider.getAllDecision().toArray(new NodeInterface[0]));
+		
+	}
+	
+	
+
+}

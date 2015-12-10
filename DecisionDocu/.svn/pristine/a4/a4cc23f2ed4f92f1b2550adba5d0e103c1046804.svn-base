@@ -1,0 +1,27 @@
+package at.jku.se.model;
+
+public class Team extends Node{
+	
+	public Team(String name, long adminUserid, String password){
+		super(name);
+		User admin = new User(null, null, null, null, false);
+		admin.setId(adminUserid);
+		this.addRelation("teamadmin", admin, true);
+		this.addDirectProperty("password", password);
+	}
+	
+	
+	public Team() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public String getPassword(){
+		return this.getDirectProperties().get("password");
+	}
+	public void setPassword(String password){
+		this.addDirectProperty("password", password);
+	}
+
+}
