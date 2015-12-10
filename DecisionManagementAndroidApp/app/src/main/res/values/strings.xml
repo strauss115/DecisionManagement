@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DeDoc</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
 <!-- TODO: Remove or change this placeholder text -->
@@ -26,7 +27,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="new_existing_picture">Take new or use existing Picutre?</string>
+    <string name="new_existing_picture">Take new or use existing Picture?</string>
     <string name="existing_picture">Use picture from media center</string>
     <string name="new_picture">Take new picture</string>
     <string name="cancel">Cancel</string>
@@ -38,5 +39,13 @@
         <item>Use picture from media center</item>
         <item>Take new picture</item>
     </string-array>
+    <string-array name="sort_options">
+        <item>sort by: name</item>
+        <item>sort by: ...</item>
+    </string-array>
+    <string name="sort_prompt">select sort strategy</string>
+    <string name="add_select_team">Select project</string>
+    <string name="add_select_desc_name">Specify decision name</string>
+    <string name="search_hint">fulltext search ...</string>
 
 </resources>

@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff8d1a</color>
     <color name="colorfloatingButton">#3F51B5</color>
+    <color name="colorSecondary">#999</color>
 </resources>

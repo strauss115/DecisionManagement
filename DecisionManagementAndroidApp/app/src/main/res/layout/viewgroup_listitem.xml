@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+
+    <TextView
+        android:id="@+id/decision_creation_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Date: yyyy-mm-dd"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+
+    <TextView
+        android:id="@+id/decision_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/decision_creation_date"
+
+        android:text="Author: xyz"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        />
+
+    <!-- Service price -->
+
+    <LinearLayout
+        android:layout_below="@+id/decision_creation_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/decision_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="5dp"
+                android:text="Decision xyz"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_gravity="right"
+            android:layout_weight="0.30"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/decision_creation_date"
+            android:layout_alignParentRight="true"
+            android:id="@+id/linearLayout">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:id="@+id/decision_startChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_send"
+                android:text=""/>
+
+            <CheckBox
+                android:id="@+id/decision_favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/star" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

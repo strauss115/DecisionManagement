@@ -1,5 +1,7 @@
 package at.jku.se.decisiondocu.restclient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -17,16 +19,29 @@ import javax.ws.rs.core.FeatureContext;
  */
 public class RestHelper {
 
-    private static boolean DEBUG_MODE = false;
+    private static boolean DEBUG_MODE = true;
 
-    private static final String BASEURL_OFFLINE = "http://192.168.0.103:8080/DecisionDocu/api/";
+    public static final String BASEURL_OFFLINE = "http://192.168.0.15:8080/DecisionDocu/api/";
     private static final String BASEURL_ONLINE = "http://ubuntu.mayerb.net:8080/DecisionDocu/api/";
+
+    public static String GetBaseURL() {
+        String url = (DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE);
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+        return url;
+    }
 
     //private static final String BASEURL_OFFLINE = "http://www.oracle.com";
     //private static final String BASEURL_ONLINE = "http://www.oracle.com";
 
     private static Client client, client2;
 
+    /**
+     * Returniert das WebTarget des Backends inkl. der Registrierung des
+     * AndroidFriendlyFeatures.
+     * @return
+     */
     protected static WebTarget getWebTarget() {
         if (client == null) {
             try {
@@ -36,6 +51,11 @@ public class RestHelper {
         return client.target((DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE));
     }
 
+    /**
+     * Returniert das WebTarget des Backends inkl. der Registrierung des
+     * AndroidFriendlyFeatures. (Backend kann auch Dokumente hochladen,...)
+     * @return
+     */
     protected static WebTarget getWebTargetWithMultiFeature() {
         if (client2 == null) {
             try {
@@ -47,6 +67,9 @@ public class RestHelper {
         return client2.target((DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE));
     }
 
+    /**
+     * Diese Klasse wird benötigt, um Jersey mit Android kompatibel zu machen.
+     */
     public static class AndroidFriendlyFeature implements Feature{
 
         @Override
