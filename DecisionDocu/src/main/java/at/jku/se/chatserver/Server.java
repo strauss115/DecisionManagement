@@ -20,7 +20,7 @@ public class Server {
 		int portNumber = 2222;
 		if (args.length < 1) {
 			System.out
-					.println("Usage: java MultiThreadChatServerSync <portNumber>\n"
+					.println("Usage: java Server <portNumber>\n"
 							+ "Now using port number=" + portNumber);
 		} else {
 			portNumber = Integer.valueOf(args[0]).intValue();
