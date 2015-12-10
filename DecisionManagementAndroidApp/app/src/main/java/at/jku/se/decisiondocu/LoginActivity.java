@@ -43,18 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @AfterViews
     protected void init() {
-        /*new AsyncTask<Void, Void, Boolean>(){
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    Client client = ClientBuilder.newClient().register(RestHelper.AndroidFriendlyFeature.class);
-                    System.out.println(client.target("http://oracle.com").request().get(String.class));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute();*/
+
     }
 
     @Click(R.id.email_sign_in_button)

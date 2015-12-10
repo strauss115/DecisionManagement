@@ -62,7 +62,6 @@ public class TeamItemView extends LinearLayout {
 
         if (item.getNrOfDecisions() == -1) {
             DecisionApi api = new DecisionApi();
-            api.setBasePath("http://192.168.0.15:8080/DecisionDocu/api");
             try {
                 List<Decision> list = api.getByProjectName(RestClient.accessToken, item.getId());
                 if (list != null) {
