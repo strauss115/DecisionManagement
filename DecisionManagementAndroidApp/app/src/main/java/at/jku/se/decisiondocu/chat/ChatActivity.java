@@ -109,6 +109,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onDestroy();
         if (mClient != null) {
             try {
+                mClient.sendMessage(Client.QUIT_MESSAGE);
                 mClient.stopClient();
             } catch (Exception e) {
                 Log.d("tag", e.getMessage());

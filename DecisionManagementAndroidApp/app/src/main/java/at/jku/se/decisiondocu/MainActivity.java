@@ -11,8 +11,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -21,10 +23,13 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
 import at.jku.se.decisiondocu.fragments.ChatFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
+import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.RestHelper;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -52,13 +57,43 @@ public class MainActivity extends AppCompatActivity {
     @ViewById(R.id.tabs)
     TabLayout tabLayout;
 
+    @ViewById(R.id.login_progress_main)
+    View mProgressView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        if(!SaveSharedPreference.isValidUser(this))//TODO: Methode definieren
-        {
-            Intent intent = new Intent(this, LoginActivity_.class);
-            startActivity(intent);
-            finish();
+        int res = SaveSharedPreference.isValidUser(this);
+        switch (res) {
+            case SaveSharedPreference.RESULT_OK:
+                RestClient.accessToken = SaveSharedPreference.getUserToken(this);
+                break;
+            case SaveSharedPreference.RESULT_TOKEN_EXPIRED:
+                new RestNetworkTasks.UserLoginTask(
+                        mProgressView, null, getBaseContext(),
+                        SaveSharedPreference.getUserEmail(this),
+                        SaveSharedPreference.getUserPass(this)
+                ){
+                    @Override
+                    protected void onPostExecute(Integer success) {
+                        super.onPostExecute(success);
+                        if (success>0) {
+                            Intent intent = new Intent(getBaseContext(),MainActivity_.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }.execute();
+                RestClient.accessToken = SaveSharedPreference.getUserToken(this);
+                break;
+            case SaveSharedPreference.RESULT_NOK:
+                Intent intent = new Intent(this, LoginActivity_.class);
+                startActivity(intent);
+                finish();
+                break;
+            default:
+                Log.e("Error", res + " not defined in switch!");
+                break;
+
         }
         super.onCreate(savedInstanceState);
     }
@@ -104,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_logout) {
-            SaveSharedPreference.clearUserName(this);
+            SaveSharedPreference.logout(this);
             Intent intent = new Intent(this, LoginActivity_.class);
             startActivity(intent);
             finish();

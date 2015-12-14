@@ -1,5 +1,6 @@
 package at.jku.se.decisiondocu.beans;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,9 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.UiThread;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
 @EBean
 public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
+    private ProgressDialog mDialog;
     private List<Project> mItems;
 
     @Bean(RESTProjectFinder.class)
@@ -38,9 +42,39 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     @AfterInject
     void initAdapter() {
-        mItems = mTeamFinder.findAll();
-        for (Project t : mItems) {
-            //new TeamIconDownloader(t, this).execute();
+        mItems = new ArrayList<>();
+        findAll();
+    }
+
+    @Background
+    void findAll() {
+        showDialog();
+        List<Project> projects = mTeamFinder.findAll();
+        updateItems(projects);
+        dismissDialog();
+    }
+
+    @UiThread
+    void updateItems(List<Project> items) {
+        mItems = items;
+        notifyDataSetChanged();
+    }
+
+    @UiThread
+    void showDialog() {
+        Log.d("dialog", "showing");
+        if (mDialog == null) {
+            mDialog = new ProgressDialog(context);
+            mDialog.setMessage("please wait...");
+            mDialog.show();
+        }
+    }
+
+    @UiThread
+    void dismissDialog() {
+        Log.d("dialog", "hiding");
+        if (mDialog != null) {
+            mDialog.dismiss();
         }
     }
 

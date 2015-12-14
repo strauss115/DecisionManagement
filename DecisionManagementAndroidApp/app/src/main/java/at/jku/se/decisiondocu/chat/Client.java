@@ -12,6 +12,7 @@ import java.net.Socket;
 
 public class Client {
 
+	public static final String QUIT_MESSAGE = "/quit";
 	private String serverMessage;
 	private OnMessageReceived mMessageListener = null;
 	private boolean mRun = false;
