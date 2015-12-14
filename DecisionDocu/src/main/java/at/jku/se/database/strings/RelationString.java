@@ -15,5 +15,7 @@ public class RelationString {
 	public final static String SUBDECISION = "subdecision";
 	public final static String RESPONSIBLE = "responsible";
 	public final static String HASGROUP = "hasgroup";
+	public final static String Message = "message";
+	
 
 }

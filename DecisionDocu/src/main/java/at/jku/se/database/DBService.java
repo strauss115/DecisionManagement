@@ -31,7 +31,7 @@ import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 import at.jku.se.model.Alternative;
-import at.jku.se.model.Comment;
+import at.jku.se.model.Message;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Decision;
 import at.jku.se.model.DecisionGroup;
@@ -70,7 +70,7 @@ public class DBService {
 			constructors.put(NodeString.DECISIONGROUP, DecisionGroup.class.getConstructor(type));
 			constructors.put(NodeString.ALTERNATIVE, Alternative.class.getConstructor(type));
 			constructors.put(NodeString.PROPERTY, Property.class.getConstructor(type));
-			constructors.put(NodeString.COMMENT, Comment.class.getConstructor(type));
+			constructors.put(NodeString.COMMENT, Message.class.getConstructor(type));
 		}catch (Exception e){}
 	}
 	
@@ -468,6 +468,26 @@ public class DBService {
 			return false;
 		}
 	}
+	
+	public static <T extends NodeInterface> T createRelationshipWithNode(T node, String type, long startNode, long creatorid){
+		node = updateNode(node, creatorid);
+		if(node==null||node.getId()<1){
+			return null;
+		}
+		long relid = addRelationship(startNode,type,node.getId());
+		if(relid<1){
+			return null;
+		}
+		return node;	
+	}
+	
+	public static Message createMessage(String message, long relatedNode, long creatorid){
+		Message messageNode = new Message(message);
+		messageNode = createRelationshipWithNode(messageNode, RelationString.Message, relatedNode, creatorid);
+		return messageNode;
+	}
+	
+	
 	
 	/**
 	 * If node has id the properties of the node will be updated, otherwise the node will be created
