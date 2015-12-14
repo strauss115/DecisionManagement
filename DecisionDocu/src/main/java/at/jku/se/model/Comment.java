@@ -8,12 +8,10 @@ public class Comment extends Node {
 	
 	public Comment(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Comment() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void addMessage(String message) {
@@ -23,7 +21,5 @@ public class Comment extends Node {
 	public ArrayList<String> getHistory() {
 		return history;
 	}
-	
-
 }
 

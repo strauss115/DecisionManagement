@@ -6,9 +6,23 @@ public class Comment {
 	private String user;
 	
 	public Comment(String comment, String user) {
-		// TODO Auto-generated constructor stub
 		this.comment = comment;
 		this.user = user;
 	}
 
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
 }

@@ -34,7 +34,6 @@ public class User extends Node {
 
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@JsonIgnore
