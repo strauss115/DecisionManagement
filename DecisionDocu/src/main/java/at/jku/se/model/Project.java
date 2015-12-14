@@ -18,7 +18,6 @@ public class Project extends Node {
 
 	public Project() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@JsonIgnore

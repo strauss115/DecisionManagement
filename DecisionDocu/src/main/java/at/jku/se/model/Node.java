@@ -148,7 +148,6 @@ public abstract class Node implements NodeInterface {
 		try {
 			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			return "Node [id=" + id + ", name=" + name + ", relationships=" + relationships + ", creationDate="
 			+ creationDate + ", directProperties=" + directProperties + "]";
 		}

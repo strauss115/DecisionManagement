@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.model.NodeInterface;
-import at.jku.se.model.Project;
 import at.jku.se.model.User;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
@@ -104,16 +103,11 @@ public class UserResource {
 			@ApiParam(value = "EMail of the user to login", required = true) @QueryParam("eMail") String eMail,
 			@ApiParam(value = "Password of the user to login", required = true) @QueryParam("password") String password) {
 		log.debug("Login user: " + eMail);
-		boolean debug = false;
+
 		if (eMail!=null && password!=null) {
 			User u = DBService.getUserByEmail(eMail);
-			System.out.println(u.getPassword());
-			if (debug || (u != null && u.getPassword().equals(password))) {
-				if (debug) {
-					u = new User();
-					u.setEmail(eMail);
-					u.setPassword(password);
-				}
+			log.debug(u.getPassword());
+			if (u != null && u.getPassword().equals(password)) {
 				String token = SessionManager.addSession(u);
 				try {
 					OAuthResponse response = OAuthASResponse
@@ -138,6 +132,7 @@ public class UserResource {
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Created"),
 			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 401, message = "Unauthorized") }
 	)
 	public Response register(
@@ -152,14 +147,13 @@ public class UserResource {
         log.debug("password: " + password);
         log.debug("eMail: " + eMail);
 
-        // TODO: Check properties
         User user = new User();
         user.setAdmin(false);
         user.setEmail(eMail);
         user.setName(firstName);
         user.setLastname(lastName);
         user.setPassword(password);
-        System.out.println(user.getPassword());
+
         try {
         	User existinguser = null;
         	try{
@@ -168,9 +162,9 @@ public class UserResource {
         		log.debug("Error occured!", e);
         	}
         	if(existinguser!=null){
-        		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+        		return RestResponse.getResponse(HttpCode.HTTP_400_BAD_REQUEST);
         	}
-        	System.out.println(user.getPassword());
+        	log.debug(user.getPassword());
         	user = DBService.updateNode(user, -1);
         	
 		} catch (Exception e) {
@@ -184,7 +178,7 @@ public class UserResource {
         try {
             uri = new URI("/DecisionDocu/api/user/" + user.getId());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+        	log.debug("Error occured!", e);
         }
         String json = RestResponse.packData(user);
         return Response.created(uri).entity(json).build();
