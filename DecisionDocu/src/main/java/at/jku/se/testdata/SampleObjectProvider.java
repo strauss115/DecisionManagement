@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.jku.se.model.Comment;
+import at.jku.se.model.Message;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Decision;
 import at.jku.se.model.NodeInterface;
@@ -38,8 +38,8 @@ public class SampleObjectProvider {
 		dec1.addRelation("assumption", new Property("We can’t increase the project budget by more than 10 percent"), true);
 		
 		Property assumption = new Property("reduce duplicate business logic");
-		Comment comment = new Comment("This is a comment");
-		comment.addRelation("comment", new Comment("subcomment"), true);
+		Message comment = new Message("This is a comment");
+		comment.addRelation("comment", new Message("subcomment"), true);
 		assumption.addRelation("comment", comment, true);
 		dec1.addRelation("argument", assumption, true);
 		

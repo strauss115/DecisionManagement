@@ -52,8 +52,8 @@ public class NodeResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
-			Decision dec = mapper.readValue(json, Decision.class);
-			return RestResponse.getSuccessResponse(DBService.updateNodeWihtRelationships(dec, user.getId()));
+			NodeInterface node = mapper.readValue(json, NodeInterface.class);
+			return RestResponse.getSuccessResponse(DBService.updateNodeWihtRelationships(node, user.getId()));
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
