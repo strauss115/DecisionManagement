@@ -15,7 +15,6 @@ public class StartupServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		// Chatserver starten
-		Server s = new Server();
+		new Thread(new Server()).start();
 	}
-	
 }

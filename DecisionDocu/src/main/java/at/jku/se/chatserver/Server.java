@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Server {
+public class Server implements Runnable {
 	private static final Logger log = LogManager.getLogger(Server.class);
 	private ServerSocket serverSocket = null;
 	private Socket clientSocket = null;
@@ -20,8 +20,9 @@ public class Server {
 	private static final ArrayList<ClientThread> clientthreads = new ArrayList<ClientThread>();
 	public static ArrayList<Decision> decs = new ArrayList<Decision>();
 
-	public Server() {
-
+	@Override
+	public void run() {
+		log.info("starting chatserver...");
 		try {
 			serverSocket = new ServerSocket(portNumber);
 		} catch (IOException e) {
@@ -46,7 +47,6 @@ public class Server {
 			} catch (IOException e) {
 				log.error("Error occured", e);
 			}
-		}
+		}	
 	}
-
 }
