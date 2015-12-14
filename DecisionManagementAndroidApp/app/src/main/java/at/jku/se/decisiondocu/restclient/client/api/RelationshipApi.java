@@ -16,7 +16,7 @@ import at.jku.se.decisiondocu.restclient.client.model.Body;
 
 public class RelationshipApi {
     String basePath = RestHelper.GetBaseURL();
-    ApiInvoker apiInvoker = ApiInvoker.getInstance();
+    ApiInvoker apiInvoker = new ApiInvoker();
 
     public void addHeader(String key, String value) {
         getInvoker().addDefaultHeader(key, value);

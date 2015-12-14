@@ -17,7 +17,7 @@ import at.jku.se.decisiondocu.restclient.client.model.FormDataContentDisposition
 
 public class UploadApi {
     String basePath = RestHelper.GetBaseURL();
-    ApiInvoker apiInvoker = ApiInvoker.getInstance();
+    ApiInvoker apiInvoker = new ApiInvoker();
 
     public void addHeader(String key, String value) {
         getInvoker().addDefaultHeader(key, value);
