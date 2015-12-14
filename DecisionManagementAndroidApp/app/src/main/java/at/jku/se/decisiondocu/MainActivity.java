@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
     @ViewById(R.id.tabs)
     TabLayout tabLayout;
 
-    @ViewById(R.id.login_progress_main)
-    View mProgressView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         int res = SaveSharedPreference.isValidUser(this);
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case SaveSharedPreference.RESULT_TOKEN_EXPIRED:
                 new RestNetworkTasks.UserLoginTask(
-                        mProgressView, null, getBaseContext(),
+                        null, null, getBaseContext(),
                         SaveSharedPreference.getUserEmail(this),
                         SaveSharedPreference.getUserPass(this)
                 ){

@@ -110,8 +110,8 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="hk2-locator-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-1.15.0-rc" level="project" />
-    <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="google-oauth-client-1.15.0-rc" level="project" />
+    <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.6.1" level="project" />
     <orderEntry type="library" exported="" name="google-oauth-client-java6-1.15.0-rc" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
@@ -122,16 +122,21 @@
     <orderEntry type="library" exported="" name="jersey-guava-2.17" level="project" />
     <orderEntry type="library" exported="" name="aopalliance-repackaged-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="osgi-resource-locator-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="hk2-api-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="jersey-media-multipart-2.17" level="project" />
+    <orderEntry type="library" exported="" name="hk2-api-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-jackson-1.15.0-rc" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="org.apache.oltu.oauth2.client-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.3.3" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-android-1.15.0-rc" level="project" />
     <orderEntry type="library" exported="" name="androidannotations-api-3.2" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-2.5.3" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.3.3" level="project" />
     <orderEntry type="library" exported="" name="jersey-common-2.17" level="project" />
+    <orderEntry type="library" exported="" name="swagger-annotations-1.5.0" level="project" />
     <orderEntry type="library" exported="" name="jersey-client-2.17" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.5" level="project" />
+    <orderEntry type="library" exported="" name="org.apache.http.legacy-android-23" level="project" />
   </component>
 </module>
