@@ -354,6 +354,10 @@ public class ApiInvoker {
         Log.d("response", responseString);
         return responseString;
       }
+      else if(code == 401) {
+        // Unauthorized
+        throw new ApiException(401, "Unauthorized");
+      }
       else {
         if(response.getEntity() != null) {
           HttpEntity resEntity = response.getEntity();
