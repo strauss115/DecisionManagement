@@ -9,5 +9,5 @@ public class NodeString {
 	public static final String DECISIONGROUP = "DecisionGroup";
 	public static final String ALTERNATIVE = "Alternative";
 	public static final String PROPERTY = "Property";
-	public static final String COMMENT = "Comment";
+	public static final String MESSAGE = "Message";
 }

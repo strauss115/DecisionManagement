@@ -70,7 +70,7 @@ public class DBService {
 			constructors.put(NodeString.DECISIONGROUP, DecisionGroup.class.getConstructor(type));
 			constructors.put(NodeString.ALTERNATIVE, Alternative.class.getConstructor(type));
 			constructors.put(NodeString.PROPERTY, Property.class.getConstructor(type));
-			constructors.put(NodeString.COMMENT, Message.class.getConstructor(type));
+			constructors.put(NodeString.MESSAGE, Message.class.getConstructor(type));
 		}catch (Exception e){}
 	}
 	
@@ -309,6 +309,9 @@ public class DBService {
 			String nodeType=nodeTypes[0];
 			
 			Constructor<? extends NodeInterface> constructor = constructors.get(nodeType);
+			if(constructor==null){
+				constructor = constructors.get(NodeString.PROPERTY);
+			}
 			NodeInterface node = constructor.newInstance();
 			node.setId(nodeId);
 			
@@ -711,7 +714,7 @@ public class DBService {
 	}
 	
 	private static ResultSet executeQuery(String query)throws Exception{
-			System.out.println(query);
+			//System.out.println(query);
 			Statement stmt = getDBService().getConnection().createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			stmt.closeOnCompletion();
@@ -772,8 +775,15 @@ public class DBService {
 			e.printStackTrace();
 		}*/
 		
-		NodeInterface node = getNodeByID(NodeInterface.class,5861,0);
-		System.out.println(node);
+		/*NodeInterface node = getNodeByID(NodeInterface.class,5861,0);
+		System.out.println(node);*/
+		
+		Message m1 = new Message("Chatnachricht 6");
+		Node node = DBService.getNodeByID(Decision.class, 5884, admin, 2);
+		//System.out.println(node);
+		//node.addRelation("Message", m1, true);
+		//DBService.updateNodeWihtRelationships(node, admin.getId());
+		createMessage("Chatnachricht 7", node.getId(),admin.getId());
 	}
 
 }
