@@ -5,6 +5,11 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import at.jku.se.database.DBService;
+import at.jku.se.model.NodeInterface;
+import at.jku.se.model.User;
+import at.jku.se.model.Decision;
+
 public class ClientThread extends Thread {
 	private String clientName = null;
 	private DataInputStream is = null;
@@ -13,6 +18,8 @@ public class ClientThread extends Thread {
 	private String name;
 	
 	private final ArrayList<ClientThread> clientthreads;
+	
+	private NodeInterface node = null;
 
 	public ClientThread(Socket clientSocket, ArrayList<ClientThread> clientthreads) {
 		this.clientSocket = clientSocket;
@@ -38,20 +45,27 @@ public class ClientThread extends Thread {
 			}
 
 			String[] parts = name.split("@");
-			// Find the Decision Object if exists, otherwise create it
+			System.out.println(name);
+			// Get the User Node Object via DBService
+			User user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
+			System.out.println(user);
+			// Get the Node Object via DBService
+			node = DBService.getNodeByID(Decision.class, 5884, user, 1);
+			System.out.println(node);
+
 			String decname = parts[1];
 			int j = 0, index = -1;
 			
-			for (Decision dec : Server.decs) {
+			for (DecisionOld dec : Server.decs) {
 				if (dec.getShortname().equals(decname)) { index = j; break; }
 				j++;
 			}
 			if (index == -1) {
-				Server.decs.add(new Decision(decname, decname));
+				Server.decs.add(new DecisionOld(decname, decname));
 			}
 
-			os.println("Welcome " + parts[0]
-					+ " to " + decname + " chat room.\nTo leave enter /quit in a new line.");
+			os.println("Welcome " + user.getName()
+					+ " to '" + node.getName() + "' chat room.\nTo leave enter /quit in a new line.");
 
 			// send chat history
 			for (String line : Server.decs.get(j)
@@ -160,5 +174,9 @@ public class ClientThread extends Thread {
 			return "Kommentar '" + comment + "' zur Eigenschaft '" + propertie + "' hinzugefuegt";
 		}
 		return line;
+	}
+	
+	public long getNodeId() {
+		return node.getId();
 	}
 }
