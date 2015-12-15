@@ -391,8 +391,11 @@ public class DBService {
 		}
 		StringBuilder query = new StringBuilder();
 		StringBuilder match = new StringBuilder();
-		query.append("Match ").append(usercontrol).append("(n1:");
-		query.append(nodetype).append(afilter).append(")");
+		query.append("Match ").append(usercontrol).append("(n1");
+		if(!nodetype.equals(NodeInterface.class.getSimpleName())){
+		query.append(":").append(nodetype);
+		}
+		query.append(afilter).append(")");
 		match.append(query.toString());
 		query.append(where)
 		.append("Return null as RelNodeId, null as RelId, null as Reltype, id(n1)as NodeId, labels(n1)as NodeLable, n1 as Node");
@@ -708,6 +711,7 @@ public class DBService {
 	}
 	
 	private static ResultSet executeQuery(String query)throws Exception{
+			System.out.println(query);
 			Statement stmt = getDBService().getConnection().createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			stmt.closeOnCompletion();
@@ -759,14 +763,17 @@ public class DBService {
 		System.out.println(dec);
 		System.out.println(updateNodeWihtRelationships(dec, admin.getId()));*/
 		
-		try {
+		/*try {
 			String json = mapper.writeValueAsString(getAllDecisions(admin).toArray(new NodeInterface[0]));
 			mapper.readValue(json, Decision[].class);
 				
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}*/
+		
+		NodeInterface node = getNodeByID(NodeInterface.class,5861,0);
+		System.out.println(node);
 	}
 
 }
