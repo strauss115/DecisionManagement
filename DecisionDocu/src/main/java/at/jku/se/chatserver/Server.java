@@ -22,7 +22,7 @@ public class Server implements Runnable {
 
 	@Override
 	public void run() {
-		log.info("starting chatserver...");
+		log.info("starting chatserver on port " + portNumber);
 		try {
 			serverSocket = new ServerSocket(portNumber);
 		} catch (IOException e) {
@@ -48,5 +48,16 @@ public class Server implements Runnable {
 				log.error("Error occured", e);
 			}
 		}	
+	}
+	
+	public void close() {
+		if (serverSocket != null) {
+			try {
+				serverSocket.close();
+				log.debug("Socket closed!");
+			} catch (Exception e) {
+				log.error(e);
+			}
+		}
 	}
 }

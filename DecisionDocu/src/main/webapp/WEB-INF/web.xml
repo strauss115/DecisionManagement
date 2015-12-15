@@ -29,14 +29,6 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
-	<servlet>
-		<description>Does stuff on container startup</description>
-		<display-name>StartupServlet</display-name>
-		<servlet-name>StartupServlet</servlet-name>
-		<servlet-class>at.jku.se.chatserver.StartupServlet</servlet-class>
-		<load-on-startup>3</load-on-startup>
-	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>Jersey Web Application</servlet-name>
 		<url-pattern>/api/*</url-pattern>
