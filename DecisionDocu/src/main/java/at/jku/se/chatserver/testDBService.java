@@ -30,7 +30,8 @@ public class testDBService {
 		
 		Node node = DBService.getNodeByID(Decision.class, 5884, admin, 2);
 
-		node.addRelation("Message", m1, true);
+		//node.addRelation("Message", m1, true);
+		DBService.createMessage("Chatnachricht 7", node.getId(), admin.getId());
 		
 		//DBService.addRelationship(node.getId(), "Message", m1.getId());
 		DBService.updateNodeWihtRelationships(node, admin.getId());

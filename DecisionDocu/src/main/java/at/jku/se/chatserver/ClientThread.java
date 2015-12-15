@@ -50,7 +50,7 @@ public class ClientThread extends Thread {
 			User user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
 			System.out.println(user);
 			// Get the Node Object via DBService
-			node = DBService.getNodeByID(Decision.class, 5884, user, 1);
+			node = DBService.getNodeByID(NodeInterface.class, 5884, user, 1);
 			System.out.println(node);
 
 			String decname = parts[1];
