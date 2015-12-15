@@ -30,7 +30,8 @@ public class SessionManager {
 		String token = new BigInteger(130, random).toString(32);
 		validSessions.put(token, session);
 		removeExpiredTokens();
-		log.debug("Adding Session: " + session);
+		log.debug("Adding Token: '" + token + "' (expires: " + session.getExpiredate() + ") for user " + user.getEmail());
+		log.debug("Number of valid sessions: " + validSessions.size());
 		return token;
 	}
 	
