@@ -18,9 +18,9 @@ import at.jku.se.decisiondocu.chat.ChatActivity_;
 @EFragment(R.layout.fragment_chat)
 public class ChatFragment extends Fragment {
 
-    public static final String IP_ADDRESS = "chat.sosowu.at";
-    public static final String USERNAME = "Hans";
-    public static final String DECISION_NAME = "Dec3";
+    public static final String IP_ADDRESS = "192.168.0.101";
+    public static final String USERNAME = "5861";
+    public static final String DECISION_NAME = "5884";
 
     @ViewById(R.id.chat_ip_address)
     EditText mIPAddress;

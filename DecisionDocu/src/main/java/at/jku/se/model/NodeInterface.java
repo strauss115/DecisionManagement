@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@class")
 @JsonSubTypes({ @Type(value = Decision.class, name = "decision"), @Type(value = Property.class, name = "property") 
-, @Type(value = Project.class, name = "project"), @Type(value = User.class, name = "user"), @Type(value = Message.class, name = "comment")
+, @Type(value = Project.class, name = "project"), @Type(value = User.class, name = "user"), @Type(value = Message.class, name = "message")
 , @Type(value = Alternative.class, name = "alternative"), @Type(value = DecisionGroup.class, name = "decisiongroup")
 , @Type(value = InfluenceFactor.class, name = "influencefactor"), @Type(value = QualityAttribute.class, name = "qualityattribute")})
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
