@@ -1,27 +1,24 @@
-package at.jku.se.decisiondocu.chat;
+package at.jku.se.decisiondocu.beans;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
- 
-import java.util.ArrayList;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
-import at.jku.se.decisiondocu.asynctask.TeamIconDownloader;
-import at.jku.se.decisiondocu.beans.Team;
+import java.util.ArrayList;
+
 import at.jku.se.decisiondocu.views.ChatListItemView;
 import at.jku.se.decisiondocu.views.ChatListItemView_;
-import at.jku.se.decisiondocu.views.TeamItemView;
-import at.jku.se.decisiondocu.views.TeamItemView_;
 
+/**
+ * Created by martin on 14.12.15.
+ */
 @EBean
-public class MyCustomAdapter extends BaseAdapter {
+public class ChatAdapter extends BaseAdapter {
 
     @RootContext
     Context context;
@@ -49,22 +46,22 @@ public class MyCustomAdapter extends BaseAdapter {
         //getCount() represents how many items are in the list
         return mListItems.size();
     }
- 
+
     @Override
-        //get the data of an item from a specific position
-        //i represents the position of the item in the list
+    //get the data of an item from a specific position
+    //i represents the position of the item in the list
     public String getItem(int i) {
         return mListItems.get(i);
     }
- 
+
     @Override
-        //get the position id of the item from the list
+    //get the position id of the item from the list
     public long getItemId(int i) {
         return 0;
     }
- 
+
     @Override
- 
+
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ChatListItemView view;
@@ -77,6 +74,6 @@ public class MyCustomAdapter extends BaseAdapter {
 
         view.bind(getItem(position));
         return view;
- 
+
     }
 }

@@ -2,10 +2,17 @@ package at.jku.se.decisiondocu.asynctask;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 /**
  * Created by Benjamin on 19.11.2015.
@@ -28,7 +35,17 @@ public class RestNetworkTasks {
         protected Integer doInBackground(Void... params) {
             token = RestClient.getToken(mEmail,mPassword);
             if(token!=null){
-                SaveSharedPreference.setUserEmail(context,mEmail);
+                SaveSharedPreference.setUserEmail(context, mEmail);
+                SaveSharedPreference.setUserPassword(context, mPassword);
+                SaveSharedPreference.setUserToken(context, token);
+
+                Timestamp original = new Timestamp(System.currentTimeMillis());
+                Timestamp later = new Timestamp(System.currentTimeMillis() + 3600 * 1000);
+
+                Log.d("timestamp", original.toString());
+                Log.d("timestamp", later.toString());
+
+                SaveSharedPreference.setUserTokenTimestamp(context, System.currentTimeMillis() + 3600 * 1000);
                 return 1;
             }
             return 0;
@@ -61,5 +78,4 @@ public class RestNetworkTasks {
             return 0;
         }
     }
-
 }

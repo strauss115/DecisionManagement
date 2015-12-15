@@ -13,10 +13,10 @@ import at.jku.se.decisiondocu.R;
 /**
  * Created by martin on 30.11.15.
  */
-@EViewGroup(R.layout.list_item)
+@EViewGroup(R.layout.viewgroup_chat)
 public class ChatListItemView extends LinearLayout {
 
-    @ViewById(R.id.list_item_text_view)
+    @ViewById(R.id.chat_message_text)
     TextView tv_headline;
 
 
@@ -29,6 +29,11 @@ public class ChatListItemView extends LinearLayout {
     }
 
     public void bind(String item) {
+        if (item.contains("Hans")) {
+            tv_headline.setBackgroundResource(R.drawable.speech_bubble_orange);
+        } else {
+            tv_headline.setBackgroundResource(R.drawable.speech_bubble_green);
+        }
         tv_headline.setText(item);
     }
 }

@@ -57,8 +57,10 @@ import javax.net.ssl.X509TrustManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonParseException;
 
+import io.swagger.annotations.Api;
+
 public class ApiInvoker {
-  private static ApiInvoker INSTANCE = new ApiInvoker();
+
   private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
 
   private HttpClient client = null;
@@ -85,12 +87,10 @@ public class ApiInvoker {
     DATE_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-    // Set default User-Agent.
-    setUserAgent("Android-Java-Swagger");
   }
 
-  public static void setUserAgent(String userAgent) {
-    INSTANCE.addDefaultHeader("User-Agent", userAgent);
+  public ApiInvoker() {
+    addDefaultHeader("User-Agent", "Android-Java-Swagger");
   }
 
   public static Date parseDateTime(String str) {
@@ -190,14 +190,6 @@ public class ApiInvoker {
     params.add(new Pair(name, sb.substring(1)));
 
     return params;
-  }
-
-  public ApiInvoker() {
-    initConnectionManager();
-  }
-
-  public static ApiInvoker getInstance() {
-    return INSTANCE;
   }
 
   public void ignoreSSLCertificates(boolean ignoreSSLCertificates) {
@@ -378,14 +370,14 @@ public class ApiInvoker {
   }
 
   private HttpClient getClient(String host) {
-    if (client == null) {
+    //if (client == null) {
       if (ignoreSSLCertificates && ignoreSSLConnectionManager != null) {
         // Trust self signed certificates
         client = new DefaultHttpClient(ignoreSSLConnectionManager, new BasicHttpParams());
       } else {
         client = new DefaultHttpClient();
       }
-    }
+    //}
     return client;
   }
 

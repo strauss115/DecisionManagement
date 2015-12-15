@@ -2,6 +2,7 @@ package at.jku.se.decisiondocu.chat;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
+import at.jku.se.decisiondocu.beans.ChatAdapter;
 
 import static android.os.SystemClock.sleep;
 
@@ -41,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     Button send;
 
     @Bean
-    MyCustomAdapter mAdapter;
+    ChatAdapter mAdapter;
 
     private Client mClient;
 
@@ -99,6 +101,19 @@ public class ChatActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
             mAdapter.appendData(values[0]);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mClient != null) {
+            try {
+                mClient.sendMessage(Client.QUIT_MESSAGE);
+                mClient.stopClient();
+            } catch (Exception e) {
+                Log.d("tag", e.getMessage());
+            }
         }
     }
 }

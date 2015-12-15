@@ -4,11 +4,11 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import at.jku.se.database.DBService;
 import at.jku.se.model.User;
 
 public class SessionManager {
@@ -17,11 +17,11 @@ public class SessionManager {
 	private static final Logger log = LogManager.getLogger(SessionManager.class);
 	private static HashMap<String, Session> validSessions = new HashMap<String, Session>();
 	
-	static{
+	/*static{
 		Session supersession = new Session(DBService.getUserByEmail("admin@example.com"));
 		supersession.setExpiredate(null);
 		validSessions.put("g0up9ej1egkmrtveig59ke0adf",supersession);
-	}
+	}*/
 	
 	// ------------------------------------------------------------------------
 	
@@ -30,21 +30,26 @@ public class SessionManager {
 		String token = new BigInteger(130, random).toString(32);
 		validSessions.put(token, session);
 		removeExpiredTokens();
-		log.debug("Adding Session: " + session);
+		log.debug("Adding Token: '" + token + "' (expires: " + session.getExpiredate() + ") for user " + user.getEmail());
+		log.debug("Number of valid sessions: " + validSessions.size());
 		return token;
 	}
 	
 	// TODO remove session and implement timeout
 	
 	private static void removeExpiredTokens() {
-		for (String key:validSessions.keySet()){
+		for (Iterator<String> iterator = validSessions.keySet().iterator(); iterator.hasNext();) {
+			String key = iterator.next();
 			try{
 				if(validSessions.get(key).getExpiredate().before(new Date())){
-					validSessions.remove(key);
+					log.debug("Removing session: " + validSessions.get(key).toString());
+					iterator.remove();
 				}
-			}catch (Exception e){}//Expire date not set
-		}
-		
+			}
+			catch(Exception e) {
+				log.error(e);
+			}
+		}		
 	}
 
 	public static boolean verifySession(String session) {
@@ -52,6 +57,7 @@ public class SessionManager {
 			try{
 				return validSessions.get(session).getExpiredate().after(new Date());
 			}catch (Exception e){
+				log.error(e);
 				return true;//Expire date not set
 			}
 		}

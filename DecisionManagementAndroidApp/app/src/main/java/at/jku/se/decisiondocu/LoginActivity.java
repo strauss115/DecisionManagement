@@ -14,6 +14,7 @@ import org.androidannotations.annotations.EditorAction;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
+import at.jku.se.decisiondocu.restclient.RestHelper;
 
 /**
  * A login screen that offers login via email/password.
@@ -43,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
 
     @AfterViews
     protected void init() {
+        if (RestHelper.DEBUG_MODE) {
+            mEmailView.setText("user1@u1.com");
+            mPasswordView.setText("password");
+        }
 
     }
 

@@ -23,7 +23,7 @@ import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 public class DecisionApi {
     String basePath = RestHelper.GetBaseURL();
-    ApiInvoker apiInvoker = ApiInvoker.getInstance();
+    ApiInvoker apiInvoker = new ApiInvoker();
     ObjectMapper mapper = new ObjectMapper();
 
     public void addHeader(String key, String value) {

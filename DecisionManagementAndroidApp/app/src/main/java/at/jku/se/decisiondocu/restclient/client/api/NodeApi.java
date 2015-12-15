@@ -18,7 +18,7 @@ import at.jku.se.decisiondocu.restclient.client.model.Body;
 
 public class NodeApi {
     String basePath = RestHelper.GetBaseURL();
-    ApiInvoker apiInvoker = ApiInvoker.getInstance();
+    ApiInvoker apiInvoker = new ApiInvoker();
     ObjectMapper mapper = new ObjectMapper();
 
     public void addHeader(String key, String value) {
