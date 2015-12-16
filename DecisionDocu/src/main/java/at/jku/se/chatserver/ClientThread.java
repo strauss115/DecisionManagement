@@ -82,7 +82,6 @@ public class ClientThread extends Thread {
 					break;
 				}
 				
-				// Sending to the others
 				synchronized (this) {
 					String message = "<" + user.getName() + "> " + line;
 					

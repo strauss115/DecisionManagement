@@ -5,11 +5,17 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
+import at.jku.se.decisiondocu.chat.ChatActivity;
+import at.jku.se.decisiondocu.chat.ChatActivity_;
+import at.jku.se.decisiondocu.fragments.ChatFragment;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+
+import static at.jku.se.decisiondocu.R.id.decision_startChat;
 
 /**
  * Created by martin on 23.11.15.
@@ -25,6 +31,15 @@ public class ListItemView extends LinearLayout {
 
     @ViewById(R.id.decision_creation_date)
     TextView tv_date;
+
+    @Click(R.id.decision_startChat)
+    void click() {
+        new ChatActivity_.IntentBuilder_(getContext())
+                .IPAddress("192.168.0.101")
+                .UserName("5861")
+                .DecisionName("5898")
+                .start();
+    }
 
     public ListItemView(Context context) {
         super(context);
