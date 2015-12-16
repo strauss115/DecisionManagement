@@ -18,7 +18,6 @@ public class Server implements Runnable {
 	// This chat server can accept up to maxClientsCount clients' connections.
 	private static final int maxClientsCount = 10;
 	private static final ArrayList<ClientThread> clientthreads = new ArrayList<ClientThread>();
-	public static ArrayList<DecisionOld> decs = new ArrayList<DecisionOld>();
 
 	@Override
 	public void run() {

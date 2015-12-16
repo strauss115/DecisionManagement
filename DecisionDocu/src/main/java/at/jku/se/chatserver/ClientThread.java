@@ -13,7 +13,6 @@ import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 
 public class ClientThread extends Thread {
-	private String clientName = null;
 	private DataInputStream is = null;
 	private PrintStream os = null;
 	private Socket clientSocket = null;
@@ -55,54 +54,24 @@ public class ClientThread extends Thread {
 			// Get the Node Object via DBService
 			node = DBService.getNodeByID(NodeInterface.class, Integer.parseInt(parts[1]), user, 2);
 			//System.out.println(node);
-			
-			/* OLD
-			String decname = parts[1];
-			int j = 0, index = -1;
-			
-			for (DecisionOld dec : Server.decs) {
-				if (dec.getShortname().equals(decname)) { index = j; break; }
-				j++;
-			}
-			if (index == -1) {
-				Server.decs.add(new DecisionOld(decname, decname));
-			} */
 
 			os.println("Welcome " + user.getName()
 					+ " to '" + node.getName() + "' chat room.\nTo leave enter /quit in a new line.");
 
-			// Chatverlauf senden
+			// Chatverlauf an diesen Client senden
 			Map<String, List<RelationshipInterface>> rs = node.getRelationships();
-			System.out.println(rs);
-			if (rs.get("message") == null) {
-				System.out.println("Keine Nachrichten vorhanden");
-			}
-			else {
+			if (rs.get("message") != null) {
 				for (RelationshipInterface m : rs.get("message")) {
 					os.println(m.getRelatedNode().getName());
 				}
 			}
 			
-			System.out.println("Chatverlauf gesendet");
-			
 			synchronized (this) {
-				for (ClientThread thread : clientthreads) {
-					if (thread == this) {
-						clientName = "?" + user.getName();
-						break;
-					}
-				}
 				String message = "The user " + user.getName()
 						+ " entered the chat.";
 				
-				// Nachricht speichern:
-				DBService.createMessage(message, node.getId(), user.getId());
-
-				// Nachricht an alle Clients dieses Nodes senden:
-				for (ClientThread thread : clientthreads) {
-					if (thread != this && thread.getNodeId() == this.getNodeId())
-						thread.os.println(message);
-				}
+				this.saveMessage(message);
+				this.sendToOtherClients(message);
 			}
 			
 			// Start the conversation
@@ -115,21 +84,16 @@ public class ClientThread extends Thread {
 				
 				// Sending to the others
 				synchronized (this) {
-					String message = "<" + name + "> " + line;
-					// Nachricht speichern:
-					DBService.createMessage(message, node.getId(), user.getId());
-					for (ClientThread thread : clientthreads) {
-						if (thread.clientName != null && thread.getNodeId() == this.getNodeId())
-							thread.os.println(message);
-					}
+					String message = "<" + user.getName() + "> " + line;
+					
+					this.saveMessage(message);
+					this.sendToNodesClients(message);
 				}
 			}
 			synchronized (this) {
-				for (ClientThread thread : clientthreads) {
-					if (thread != this && thread.clientName != null && thread.getNodeId() == this.getNodeId())
-						thread.os.println("The user " + user.getName()
-								+ " is leaving the chat room.");
-				}
+				String message = "The user " + user.getName() + " is leaving the chat room.";
+				this.saveMessage(message);
+				this.sendToNodesClients(message);
 			}
 			os.println("*** Bye " + user.getName() + " ***");
 
@@ -143,22 +107,15 @@ public class ClientThread extends Thread {
 			os.close();
 			clientSocket.close();
 		} catch (IOException e) {
-			System.out.println("Thread Error");
-		}
-		catch (Exception e) {
 			System.out.println(e);
-			System.out.println("Thread Error2");
-			LeaveChat();
 		}
-	}
-	
-	private void LeaveChat () {
-		for (ClientThread thread : clientthreads) {
-			if (thread != this && thread.clientName != null && thread.getNodeId() == this.getNodeId())
-				thread.os.println("The user " + user.getName()
-						+ " is leaving the chat room.");
+		catch (Exception e) {			
+			System.out.println(e);
+			String message = "The user " + user.getName() + " is leaving the chat room.";
+			this.saveMessage(message);
+			this.sendToOtherClients(message);
+			clientthreads.remove(this);
 		}
-		clientthreads.remove(this);
 	}
 
 	private String checkLine(String line, String user) {
@@ -186,5 +143,23 @@ public class ClientThread extends Thread {
 	
 	public long getNodeId() {
 		return node.getId();
+	}
+	
+	private void saveMessage(String message) {
+		DBService.createMessage(message, node.getId(), user.getId());
+	}
+	
+	private void sendToOtherClients(String message) {
+		for (ClientThread thread : clientthreads) {
+			if (thread != this && thread.getNodeId() == this.getNodeId())
+				thread.os.println(message);
+		}
+	}
+	
+	private void sendToNodesClients(String message) {
+		for (ClientThread thread : clientthreads) {
+			if (thread != null && thread.getNodeId() == this.getNodeId())
+				thread.os.println(message);
+		}
 	}
 }
