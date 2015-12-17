@@ -1,9 +1,8 @@
 package at.jku.se.rest.web.api;
 
-import java.util.List;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -14,31 +13,24 @@ import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.Logger;
 
-import com.owlike.genson.Genson;
+import at.jku.se.rest.response.HttpCode;
+import at.jku.se.rest.response.RestResponse;
+import at.jku.se.rest.web.pojos.Group;
 
 import org.apache.logging.log4j.LogManager;
 
-import at.jku.se.dm.data.SampleObjectProvider;
-import at.jku.se.dm.rest.HttpCode;
-import at.jku.se.dm.rest.RestResponse;
-import at.jku.se.dm.rest.pojos.Group;
-import at.jku.se.dm.rest.pojos.Team;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Path("/group")
-@Api(value = "group")
+@Path("/web/group")
+@Api(value = "web/group")
 public class GroupResource {
 
 	private static final Logger log = LogManager.getLogger(GroupResource.class);
-	private static Genson genson = new Genson();
-
-	// not needed so far
-	// @Context
-	// UriInfo ui;
+	//private static Genson genson = new Genson();
 
 	// ------------------------------------------------------------------------
 
@@ -51,13 +43,15 @@ public class GroupResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets all groups", response = Group.class, responseContainer = "List")
-	public Response getAll() {
+	public Response getAll(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
 		log.debug("GET all groups");
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 
-		List<Group> groups = SampleObjectProvider.getAllGroups();
-		log.info("GET all groups returning '" + groups.size() + "' elements");
-
-		return RestResponse.getSuccessResponse(groups);
+		// List<Group> groups = SampleObjectProvider.getAllGroups();
+		// log.info("GET all groups returning '" + groups.size() + "'
+		// elements");
+		//
+		// return RestResponse.getSuccessResponse(groups);
 	}
 
 	@GET
@@ -65,16 +59,20 @@ public class GroupResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets group by name", response = Group.class)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No group found with given name") })
-	public Response get(@ApiParam(value = "Group name") @PathParam("groupName") String name) {
+	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Group name") @PathParam("groupName") String name) {
 		log.debug("GET group '" + name + "'");
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 
-		Group g = SampleObjectProvider.getGroupByName(name);
-		if (g != null) {
-			log.info("GET group returning '" + g.getName() + "'");
-			return RestResponse.getSuccessResponse(g);
-		} else {
-			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
-		}
+		// List<Group> groups = SampleObjectProvider.getAllGroups();
+		//
+		// Group g = SampleObjectProvider.getGroupByName(name);
+		// if (g != null) {
+		// log.info("GET group returning '" + g.getName() + "'");
+		// return RestResponse.getSuccessResponse(g);
+		// } else {
+		// return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+		// }
 	}
 
 	@POST
@@ -82,18 +80,22 @@ public class GroupResource {
 	@ApiOperation(value = "Create new group using JSON format")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Group saved successfully"),
 			@ApiResponse(code = 500, message = "Unable to save group") })
-	public Response createJSON(@ApiParam(value = "Group as JSON") String json) {
+	public Response createJSON(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Group as JSON") String json) {
 		log.debug("POST create group JSON: " + json);
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 
-		try {
-			Group g = genson.deserialize(json, Group.class);
-			SampleObjectProvider.addGroup(g);
-			log.debug("Created group successfully");
-			return RestResponse.getSuccessResponse();
-		} catch (Exception e) {
-			log.debug("Failed to create new group '" + e + "'");
-			return RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR, e.getMessage());
-		}
+		// try {
+		// Group g = genson.deserialize(json, Group.class);
+		// SampleObjectProvider.addGroup(g);
+		// log.debug("Created group successfully");
+		// return RestResponse.getSuccessResponse();
+		// } catch (Exception e) {
+		// log.debug("Failed to create new group '" + e + "'");
+		// return
+		// RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR,
+		// e.getMessage());
+		// }
 	}
 
 	@POST
@@ -102,19 +104,23 @@ public class GroupResource {
 	@ApiOperation(value = "Creates a new group")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Group saved successfully"),
 			@ApiResponse(code = 500, message = "Unable to save group") })
-	public Response create(@ApiParam(value = "Name of group") @QueryParam("name") String name,
+	public Response create(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Name of group") @QueryParam("name") String name,
 			@ApiParam(value = "Team name where group belongs to") @QueryParam("teamName") String teamName) {
 		log.debug("POST create group '" + name + "'");
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 
-		try {
-			Team t = SampleObjectProvider.getTeamByName(teamName);
-			SampleObjectProvider.addGroup(name, t);
-			log.debug("Created group successfully");
-			return RestResponse.getSuccessResponse();
-		} catch (Exception e) {
-			log.debug("Failed to create new group '" + e + "'");
-			return RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR, e.getMessage());
-		}
+		// try {
+		// WebTeam t = SampleObjectProvider.getTeamByName(teamName);
+		// SampleObjectProvider.addGroup(name, t);
+		// log.debug("Created group successfully");
+		// return RestResponse.getSuccessResponse();
+		// } catch (Exception e) {
+		// log.debug("Failed to create new group '" + e + "'");
+		// return
+		// RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR,
+		// e.getMessage());
+		// }
 	}
 
 	// @PUT
@@ -132,21 +138,25 @@ public class GroupResource {
 	@ApiOperation(value = "Deletes a group")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Group deleted successfully"),
 			@ApiResponse(code = 500, message = "Unable to delete group") })
-	public Response delete(@PathParam("groupName") String name) {
+	public Response delete(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@PathParam("groupName") String name) {
 		log.debug("DELETE group '" + name + "'");
-		
-		try {
-			Group g = SampleObjectProvider.getGroupByName(name);
-			if (SampleObjectProvider.deleteGroup(g)) {
-				log.debug("Deleted group successfully");
-				return RestResponse.getSuccessResponse();
-			}
-			else 
-				throw new Exception("Could not delete group");
-		} catch (Exception e) {
-			log.debug("Failed to delete group '" + e + "'");
-			return RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR, e.getMessage());
-		}
+		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+
+		// try {
+		// Group g = SampleObjectProvider.getGroupByName(name);
+		// if (SampleObjectProvider.deleteGroup(g)) {
+		// log.debug("Deleted group successfully");
+		// return RestResponse.getSuccessResponse();
+		// }
+		// else
+		// throw new Exception("Could not delete group");
+		// } catch (Exception e) {
+		// log.debug("Failed to delete group '" + e + "'");
+		// return
+		// RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR,
+		// e.getMessage());
+		// }
 	}
 
 }

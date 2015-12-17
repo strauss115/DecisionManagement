@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import at.jku.se.rest.response.ResponseData;
 
-public class Decision extends ResponseData {
+public class WebDecision extends ResponseData {
 
 	public static final String ID_PREFIX = "D";
 	
@@ -17,7 +17,7 @@ public class Decision extends ResponseData {
 	private String author;
 	private LinkedList<InfluenceFactor> influenceFactors;
 	private LinkedList<Rationale> rationales;
-	private LinkedList<Alternative> alternatives;
+	private LinkedList<WebAlternative> alternatives;
 	private LinkedList<Consequence> consequences;
 	private LinkedList<QualityAttribute> qualityAttributes;
 	private String team; // just team IDs
@@ -29,7 +29,7 @@ public class Decision extends ResponseData {
 	
 	// ------------------------------------------------------------------------
 	
-	public Decision() {
+	public WebDecision() {
 		
 	}
 	
@@ -41,7 +41,7 @@ public class Decision extends ResponseData {
 	 * @param author
 	 * @param team
 	 */
-	public Decision(String id, String name, User author, Team team) {
+	public WebDecision(String id, String name, WebUser author, WebTeam team) {
 		setId(id);
 		this.name = name;
 		this.author = author.getEMail();
@@ -50,7 +50,7 @@ public class Decision extends ResponseData {
 		
 		this.influenceFactors = new LinkedList<InfluenceFactor>();
 		this.rationales = new LinkedList<Rationale>();
-		this.alternatives = new LinkedList<Alternative>();
+		this.alternatives = new LinkedList<WebAlternative>();
 		this.consequences = new LinkedList<Consequence>();
 		this.qualityAttributes = new LinkedList<QualityAttribute>();
 		this.relatedDecisions = new LinkedList<String>();
@@ -67,7 +67,7 @@ public class Decision extends ResponseData {
 	 * @param author
 	 * @param team
 	 */
-	public Decision(String name, User author, Team team) {
+	public WebDecision(String name, WebUser author, WebTeam team) {
 		this (generateId(name, ID_PREFIX), name, author, team);
 	}
 	
@@ -94,13 +94,13 @@ public class Decision extends ResponseData {
 	public String getAuthor() {
 		return author;
 	}
-	public void setAuthor(User author) {
+	public void setAuthor(WebUser author) {
 		this.author = author.getEMail();
 	}
-	public LinkedList<Alternative> getAlternatives() {
+	public LinkedList<WebAlternative> getAlternatives() {
 		return alternatives;
 	}
-	public void addAlternative(Alternative alternative) {
+	public void addAlternative(WebAlternative alternative) {
 		alternatives.add(alternative);
 	}
 	public LinkedList<Rationale> getRationales() {

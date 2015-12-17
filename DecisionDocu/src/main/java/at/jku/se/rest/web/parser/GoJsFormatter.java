@@ -247,7 +247,7 @@ public class GoJsFormatter {
 		resultJSON = formatGoJsString(s);
 	}
 	
-	public GoJsFormatter(Decision decision){
+	public GoJsFormatter(WebDecision decision){
 		if (decision != null) {
 			String jsonstring = "{\"name\":\"" + decision.getName() + "\", \"children\": [";
 			// add influence factors
@@ -267,9 +267,9 @@ public class GoJsFormatter {
 			jsonstring += "]},";
 			// add alternatives
 			jsonstring += "{\"name\":\"Alternatives\", \"children\":[";
-			List<Alternative> alternatives = decision.getAlternatives();
+			List<WebAlternative> alternatives = decision.getAlternatives();
 			firstElement = true;
-			for(Alternative alt : alternatives){
+			for(WebAlternative alt : alternatives){
 				if(firstElement){
 					jsonstring += "{\"name\":\"" + alt.getValue() + "\"}";
 					firstElement = false;

@@ -8,7 +8,7 @@ import at.jku.se.rest.response.ResponseData;
 /**
  * Data class for teams used by REST service
  */
-public class Team extends ResponseData {
+public class WebTeam extends ResponseData {
 	
 	public static final String ID_PREFIX = "T";
 
@@ -16,15 +16,15 @@ public class Team extends ResponseData {
 	
 	private String name;
 	private LinkedList<String> users;
-	private User admin;
+	private WebUser admin;
 	
 	// ------------------------------------------------------------------------
 	
-	public Team() {
+	public WebTeam() {
 		
 	}
 	
-	public Team(String id, String name, User admin) {
+	public WebTeam(String id, String name, WebUser admin) {
 		this.name = name;
 		this.admin = admin;
 		setId(ID_PREFIX + name);
@@ -32,7 +32,7 @@ public class Team extends ResponseData {
 		users = new LinkedList<String>();
 	}
 	
-	public Team(String name, User admin) {
+	public WebTeam(String name, WebUser admin) {
 		this.name = name;
 		this.admin = admin;
 		setId(ID_PREFIX + name);
@@ -50,15 +50,15 @@ public class Team extends ResponseData {
 		this.name = name;
 	}
 	
-	public User getAdmin() {
+	public WebUser getAdmin() {
 		return admin;
 	}
 	
-	public void setAdmin(User admin) {
+	public void setAdmin(WebUser admin) {
 		this.admin = admin;
 	}
 	
-	public boolean addUser(User user) {
+	public boolean addUser(WebUser user) {
 		if (!users.contains(user.getEMail())) {
 			users.add((user.getEMail()));
 			return true;
@@ -66,7 +66,7 @@ public class Team extends ResponseData {
 		return false;
 	}
 	
-	public boolean removeUser(User user) {
+	public boolean removeUser(WebUser user) {
 		if (users.contains((user.getEMail()))) {
 			users.remove((user.getEMail()));
 			return true;

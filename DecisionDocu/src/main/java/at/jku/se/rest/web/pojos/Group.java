@@ -19,7 +19,7 @@ public class Group extends ResponseData {
 		
 	}
 	
-	public Group(String name, Team team) {
+	public Group(String name, WebTeam team) {
 		this.name = name;
 		this.team = team.getName();
 		
@@ -48,7 +48,7 @@ public class Group extends ResponseData {
 		return decisions;
 	}
 
-	public boolean addDecision(Decision decision) {
+	public boolean addDecision(WebDecision decision) {
 		if (!decisions.contains(decision.getName())) {
 			decisions.add(decision.getName());
 			return true;
@@ -56,7 +56,7 @@ public class Group extends ResponseData {
 		return false;
 	}
 	
-	public boolean removeDecision(Decision decision) {
+	public boolean removeDecision(WebDecision decision) {
 		if (decisions.contains(decision.getName())) {
 			decisions.remove(decision.getName());
 			return true;

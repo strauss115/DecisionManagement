@@ -117,6 +117,10 @@ public class DBService {
 		return getAllNodes(Decision.class, user, 2);
 	}
 	
+	public static Decision getDecisionById(long decisionId) {
+		
+	}
+	
 	public static User getUserByEmail(String email){
 		try{
 		return getAllNodes(User.class,0,"{email: \""+email+"\"}",null).get(0);

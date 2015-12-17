@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import at.jku.se.rest.response.ResponseData;
 
-public class User extends ResponseData {
+public class WebUser extends ResponseData {
 
 	/**
 	 * Unique e-mail address
@@ -18,11 +18,11 @@ public class User extends ResponseData {
 
 	// ------------------------------------------------------------------------
 
-	public User() {
+	public WebUser() {
 
 	}
 
-	public User(String eMail, String firstName, String lastName, String password) {
+	public WebUser(String eMail, String firstName, String lastName, String password) {
 		this.eMail = eMail;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -85,7 +85,7 @@ public class User extends ResponseData {
 		return teams;
 	}
 
-	public boolean addToTeam(Team team) {
+	public boolean addToTeam(WebTeam team) {
 		if (!teams.contains((team.getName()))) {
 			teams.add((team.getName()));
 			return true;
