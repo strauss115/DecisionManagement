@@ -1,4 +1,4 @@
-package at.jku.se.rest.web.api;
+package at.jku.se.rest.api;
 
 import java.util.List;
 
@@ -23,15 +23,15 @@ import at.jku.se.rest.response.RestResponse;
 import io.swagger.annotations.*;
 
 @Path("/web/chat")
-@Api(value = "web/chat")
-public class ChatResource {
+@Api(value = "webChat")
+public class WebChatResource {
 
-	private static final Logger log = LogManager.getLogger(DecisionResource.class);
+	private static final Logger log = LogManager.getLogger(WebDecisionResource.class);
 	// private static Genson genson = new Genson();
 
 	// ------------------------------------------------------------------------
 
-	public ChatResource() {
+	public WebChatResource() {
 
 	}
 

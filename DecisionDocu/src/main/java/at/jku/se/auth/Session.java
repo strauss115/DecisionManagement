@@ -1,23 +1,24 @@
 package at.jku.se.auth;
 
-import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.commons.lang3.time.DateUtils;
 
 import at.jku.se.model.User;
 
 public class Session {
 
-	Date expiredate;
-	User user;
-	
-	public Session(User user){
+	private Date expiredate;
+	private User user;
+
+	// ------------------------------------------------------------------------
+
+	public Session(User user) {
 		this.user = user;
-		expiredate = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(expiredate);
-		cal.add(Calendar.HOUR_OF_DAY, 1);
-		expiredate = cal.getTime();
+		this.expiredate = DateUtils.addHours(new Date(), 1);
 	}
+
+	// ------------------------------------------------------------------------
 
 	public Date getExpiredate() {
 		return expiredate;
@@ -30,6 +31,8 @@ public class Session {
 	public User getUser() {
 		return user;
 	}
+
+	// ------------------------------------------------------------------------
 
 	@Override
 	public String toString() {

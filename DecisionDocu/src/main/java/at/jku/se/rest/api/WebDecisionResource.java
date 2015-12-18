@@ -1,4 +1,4 @@
-package at.jku.se.rest.web.api;
+package at.jku.se.rest.api;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,14 +31,15 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Path("/web/decision")
-@Api(value = "web/decision")
-public class DecisionResource {
+@Api(value = "webDecision")
+public class WebDecisionResource {
 
-	private static final Logger log = LogManager.getLogger(DecisionResource.class);
+	private static final Logger log = LogManager.getLogger(WebDecisionResource.class);
+	private static DecisionResource api = new DecisionResource();
 
 	// ------------------------------------------------------------------------
 
-	public DecisionResource() {
+	public WebDecisionResource() {
 
 	}
 
@@ -47,14 +48,39 @@ public class DecisionResource {
 	/**
 	 * Converts a generic decision to web API decision format
 	 */
-	private static WebDecision convertDecision(Decision decision) {
-		WebDecision result = new WebDecision();
-		result.setName(decision.getName());
-		// result.setAuthor();
-		result.setCreationDate(decision.getCreationDate().getDate());
-		// TODO add other attributes
+	public static WebDecision convertDecision(Decision decision) {
+		try {
+			if (decision != null) {
+				WebDecision result = new WebDecision();
 
-		return result;
+				result.setId(String.valueOf(decision.getId()));
+				result.setName(decision.getName());
+				result.setCreationDate(decision.getCreationDate().getDate());
+				// TODO add other attributes - missing db implementation
+
+				return result;
+			} else {
+				log.error("Unable to convert decision because of null reference");
+				return new WebDecision();
+			}
+		} catch (Exception e) {
+			log.error("Unexpetected exception when converting decision '" + decision.getName() + "':" + e.getMessage());
+			return new WebDecision();
+		}
+	}
+
+	/**
+	 * Converts a list of generic decision to web API decision format
+	 */
+	public static List<WebDecision> convertDecision(List<Decision> decisions) {
+		List<WebDecision> webDecisions = new LinkedList<WebDecision>();
+
+		for (Decision d : decisions) {
+			if (d != null)
+				webDecisions.add(convertDecision(d));
+		}
+		// --
+		return webDecisions;
 	}
 
 	// ------------------------------------------------------------------------
@@ -69,57 +95,23 @@ public class DecisionResource {
 			log.warn("Unauthorized access");
 			return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 		}
+
 		User user = SessionManager.getUser(token);
-
-		List<Decision> decisions = DBService.getAllDecisions(user);
-		List<WebDecision> result = new LinkedList<>();
-
-		for (Decision d : decisions) {
-			result.add(convertDecision(d));
-		}
+		List<WebDecision> result = convertDecision(DBService.getAllDecisions(user));
 
 		log.info("GET all decisions returning '" + result.size() + "' elements");
-
 		return RestResponse.getSuccessResponse(result);
 	}
 
 	@GET
-	@Path("/{name}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Gets a decision by name", response = WebDecision.class)
-	@ApiResponses(value = { @ApiResponse(code = 204, message = "No decision found with given name") })
-	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@ApiParam(value = "Name of decision") @PathParam("name") String name) {
-		log.debug("GET decision '" + name + "'");
-
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
-
-		// Decision d = SampleObjectProvider.getDecisionByName(name);
-		// if (d != null) {
-		// log.info("GET decision returning '" + d.getName() + "'");
-		// return RestResponse.getSuccessResponse(d);
-		// } else {
-		// return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
-		// }
-	}
-
-	@GET
-	@Path("/byId/{id}")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets a decision by id", response = WebDecision.class)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No decision found with given id") })
 	public Response getById(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@ApiParam(value = "Decision id") @PathParam("id") String id) {
+			@ApiParam(value = "Decision id") @PathParam("id") long id) {
 		log.debug("GET decision by id '" + id + "'");
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
-
-		// Decision d = SampleObjectProvider.getDecisionById(id);
-		// if (d != null) {
-		// log.info("GET decision returning '" + d.getName() + "'");
-		// return RestResponse.getSuccessResponse(d);
-		// } else {
-		// return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
-		// }
+		return api.getDecision(token, id);
 	}
 
 	@GET
@@ -208,21 +200,18 @@ public class DecisionResource {
 	@ApiOperation(value = "Gets a JSON formatted graph for web app decision mind map")
 	public Response getGraphAsJsonById(
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@ApiParam(value = "Decision id") @QueryParam("id") String id) {
+			@ApiParam(value = "Decision id", required = true) @QueryParam("id") long id) {
 		log.debug("GET decisions by id '" + id + "'");
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
-
-		// WebDecision decision = SampleObjectProvider.getDecisionById(id);
-		// Response response = null;
-		// if (decision != null) {
-		// GoJsFormatter f2 = new GoJsFormatter(decision);
-		// String result = f2.getGoJsString();
-		// System.out.println(result);
-		// response =
-		// Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
-		// RestResponse.addResponseHeaders(response);
-		// return response;
-		// }
-		// return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+		WebDecision decision = convertDecision(DBService.getDecisionById(id));
+		Response response = null;
+		if (decision != null) {
+			GoJsFormatter f2 = new GoJsFormatter(decision);
+			String result = f2.getGoJsString();
+			System.out.println(result);
+			response = Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
+			RestResponse.addResponseHeaders(response);
+			return response;
+		}
+		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
 }

@@ -118,7 +118,8 @@ public class DBService {
 	}
 	
 	public static Decision getDecisionById(long decisionId) {
-		
+		// TODO implementation
+		return null;
 	}
 	
 	public static User getUserByEmail(String email){

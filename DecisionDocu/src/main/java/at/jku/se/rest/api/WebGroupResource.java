@@ -1,4 +1,4 @@
-package at.jku.se.rest.web.api;
+package at.jku.se.rest.api;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -26,15 +26,15 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Path("/web/group")
-@Api(value = "web/group")
-public class GroupResource {
+@Api(value = "webGroup")
+public class WebGroupResource {
 
-	private static final Logger log = LogManager.getLogger(GroupResource.class);
+	private static final Logger log = LogManager.getLogger(WebGroupResource.class);
 	//private static Genson genson = new Genson();
 
 	// ------------------------------------------------------------------------
 
-	public GroupResource() {
+	public WebGroupResource() {
 
 	}
 

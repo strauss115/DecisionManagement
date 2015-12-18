@@ -6,9 +6,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import at.jku.se.database.DBService;
 import at.jku.se.model.User;
 
 public class SessionManager {
@@ -17,12 +19,12 @@ public class SessionManager {
 	private static final Logger log = LogManager.getLogger(SessionManager.class);
 	private static HashMap<String, Session> validSessions = new HashMap<String, Session>();
 
-	/*
-	 * static{ Session supersession = new
-	 * Session(DBService.getUserByEmail("admin@example.com"));
-	 * supersession.setExpiredate(null);
-	 * validSessions.put("g0up9ej1egkmrtveig59ke0adf",supersession); }
-	 */
+	static {
+		// adding a 12 hours valid super session for testing purposes
+		Session supersession = new Session(DBService.getUserByEmail("admin@example.com"));
+		supersession.setExpiredate(DateUtils.addHours(new Date(), 12)); 
+		validSessions.put("1", supersession);
+	}
 
 	// ------------------------------------------------------------------------
 

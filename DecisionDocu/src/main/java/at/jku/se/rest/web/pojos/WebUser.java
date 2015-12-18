@@ -9,6 +9,7 @@ public class WebUser extends ResponseData {
 	/**
 	 * Unique e-mail address
 	 */
+	
 	private String eMail;
 	private String firstName, lastName;
 	private String password; // TODO JsonIgnore is not working...
@@ -32,7 +33,7 @@ public class WebUser extends ResponseData {
 	}
 
 	// ------------------------------------------------------------------------
-
+	
 	public String getEMail() {
 		return eMail;
 	}

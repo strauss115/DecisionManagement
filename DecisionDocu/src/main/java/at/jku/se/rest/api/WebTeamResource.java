@@ -1,6 +1,4 @@
-package at.jku.se.rest.web.api;
-
-import java.util.List;
+package at.jku.se.rest.api;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,15 +23,15 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Path("/team")
-@Api(value = "team")
-public class TeamResource {
+@Path("/web/team")
+@Api(value = "webTeam")
+public class WebTeamResource {
 
-	private static final Logger log = LogManager.getLogger(TeamResource.class);
+	private static final Logger log = LogManager.getLogger(WebTeamResource.class);
 
 	// ------------------------------------------------------------------------
 
-	public TeamResource() {
+	public WebTeamResource() {
 
 	}
 
