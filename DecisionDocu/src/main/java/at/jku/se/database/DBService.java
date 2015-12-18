@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -19,6 +20,8 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
 import org.neo4j.jdbc.Driver;
 import org.neo4j.jdbc.internal.Neo4jConnection;
@@ -44,17 +47,23 @@ import at.jku.se.model.QualityAttribute;
 import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
+import at.jku.se.rest.api.ChatResource;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
 
 @SuppressWarnings("unchecked")
 public class DBService {
 	
+	private static final Logger log = LogManager.getLogger(ChatResource.class);
 	private static final String CONNECT_STRING = "jdbc:neo4j://ubuntu.mayerb.net:7474/";
+	
 	private static Properties properties = new Properties();
 	private static Neo4jConnection con;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static HashMap<String, Constructor<? extends NodeInterface>> constructors = new HashMap<String, Constructor<? extends NodeInterface>>();
+	private static DBService ref;
+	
+	// ------------------------------------------------------------------------
 	
 	static {
 		properties.setProperty("user", "neo4j");
@@ -74,17 +83,19 @@ public class DBService {
 		}catch (Exception e){}
 	}
 	
-	private static DBService ref;
-	
-	private DBService() {
-	}
-	
 	public static DBService getDBService() {
 		if (ref == null) {
 			ref = new DBService();
 		}
 		return ref;
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	private DBService() {
+	}
+		
+	// ------------------------------------------------------------------------
 	
 	private Neo4jConnection getConnection(){
 		if(con==null){
@@ -97,8 +108,18 @@ public class DBService {
 		}
 		return con;
 	}
+	
+	// ------------------------------------------------------------------------
+	// *** High level database query methods *** 
+	// ------------------------------------------------------------------------
+	
 	public static List<Decision> getAllDecisions (User user){
 		return getAllNodes(Decision.class, user, 2);
+	}
+	
+	public static Decision getDecisionById(long decisionId) {
+		// TODO implementation
+		return null;
 	}
 	
 	public static User getUserByEmail(String email){
@@ -152,6 +173,37 @@ public class DBService {
 		}
 		return null;
 	}
+	
+	public static List<Message> getAllMessages() {
+		try {
+			log.debug("Trying to get all chat messages");
+			return getAllNodes(Message.class, 2);
+		} catch (Exception e) {
+			log.error("Unable to get all chat messages: " + e);
+			return new LinkedList<Message>();
+		}
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	public static boolean addUserToProject(User user, long projectId, String projectPassword) {
+		Project project = getNodeByID(Project.class,projectId,0);
+		if(project==null||project.getPassword()==null||project.getPassword().length()<=0){
+			return false;
+		}
+		if(!project.getPassword().equals(projectPassword)){
+			return false;
+		}
+		try{
+			return addRelationship(user.getId(),RelationString.HASPROJECT,projectId)>0;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	// ------------------------------------------------------------------------
 	
 	public static <T extends NodeInterface> T getNodeByID(Class<T> type, long nodeid, User user, int level){
 		try{
@@ -694,23 +746,6 @@ public class DBService {
 		
 		match.append("}");
 		return match.toString();
-	}
-	
-	public static boolean addUserToProject(User user, long projectId, String projectPassword) {
-		Project project = getNodeByID(Project.class,projectId,0);
-		if(project==null||project.getPassword()==null||project.getPassword().length()<=0){
-			return false;
-		}
-		if(!project.getPassword().equals(projectPassword)){
-			return false;
-		}
-		try{
-			return addRelationship(user.getId(),RelationString.HASPROJECT,projectId)>0;
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		
-		return false;
 	}
 	
 	private static ResultSet executeQuery(String query)throws Exception{
