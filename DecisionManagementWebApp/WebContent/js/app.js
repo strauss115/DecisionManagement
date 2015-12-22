@@ -1,5 +1,5 @@
 var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices', 'decisionServices', 'angularFileUpload']);
-var serverAddress = "http://ubuntu.mayerb.net:8080";
+var serverAddress = "http://140.78.186.75:8181";
 
 
 

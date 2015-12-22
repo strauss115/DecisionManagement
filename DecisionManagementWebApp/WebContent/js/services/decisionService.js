@@ -11,4 +11,3 @@ decisionServices.factory('LoadGraph', ['$resource',
         });
     }]);
 
-
