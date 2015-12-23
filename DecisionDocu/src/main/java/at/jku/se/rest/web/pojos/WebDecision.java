@@ -20,8 +20,6 @@ public class WebDecision extends ResponseData {
 	private LinkedList<WebAlternative> alternatives;
 	private LinkedList<Consequence> consequences;
 	private LinkedList<QualityAttribute> qualityAttributes;
-	private String team; // just team IDs
-	private String group;
 	private LinkedList<String> relatedDecisions;
 	private LinkedList<String> responsibles;
 	private LinkedList<String> documents;
@@ -32,7 +30,6 @@ public class WebDecision extends ResponseData {
 	public WebDecision() {
 		this.name = "";
 		this.author = "";
-		this.team = "";
 		this.creationDate = new Date();
 		
 		this.influenceFactors = new LinkedList<InfluenceFactor>();
@@ -54,13 +51,12 @@ public class WebDecision extends ResponseData {
 	 * @param author
 	 * @param team
 	 */
-	public WebDecision(String id, String name, WebUser author, WebTeam team) {
+	public WebDecision(String id, String name, WebUser author) {
 		this();
 		
 		setId(id);
 		this.name = name;
 		this.author = author.getEMail();
-		this.team = team.getName();
 		this.creationDate = new Date();
 	}
 	
@@ -71,8 +67,8 @@ public class WebDecision extends ResponseData {
 	 * @param author
 	 * @param team
 	 */
-	public WebDecision(String name, WebUser author, WebTeam team) {
-		this (generateId(name, ID_PREFIX), name, author, team);
+	public WebDecision(String name, WebUser author) {
+		this (generateId(name, ID_PREFIX), name, author);
 	}
 	
 	// ------------------------------------------------------------------------
@@ -124,18 +120,6 @@ public class WebDecision extends ResponseData {
 	}
 	public void addInfluenceFactor(InfluenceFactor influenceFactor) {
 		influenceFactors.add(influenceFactor);
-	}
-	public String getTeam() {
-		return team;
-	}
-	public void setTeam(String team) {
-		this.team = team;
-	}
-	public String getGroup() {
-		return group;
-	}
-	public void setGroup(Group group) {
-		this.group = group.getName();
 	}
 	public LinkedList<QualityAttribute> getQualityAttributes() {
 		return qualityAttributes;
