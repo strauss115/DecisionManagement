@@ -30,22 +30,9 @@ public class WebDecision extends ResponseData {
 	// ------------------------------------------------------------------------
 	
 	public WebDecision() {
-		
-	}
-	
-	/**
-	 * Constructor used by backend for existing decision in database
-	 * 
-	 * @param id
-	 * @param name
-	 * @param author
-	 * @param team
-	 */
-	public WebDecision(String id, String name, WebUser author, WebTeam team) {
-		setId(id);
-		this.name = name;
-		this.author = author.getEMail();
-		this.team = team.getName();
+		this.name = "";
+		this.author = "";
+		this.team = "";
 		this.creationDate = new Date();
 		
 		this.influenceFactors = new LinkedList<InfluenceFactor>();
@@ -59,6 +46,23 @@ public class WebDecision extends ResponseData {
 		this.decisionGraph = new DecisionGraph();
 	}
 	
+	/**
+	 * Constructor used by backend for existing decision in database
+	 * 
+	 * @param id
+	 * @param name
+	 * @param author
+	 * @param team
+	 */
+	public WebDecision(String id, String name, WebUser author, WebTeam team) {
+		this();
+		
+		setId(id);
+		this.name = name;
+		this.author = author.getEMail();
+		this.team = team.getName();
+		this.creationDate = new Date();
+	}
 	
 	/**
 	 * Constructor used by API for new decision objects
