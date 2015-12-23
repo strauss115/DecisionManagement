@@ -2,6 +2,7 @@ package at.jku.se.decisiondocu.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +19,7 @@ import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +27,15 @@ import java.util.Map;
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.DecisionFinder;
 import at.jku.se.decisiondocu.beans.RESTDecisionFinder;
+import at.jku.se.decisiondocu.restclient.client.model.Alternative;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.NodeString;
+import at.jku.se.decisiondocu.restclient.client.model.PropertyString;
 import at.jku.se.decisiondocu.restclient.client.model.RelationString;
 import at.jku.se.decisiondocu.restclient.client.model.RelationshipInterface;
 import at.jku.se.decisiondocu.restclient.client.model.User;
+
 
 /**
  * Created by martin on 23.12.15.
@@ -40,7 +45,7 @@ public class SearchDetailsActivity extends AppCompatActivity {
 
     private ProgressDialog mDialog;
     private Decision mDecision;
-
+    private HashMap<LinearLayout,Integer> mLinearLayoutHashMap;
 
     @ViewById(R.id.search_detail_title)
     TextView mTitle;
@@ -48,8 +53,8 @@ public class SearchDetailsActivity extends AppCompatActivity {
     @ViewById(R.id.search_detail_id)
     TextView mId;
 
-    @ViewById(R.id.search_detail_author)
-    TextView mAuthor;
+    @ViewById(R.id.search_detail_authors)
+    LinearLayout mAuthors;
 
     @ViewById(R.id.search_detail_creationdate)
     TextView mCreationDate;
@@ -68,6 +73,7 @@ public class SearchDetailsActivity extends AppCompatActivity {
 
     @AfterInject
     void init() {
+        mLinearLayoutHashMap = new HashMap<>();
         if (decisionId >= 0) {
             fetchData();
         }
@@ -103,12 +109,14 @@ public class SearchDetailsActivity extends AppCompatActivity {
     void updateView() {
         mTitle.setText(mDecision.getName());
         mId.setText(mDecision.getId() + "");
-        mAuthor.setText("unknown");
+
         List<RelationshipInterface> creators = mDecision.getRelationships().get(RelationString.CREATOR);
         if (creators != null && creators.size() > 0) {
             try {
-                User u = (User) creators.get(0).getRelatedNode();
-                mAuthor.setText(u.getName());
+                for (RelationshipInterface ri : creators) {
+                    User u = (User)ri.getRelatedNode();
+                    printTextView(" * " + u.getName() + " " + u.getLastname(), mAuthors);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -116,8 +124,14 @@ public class SearchDetailsActivity extends AppCompatActivity {
         mCreationDate.setText(mDecision.getCreationDate().yyyyMMdd());
 
         for (Map.Entry<String, String> entry : mDecision.getDirectProperties().entrySet()) {
+            if (entry.getKey().toLowerCase().equals(PropertyString.CREATIONDATE.toLowerCase())) continue;
             printTextView(entry.getKey() + " --> " + entry.getValue(), mDirectProperties);
         }
+
+        if (!mLinearLayoutHashMap.containsKey(mDirectProperties)) {
+            printTextView("-", mDirectProperties);
+        }
+
 
         for (Map.Entry<String, List<RelationshipInterface>> entry : mDecision.getRelationships().entrySet()) {
 
@@ -127,12 +141,12 @@ public class SearchDetailsActivity extends AppCompatActivity {
                 Log.d("node", node.getNodeType());
 
                 switch (node.getNodeType()) {
-                    case NodeString.USER:
-                        printTextView("User: " + ((User)node).getName() + " " + ((User)node).getLastname(), mRelationships);
-                        break;
                     case NodeString.PROPERTY:
                         printTextView("Property: " + node.getName(), mRelationships);
                         break;
+                    case NodeString.ALTERNATIVE:
+                        Alternative a = (Alternative)node;
+                        printTextView("Alternative: " + a.getName(), mRelationships);
                     default:
                         break;
                 }
@@ -159,6 +173,13 @@ public class SearchDetailsActivity extends AppCompatActivity {
             tv.setTextAppearance(android.R.style.TextAppearance_Medium);
         }
         tv.setText(content);
+        tv.setTextColor(Color.BLACK);
+
+        int value = 1;
+        if (mLinearLayoutHashMap.containsKey(view)) {
+            value = mLinearLayoutHashMap.get(view);
+        }
+        mLinearLayoutHashMap.put(view, value);
         view.addView(tv);
     }
 }

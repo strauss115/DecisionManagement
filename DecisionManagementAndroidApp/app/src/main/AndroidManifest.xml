@@ -39,8 +39,7 @@
         </activity>
         <activity android:name=".chat.ChatActivity_"
             android:parentActivityName=".MainActivity_" />
-        <activity android:name=".activities.SearchDetailsActivity_"
-            android:parentActivityName=".MainActivity_" />
+        <activity android:name=".activities.SearchDetailsActivity_" />
     </application>
 
 </manifest>
