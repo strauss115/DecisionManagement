@@ -122,8 +122,8 @@
     <orderEntry type="library" exported="" name="jersey-guava-2.17" level="project" />
     <orderEntry type="library" exported="" name="aopalliance-repackaged-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="osgi-resource-locator-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="hk2-api-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="jersey-media-multipart-2.17" level="project" />
+    <orderEntry type="library" exported="" name="hk2-api-2.4.0-b10" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-jackson-1.15.0-rc" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="org.apache.oltu.oauth2.client-1.0.0" level="project" />

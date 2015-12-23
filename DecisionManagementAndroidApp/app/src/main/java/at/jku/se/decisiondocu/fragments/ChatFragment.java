@@ -18,9 +18,11 @@ import at.jku.se.decisiondocu.chat.ChatActivity_;
 @EFragment(R.layout.fragment_chat)
 public class ChatFragment extends Fragment {
 
-    public static final String IP_ADDRESS = "192.168.0.101";
-    public static final String USERNAME = "5861";
-    public static final String DECISION_NAME = "5884";
+    public static final String IP_ADDRESS = "192.168.0.102";
+    public static final String USERNAME = "Kurt";
+    public static final String DECISION_NAME = "Sein, oder nicht sein?";
+    public static final long USR_NODE_ID = 5861;
+    public static final long DEC_NODE_ID = 5884;
 
     @ViewById(R.id.chat_ip_address)
     EditText mIPAddress;
@@ -65,6 +67,8 @@ public class ChatFragment extends Fragment {
         if (!error) {
             new ChatActivity_.IntentBuilder_(getActivity())
                     .IPAddress(ip)
+                    .dec_node_id(DEC_NODE_ID)
+                    .usr_node_id(USR_NODE_ID)
                     .UserName(user)
                     .DecisionName(decision)
                     .start();

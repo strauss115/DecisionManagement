@@ -25,6 +25,12 @@ public class ChatActivity extends AppCompatActivity {
     private static final int PORT = 2222;
 
     @Extra
+    long dec_node_id;
+
+    @Extra
+    long usr_node_id;
+
+    @Extra
     String DecisionName;
 
     @Extra
@@ -65,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // AWUR
         sleep(1000);
-        sendMessage(UserName + "@" + DecisionName); // Username
+        sendMessage(usr_node_id + "@" + dec_node_id); // Username
         // AWUR ende
     }
 
