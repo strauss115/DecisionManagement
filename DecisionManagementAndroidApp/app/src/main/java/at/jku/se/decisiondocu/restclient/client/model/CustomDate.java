@@ -42,4 +42,9 @@ public class CustomDate {
 		return formate.format(getDate());
 	}
 
+	public String yyyyMMdd() {
+		SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return formate.format(getDate());
+	}
+
 }

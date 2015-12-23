@@ -100,6 +100,17 @@ public class RestClient {
         return decs;
     }
 
+    public static Decision getDecisionWithId(long id) {
+        DecisionApi api = new DecisionApi();
+        Decision dec = new Decision();
+        try {
+            dec = api.getDecision(accessToken, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dec;
+    }
+
 
     public static List<Project> getAllProjects() {
         ProjectApi api = new ProjectApi();

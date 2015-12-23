@@ -38,9 +38,8 @@
                 android:value="at.jku.se.decisiondocu.LoginActivity_" />
         </activity>
         <activity android:name=".chat.ChatActivity_"
-            android:parentActivityName=".MainActivity_"
-            >
-        </activity>
+            android:parentActivityName=".MainActivity_" />
+        <activity android:name=".activities.SearchDetailsActivity_" />
     </application>
 
 </manifest>

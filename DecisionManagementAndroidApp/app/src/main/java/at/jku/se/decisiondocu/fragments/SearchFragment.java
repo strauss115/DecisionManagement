@@ -21,6 +21,7 @@ import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
+import at.jku.se.decisiondocu.activities.SearchDetailsActivity_;
 import at.jku.se.decisiondocu.beans.SearchAdapter;
 import at.jku.se.decisiondocu.fragments.dummy.DummyContent;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
@@ -69,6 +70,9 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     @ItemClick(R.id.list_view)
     protected void itemClicked(Decision item) {
         Log.i("ListView", "Item " + item + " clicked!");
+        new SearchDetailsActivity_.IntentBuilder_(getActivity())
+                .decisionId(item.getId())
+                .start();
     }
 
     private void refreshContent() {

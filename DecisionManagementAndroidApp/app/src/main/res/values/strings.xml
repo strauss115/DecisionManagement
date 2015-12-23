@@ -47,5 +47,11 @@
     <string name="add_select_team">Select project</string>
     <string name="add_select_desc_name">Specify decision name</string>
     <string name="search_hint">fulltext search ...</string>
+    <string name="itemname_id">decision id</string>
+    <string name="itemname_author">decision author</string>
+    <string name="itemname_creationdate">decision creation date</string>
+    <string name="itemname_test"><![CDATA[<testvalue>]]></string>
+    <string name="itemname_directProperties">decision direct properties</string>
+    <string name="itemname_relationships">decision relationships</string>
 
 </resources>

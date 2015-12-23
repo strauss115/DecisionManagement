@@ -10,4 +10,5 @@ import at.jku.se.decisiondocu.restclient.client.model.Decision;
 public interface DecisionFinder {
 
     List<Decision> findAll();
+    Decision find(long id);
 }

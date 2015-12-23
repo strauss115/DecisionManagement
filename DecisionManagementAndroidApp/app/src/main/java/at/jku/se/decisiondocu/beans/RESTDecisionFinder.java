@@ -17,4 +17,7 @@ public class RESTDecisionFinder implements DecisionFinder {
     public List<Decision> findAll() {
         return RestClient.getAllDecisions();
     }
+
+    @Override
+    public Decision find(long id) { return RestClient.getDecisionWithId(id); }
 }

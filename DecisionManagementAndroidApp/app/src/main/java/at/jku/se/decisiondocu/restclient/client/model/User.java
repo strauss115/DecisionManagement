@@ -32,13 +32,12 @@ public class User extends Node {
 
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@JsonIgnore
 	public String getLastname() {
 		try {
-			return this.getDirectProperties().get("lastname");
+			return super.getDirectProperties().get("lastname");
 		} catch (Exception e) {
 			return null;
 		}
@@ -47,7 +46,7 @@ public class User extends Node {
 	@JsonIgnore
 	public String getEmail() {
 		try {
-			return this.getDirectProperties().get("email");
+			return super.getDirectProperties().get("email");
 		} catch (Exception e) {
 			return null;
 		}
@@ -56,7 +55,7 @@ public class User extends Node {
 	@JsonIgnore
 	public String getPassword() {
 		try {
-			return this.getDirectProperties().get("password");
+			return super.getDirectProperties().get("password");
 		} catch (Exception e) {
 			return null;
 		}
@@ -65,7 +64,7 @@ public class User extends Node {
 	@JsonIgnore
 	public boolean isAdmin() {
 		try {
-			return Boolean.parseBoolean(this.getDirectProperties().get("isAdmin"));
+			return Boolean.parseBoolean(super.getDirectProperties().get("isAdmin"));
 		} catch (Exception e) {
 			return false;
 		}
@@ -73,22 +72,22 @@ public class User extends Node {
 
 	@JsonIgnore
 	public void setLastname(String lastname) {
-		this.addDirectProperty("lastname", lastname);
+		super.addDirectProperty("lastname", lastname);
 	}
 
 	@JsonIgnore
 	public void setEmail(String email) {
-		this.addDirectProperty("email", email);
+		super.addDirectProperty("email", email);
 	}
 
 	@JsonIgnore
 	public void setPassword(String password) {
-		this.addDirectProperty("password", password);
+		super.addDirectProperty("password", password);
 	}
 
 	@JsonIgnore
 	public void setAdmin(boolean admin) {
-		this.addDirectProperty("isAdmin", "" + admin);
+		super.addDirectProperty("isAdmin", "" + admin);
 	}
 
 	@Override
