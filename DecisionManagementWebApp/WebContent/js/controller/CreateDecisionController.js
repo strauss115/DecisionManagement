@@ -1,5 +1,25 @@
 app.controller('CreateDecisionController', function ($scope) {
-$scope.model = new go.GraphLinksModel(
-        [{"brush":"black", "loc":"0 0", "text":"decision1 very very long name", "key":0}, {"brush":"black", "loc":"254 -100", "parent":0, "text":"factor 1", "dir":"right", "key":1}, {"brush":"black", "loc":"394 -140", "parent":1, "text":"f1 child 1", "dir":"right", "key":11}, {"brush":"black", "loc":"394 -110", "parent":1, "text":"f1 child 2", "dir":"right", "key":12}, {"brush":"black", "loc":"394 -80", "parent":1, "text":"f1 child 3", "dir":"right", "key":13}, {"brush":"black", "loc":"394 -50", "parent":1, "text":"f1 child 4", "dir":"right", "key":14}, {"brush":"black", "loc":"254 100", "parent":0, "text":"factor 2 longname", "dir":"right", "key":2}, {"brush":"black", "loc":"439 70", "parent":2, "text":"f2 child 1 very long name", "dir":"right", "key":21}, {"brush":"black", "loc":"439 100", "parent":2, "text":"f2 child 2", "dir":"right", "key":22}, {"brush":"black", "loc":"439 130", "parent":2, "text":"f2 child 3", "dir":"right", "key":23}, {"brush":"black", "loc":"-80 -100", "parent":0, "text":"factor 3", "dir":"left", "key":3}, {"brush":"black", "loc":"-220 -130", "parent":3, "text":"f3 child 1", "dir":"left", "key":31}, {"brush":"black", "loc":"-220 -100", "parent":3, "text":"f3 child 2", "dir":"left", "key":32}, {"brush":"black", "loc":"-220 -70", "parent":3, "text":"f3 child 3", "dir":"left", "key":33}, {"brush":"black", "loc":"-80 100", "parent":0, "text":"factor 4 very long name loooong", "dir":"left", "key":4}, {"brush":"black", "loc":"-335 70", "parent":4, "text":"shorty", "dir":"left", "key":41}, {"brush":"black", "loc":"-335 100", "parent":4, "text":"f4 child 2", "dir":"left", "key":42}, {"brush":"black", "loc":"-335 130", "parent":4, "text":"f4 child 3", "dir":"left", "key":43}, {"brush":"black", "loc":"-485 100", "parent":43, "text":"f4 child 3 level3 1", "dir":"left", "key":4301}, {"brush":"black", "loc":"-485 130", "parent":43, "text":"f4 child 3 level3 2", "dir":"left", "key":4302}, {"brush":"black", "loc":"-485 160", "parent":43, "text":"f4 child 3 level3 3", "dir":"left", "key":4303}], [{"from":0, "to":1}, {"from":1, "to":11}, {"from":1, "to":12}, {"from":1, "to":13}, {"from":1, "to":14}, {"from":0, "to":2}, {"from":2, "to":21}, {"from":2, "to":22}, {"from":2, "to":23}, {"from":0, "to":3}, {"from":3, "to":31}, {"from":3, "to":32}, {"from":3, "to":33}, {"from":0, "to":4}, {"from":4, "to":41}, {"from":4, "to":42}, {"from":4, "to":43}, {"from":43, "to":4301}, {"from":43, "to":4302}, {"from":43, "to":4303}]);
-        $scope.model.selectedNodeData = null;
+    $scope.model = new go.Model.fromJson({"class": "go.TreeModel",
+        "nodeDataArray": [
+            {"key": 0, "text": "Mind Map", "loc": "0 0"},
+            {"key": 1, "parent": 0, "text": "Getting more time", "brush": "skyblue", "dir": "right", "loc": "77 -22"},
+            {"key": 11, "parent": 1, "text": "Wake up early", "brush": "skyblue", "dir": "right", "loc": "200 -48"},
+            {"key": 12, "parent": 1, "text": "Delegate", "brush": "skyblue", "dir": "right", "loc": "200 -22"},
+            {"key": 13, "parent": 1, "text": "Simplify", "brush": "skyblue", "dir": "right", "loc": "200 4"},
+            {"key": 2, "parent": 0, "text": "More effective use", "brush": "darkseagreen", "dir": "right", "loc": "77 43"},
+            {"key": 21, "parent": 2, "text": "Planning", "brush": "darkseagreen", "dir": "right", "loc": "203 30"},
+            {"key": 211, "parent": 21, "text": "Priorities", "brush": "darkseagreen", "dir": "right", "loc": "274 17"},
+            {"key": 212, "parent": 21, "text": "Ways to focus", "brush": "darkseagreen", "dir": "right", "loc": "274 43"},
+            {"key": 22, "parent": 2, "text": "Goals", "brush": "darkseagreen", "dir": "right", "loc": "203 56"},
+            {"key": 3, "parent": 0, "text": "Time wasting", "brush": "palevioletred", "dir": "left", "loc": "-20 -31.75"},
+            {"key": 31, "parent": 3, "text": "Too many meetings", "brush": "palevioletred", "dir": "left", "loc": "-117 -64.25"},
+            {"key": 32, "parent": 3, "text": "Too much time spent on details", "brush": "palevioletred", "dir": "left", "loc": "-117 -25.25"},
+            {"key": 33, "parent": 3, "text": "Message fatigue", "brush": "palevioletred", "dir": "left", "loc": "-117 0.75"},
+            {"key": 331, "parent": 31, "text": "Check messages less", "brush": "palevioletred", "dir": "left", "loc": "-251 -77.25"},
+            {"key": 332, "parent": 31, "text": "Message filters", "brush": "palevioletred", "dir": "left", "loc": "-251 -51.25"},
+            {"key": 4, "parent": 0, "text": "Key issues", "brush": "coral", "dir": "left", "loc": "-20 52.75"},
+            {"key": 41, "parent": 4, "text": "Methods", "brush": "coral", "dir": "left", "loc": "-103 26.75"},
+            {"key": 42, "parent": 4, "text": "Deadlines", "brush": "coral", "dir": "left", "loc": "-103 52.75"},
+            {"key": 43, "parent": 4, "text": "Checkpoints", "brush": "coral", "dir": "left", "loc": "-103 78.75"}]});
+    $scope.model.selectedNodeData = null;
 });

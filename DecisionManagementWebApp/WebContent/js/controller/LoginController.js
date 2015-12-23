@@ -13,6 +13,7 @@ app.controller('LoginController', ['$scope', '$rootScope', '$cookies', '$locatio
             $scope.token = Login.query({eMail: $scope.eMail, password: $scope.password}, function (data) {
                 $scope.loginResponse = (data);
                 $cookies.Token = $scope.loginResponse.token;
+                $cookies.Mail = $scope.eMail;
                 $location.path("/home");
                 $rootScope.login = true;
             }, function (error) {

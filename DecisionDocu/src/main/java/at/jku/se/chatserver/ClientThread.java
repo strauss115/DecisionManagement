@@ -4,15 +4,24 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import at.jku.se.database.DBService;
+import at.jku.se.model.NodeInterface;
+import at.jku.se.model.RelationshipInterface;
+import at.jku.se.model.User;
 
 public class ClientThread extends Thread {
-	private String clientName = null;
 	private DataInputStream is = null;
 	private PrintStream os = null;
 	private Socket clientSocket = null;
 	private String name;
 	
 	private final ArrayList<ClientThread> clientthreads;
+	
+	private NodeInterface node = null;
+	private User user = null;
 
 	public ClientThread(Socket clientSocket, ArrayList<ClientThread> clientthreads) {
 		this.clientSocket = clientSocket;
@@ -38,70 +47,54 @@ public class ClientThread extends Thread {
 			}
 
 			String[] parts = name.split("@");
-			// Find the Decision Object if exists, otherwise create it
-			String decname = parts[1];
-			int j = 0, index = -1;
+
+			// Get the User Node Object via DBService
+			user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
 			
-			for (Decision dec : Server.decs) {
-				if (dec.getShortname().equals(decname)) { index = j; break; }
-				j++;
-			}
-			if (index == -1) {
-				Server.decs.add(new Decision(decname, decname));
-			}
+			// Get the Node Object via DBService
+			node = DBService.getNodeByID(NodeInterface.class, Integer.parseInt(parts[1]), user, 2);
+			//System.out.println(node);
 
-			os.println("Welcome " + parts[0]
-					+ " to " + decname + " chat room.\nTo leave enter /quit in a new line.");
+			os.println("Welcome " + user.getName()
+					+ " to '" + node.getName() + "' chat room.\nTo leave enter /quit in a new line.");
 
-			// send chat history
-			for (String line : Server.decs.get(j)
-					.getHistory()) {
-				os.println(line);
+			// Chatverlauf an diesen Client senden
+			Map<String, List<RelationshipInterface>> rs = node.getRelationships();
+			if (rs.get("message") != null) {
+				for (RelationshipInterface m : rs.get("message")) {
+					os.println(m.getRelatedNode().getName());
+				}
 			}
 			
 			synchronized (this) {
-				for (ClientThread thread : clientthreads) {
-					if (thread == this) {
-						clientName = "?" + name;
-						break;
-					}
-				}
-				String message = "*** A new user " + name
-						+ " entered the decision chat ***";
-				Server.decs.get(j).addMessage(message);
-				for (ClientThread thread : clientthreads) {
-					if (thread != this)
-						thread.os.println(message);
-				}
+				String message = "The user " + user.getName()
+						+ " entered the chat.";
+				
+				this.saveMessage(message);
+				this.sendToOtherClients(message);
 			}
 			
 			// Start the conversation
 			while (true) {
 				String line = is.readLine();
-				line = checkLine(line, j, parts[0]);
+				line = checkLine(line, parts[0]);
 				if (line.startsWith("/quit")) {
 					break;
 				}
 				
-				// Sending to the others
 				synchronized (this) {
-					String message = "<" + name + "> " + line;
-					Server.decs.get(j)
-							.addMessage(message);
-					for (ClientThread thread : clientthreads) {
-						if (thread.clientName != null)
-							thread.os.println(message);
-					}
+					String message = "<" + user.getName() + "> " + line;
+					
+					this.saveMessage(message);
+					this.sendToNodesClients(message);
 				}
 			}
 			synchronized (this) {
-				for (ClientThread thread : clientthreads) {
-					if (thread != this && thread.clientName != null)
-						thread.os.println("*** The user " + name
-								+ " is leaving the chat room !!! ***");
-				}
+				String message = "The user " + user.getName() + " is leaving the chat room.";
+				this.saveMessage(message);
+				this.sendToNodesClients(message);
 			}
-			os.println("*** Bye " + name + " ***");
+			os.println("*** Bye " + user.getName() + " ***");
 
 			// close thread
 			synchronized (this) {
@@ -113,34 +106,24 @@ public class ClientThread extends Thread {
 			os.close();
 			clientSocket.close();
 		} catch (IOException e) {
-			System.out.println("Thread Error");
+			System.out.println(e);
 		}
-		catch (Exception e) {
-			System.out.println("Thread Error2");
-			LeaveChat();
+		catch (Exception e) {			
+			System.out.println(e);
+			String message = "The user " + user.getName() + " is leaving the chat room.";
+			this.saveMessage(message);
+			this.sendToOtherClients(message);
+			clientthreads.remove(this);
 		}
-	}
-	
-	private void LeaveChat () {
-		for (ClientThread thread : clientthreads) {
-			if (thread != this && thread.clientName != null)
-				thread.os.println("*** The user " + name
-						+ " is leaving the chat room !!! ***");
-		}
-		clientthreads.remove(this);
 	}
 
-	private String checkLine(String line, int deci, String user) {
+	private String checkLine(String line, String user) {
 		if (line.startsWith("/quit"))
 			return line;
 		else if (line.startsWith("?"))
 			return line;
 		else if (line.startsWith("#") && !line.contains("@")) {// Propertie with
 																// value
-			Server.decs.get(deci)
-					.addProbertie(new Propertie(line.substring(1, line.length())
-							.split(" ", 2)[0], line.substring(1, line.length())
-							.split(" ", 2)[1], user));
 			return "Propertie '"
 					+ line.substring(1, line.length()).split(" ", 2)[0]
 					+ "' mit dem Wert '"
@@ -151,14 +134,31 @@ public class ClientThread extends Thread {
 																		// propertie
 			String propertie = line.substring(1, line.length()).split(" #Comment ", 2)[0];
 			String comment = line.substring(1, line.length()).split(" #Comment ", 2)[1];
-
-			for (Propertie prop : Server.decs.get(deci).getProperties()) {
-				if (prop.getName().equals(propertie))
-					prop.addComment(new Comment(comment, user));
-			}
 			
 			return "Kommentar '" + comment + "' zur Eigenschaft '" + propertie + "' hinzugefuegt";
 		}
 		return line;
+	}
+	
+	public long getNodeId() {
+		return node.getId();
+	}
+	
+	private void saveMessage(String message) {
+		DBService.createMessage(message, node.getId(), user.getId());
+	}
+	
+	private void sendToOtherClients(String message) {
+		for (ClientThread thread : clientthreads) {
+			if (thread != this && thread.getNodeId() == this.getNodeId())
+				thread.os.println(message);
+		}
+	}
+	
+	private void sendToNodesClients(String message) {
+		for (ClientThread thread : clientthreads) {
+			if (thread != null && thread.getNodeId() == this.getNodeId())
+				thread.os.println(message);
+		}
 	}
 }

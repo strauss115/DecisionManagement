@@ -13,14 +13,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Static class containing methods to generate a REST response
  */
 public class RestResponse {
+
+	private static final Logger log = LogManager.getLogger(RestResponse.class);
+
 	/**
 	 * Using Jaxon to serialize to JSON
 	 */
 	private static ObjectMapper mapper = new ObjectMapper();
-	private static final Logger log = LogManager.getLogger(RestResponse.class);
 
 	// ------------------------------------------------------------------------
-	
+
 	/**
 	 * @return Returns a 200 OK response
 	 */
@@ -42,6 +44,22 @@ public class RestResponse {
 	 */
 	public static Response getResponse(HttpCode code) {
 		return Response.status(code.getCode()).build();
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Creates a simple response including a text
+	 * 
+	 * @param code
+	 *            HTTP code to generate response
+	 * @param text
+	 *            Text which the response should contain
+	 * @return Returns a response for REST service
+	 */
+	public static Response getSimpleTextResponse(HttpCode code, String text) {
+		Response r = Response.status(code.getCode()).entity(text).build();
+		return addResponseHeaders(r);
 	}
 
 	// ------------------------------------------------------------------------
@@ -75,24 +93,22 @@ public class RestResponse {
 	public static Response getResponse(HttpCode code, List<Object> data) {
 		return getResponseWithData(code, data);
 	}
-	
+
 	/**
 	 * 
 	 * @param response
-	 * 			response to which the header is added
-	 * @return response
-	 * 			response with the added header
+	 *            response to which the header is added
+	 * @return response response with the added header
 	 */
-	public static Response addResponseHeader(Response response){
+	public static Response addResponseHeaders(Response response) {
 		response.getHeaders().add("Access-Control-Allow-Origin", "*");
-		response.getHeaders().add("Access-Control-Allow-Headers",
-				"origin, content-type, accept, authorization");
-		response.getHeaders().add("Access-Control-Allow-Credentials",
-				"true");
-		response.getHeaders().add("Access-Control-Allow-Methods",
-				"GET, POST, PUT, DELETE, OPTIONS, HEAD");
+		response.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+		response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+		response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
 		return response;
 	}
+
+	// ------------------------------------------------------------------------
 
 	public static String packData(Object data) {
 		try {
@@ -106,17 +122,20 @@ public class RestResponse {
 	// ------------------------------------------------------------------------
 
 	private static Response getResponseWithData(HttpCode code, Object data) {
-		if(data==null){
+		log.debug("Generating '" + code + "' response");
+		
+		if (data == null) {
 			return Response.status(HttpCode.HTTP_500_SERVER_ERROR.getCode()).build();
 		}
 
 		try {
 			String jsonData = mapper.writeValueAsString(data);
-			return Response.status(code.getCode()).entity(jsonData).build();
+			log.debug("Attaching data: " + jsonData);
+			return addResponseHeaders(Response.status(code.getCode()).entity(jsonData).build());
 			// --
 		} catch (Exception e) {
-			log.debug("getResponseWithData exception occured", e);
-			return Response.status(HttpCode.HTTP_500_SERVER_ERROR.getCode()).build();
+			log.error("Error serializing data: " + e);
+			return addResponseHeaders(Response.status(HttpCode.HTTP_500_SERVER_ERROR.getCode()).build());
 		}
 	}
 

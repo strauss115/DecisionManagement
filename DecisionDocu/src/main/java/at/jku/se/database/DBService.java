@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -19,6 +20,8 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
 import org.neo4j.jdbc.Driver;
 import org.neo4j.jdbc.internal.Neo4jConnection;
@@ -44,17 +47,23 @@ import at.jku.se.model.QualityAttribute;
 import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
+import at.jku.se.rest.api.ChatResource;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
 
 @SuppressWarnings("unchecked")
 public class DBService {
 	
+	private static final Logger log = LogManager.getLogger(ChatResource.class);
 	private static final String CONNECT_STRING = "jdbc:neo4j://ubuntu.mayerb.net:7474/";
+	
 	private static Properties properties = new Properties();
 	private static Neo4jConnection con;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static HashMap<String, Constructor<? extends NodeInterface>> constructors = new HashMap<String, Constructor<? extends NodeInterface>>();
+	private static DBService ref;
+	
+	// ------------------------------------------------------------------------
 	
 	static {
 		properties.setProperty("user", "neo4j");
@@ -70,13 +79,8 @@ public class DBService {
 			constructors.put(NodeString.DECISIONGROUP, DecisionGroup.class.getConstructor(type));
 			constructors.put(NodeString.ALTERNATIVE, Alternative.class.getConstructor(type));
 			constructors.put(NodeString.PROPERTY, Property.class.getConstructor(type));
-			constructors.put(NodeString.COMMENT, Message.class.getConstructor(type));
+			constructors.put(NodeString.MESSAGE, Message.class.getConstructor(type));
 		}catch (Exception e){}
-	}
-	
-	private static DBService ref;
-	
-	private DBService() {
 	}
 	
 	public static DBService getDBService() {
@@ -85,6 +89,13 @@ public class DBService {
 		}
 		return ref;
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	private DBService() {
+	}
+		
+	// ------------------------------------------------------------------------
 	
 	private Neo4jConnection getConnection(){
 		if(con==null){
@@ -97,8 +108,18 @@ public class DBService {
 		}
 		return con;
 	}
+	
+	// ------------------------------------------------------------------------
+	// *** High level database query methods *** 
+	// ------------------------------------------------------------------------
+	
 	public static List<Decision> getAllDecisions (User user){
 		return getAllNodes(Decision.class, user, 2);
+	}
+	
+	public static Decision getDecisionById(long decisionId) {
+		// TODO implementation
+		return null;
 	}
 	
 	public static User getUserByEmail(String email){
@@ -152,6 +173,37 @@ public class DBService {
 		}
 		return null;
 	}
+	
+	public static List<Message> getAllMessages() {
+		try {
+			log.debug("Trying to get all chat messages");
+			return getAllNodes(Message.class, 2);
+		} catch (Exception e) {
+			log.error("Unable to get all chat messages: " + e);
+			return new LinkedList<Message>();
+		}
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	public static boolean addUserToProject(User user, long projectId, String projectPassword) {
+		Project project = getNodeByID(Project.class,projectId,0);
+		if(project==null||project.getPassword()==null||project.getPassword().length()<=0){
+			return false;
+		}
+		if(!project.getPassword().equals(projectPassword)){
+			return false;
+		}
+		try{
+			return addRelationship(user.getId(),RelationString.HASPROJECT,projectId)>0;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	// ------------------------------------------------------------------------
 	
 	public static <T extends NodeInterface> T getNodeByID(Class<T> type, long nodeid, User user, int level){
 		try{
@@ -309,6 +361,9 @@ public class DBService {
 			String nodeType=nodeTypes[0];
 			
 			Constructor<? extends NodeInterface> constructor = constructors.get(nodeType);
+			if(constructor==null){
+				constructor = constructors.get(NodeString.PROPERTY);
+			}
 			NodeInterface node = constructor.newInstance();
 			node.setId(nodeId);
 			
@@ -391,8 +446,11 @@ public class DBService {
 		}
 		StringBuilder query = new StringBuilder();
 		StringBuilder match = new StringBuilder();
-		query.append("Match ").append(usercontrol).append("(n1:");
-		query.append(nodetype).append(afilter).append(")");
+		query.append("Match ").append(usercontrol).append("(n1");
+		if(!nodetype.equals(NodeInterface.class.getSimpleName())){
+		query.append(":").append(nodetype);
+		}
+		query.append(afilter).append(")");
 		match.append(query.toString());
 		query.append(where)
 		.append("Return null as RelNodeId, null as RelId, null as Reltype, id(n1)as NodeId, labels(n1)as NodeLable, n1 as Node");
@@ -690,24 +748,8 @@ public class DBService {
 		return match.toString();
 	}
 	
-	public static boolean addUserToProject(User user, long projectId, String projectPassword) {
-		Project project = getNodeByID(Project.class,projectId,0);
-		if(project==null||project.getPassword()==null||project.getPassword().length()<=0){
-			return false;
-		}
-		if(!project.getPassword().equals(projectPassword)){
-			return false;
-		}
-		try{
-			return addRelationship(user.getId(),RelationString.HASPROJECT,projectId)>0;
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
 	private static ResultSet executeQuery(String query)throws Exception{
+			//System.out.println(query);
 			Statement stmt = getDBService().getConnection().createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			stmt.closeOnCompletion();
@@ -759,14 +801,24 @@ public class DBService {
 		System.out.println(dec);
 		System.out.println(updateNodeWihtRelationships(dec, admin.getId()));*/
 		
-		try {
+		/*try {
 			String json = mapper.writeValueAsString(getAllDecisions(admin).toArray(new NodeInterface[0]));
 			mapper.readValue(json, Decision[].class);
 				
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}*/
+		
+		/*NodeInterface node = getNodeByID(NodeInterface.class,5861,0);
+		System.out.println(node);*/
+		
+		Message m1 = new Message("Chatnachricht 6");
+		Node node = DBService.getNodeByID(Decision.class, 5884, admin, 2);
+		//System.out.println(node);
+		//node.addRelation("Message", m1, true);
+		//DBService.updateNodeWihtRelationships(node, admin.getId());
+		createMessage("Chatnachricht 7", node.getId(),admin.getId());
 	}
 
 }

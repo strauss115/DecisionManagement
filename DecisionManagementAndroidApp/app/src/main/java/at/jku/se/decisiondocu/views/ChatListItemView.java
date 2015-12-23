@@ -29,7 +29,7 @@ public class ChatListItemView extends LinearLayout {
     }
 
     public void bind(String item) {
-        if (item.contains("Hans")) {
+        if (item.contains("super")) {
             tv_headline.setBackgroundResource(R.drawable.speech_bubble_orange);
         } else {
             tv_headline.setBackgroundResource(R.drawable.speech_bubble_green);

@@ -2,7 +2,7 @@ package at.jku.se.chatserver;
 import java.util.ArrayList;
 
 
-public class Decision {
+public class DecisionOld {
 
 	private String name;
 	private String shortname;
@@ -10,7 +10,7 @@ public class Decision {
 	private ArrayList<String> history;
 	private ArrayList<Propertie> properties;
 	
-	public Decision(String name, String shortname) {
+	public DecisionOld(String name, String shortname) {
 		this.name = name;
 		this.shortname = name;
 		this.history = new ArrayList<String>();
