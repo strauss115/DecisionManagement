@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Project extends Node {
 
@@ -18,27 +17,29 @@ public class Project extends Node {
 
 	private int nrOfDecisions = -1;
 
-
-
 	public Project(String name, User admin, String password) {
 		super(name);
-		this.addRelation(RelationString.PROJECTAMIN, admin, true);
+		this.addRelation(RelationString.PROJECTADMIN, admin, true);
 		this.addDirectProperty(PropertyString.PASSWORD, password);
 	}
 
 	public Project() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@JsonIgnore
 	public String getPassword() {
-		return this.getDirectProperties().get(PropertyString.PASSWORD);
+		try{
+		return super.getDirectProperties().get(PropertyString.PASSWORD);
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@JsonIgnore
 	public void setPassword(String password) {
-		this.addDirectProperty(PropertyString.PASSWORD, password);
+		super.addDirectProperty(PropertyString.PASSWORD, password);
 	}
 
 	@Override

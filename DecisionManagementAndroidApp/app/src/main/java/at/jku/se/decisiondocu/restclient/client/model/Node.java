@@ -104,6 +104,10 @@ public abstract class Node implements NodeInterface {
 	public Map<String, String> getDirectProperties() {
 		return directProperties;
 	}
+	
+	public Map<String, String> getAllDirectProperties() {
+		return directProperties;
+	}
 
 	public void setDirectProperties(Map<String, String> directProperties) {
 		this.directProperties = directProperties;
@@ -144,7 +148,6 @@ public abstract class Node implements NodeInterface {
 		try {
 			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			return "Node [id=" + id + ", name=" + name + ", relationships=" + relationships + ", creationDate="
 			+ creationDate + ", directProperties=" + directProperties + "]";
 		}
