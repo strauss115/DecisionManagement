@@ -4,6 +4,11 @@ import java.util.List;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
+import at.jku.se.model.Alternative;
+import at.jku.se.model.Consequence;
+import at.jku.se.model.InfluenceFactor;
+import at.jku.se.model.QualityAttribute;
+import at.jku.se.model.Rationale;
 import at.jku.se.rest.web.pojos.*;
 
 
@@ -256,26 +261,26 @@ public class GoJsFormatter {
 			boolean firstElement = true;
 			for(InfluenceFactor inf : influenceFactors){
 				if(firstElement){
-					jsonstring += "{\"name\":\"" + inf.getValue() + "\"}";
+					jsonstring += "{\"name\":\"" + inf.getName() + "\"}";
 					firstElement = false;
 				}
 				else{
-					jsonstring += ",{\"name\":\"" + inf.getValue() + "\"}";;				
+					jsonstring += ",{\"name\":\"" + inf.getName() + "\"}";;				
 					
 				}
 			}
 			jsonstring += "]},";
 			// add alternatives
 			jsonstring += "{\"name\":\"Alternatives\", \"children\":[";
-			List<WebAlternative> alternatives = decision.getAlternatives();
+			List<Alternative> alternatives = decision.getAlternatives();
 			firstElement = true;
-			for(WebAlternative alt : alternatives){
+			for(Alternative alt : alternatives){
 				if(firstElement){
-					jsonstring += "{\"name\":\"" + alt.getValue() + "\"}";
+					jsonstring += "{\"name\":\"" + alt.getName() + "\"}";
 					firstElement = false;
 				}
 				else{
-					jsonstring += ",{\"name\":\"" + alt.getValue() + "\"}";;				
+					jsonstring += ",{\"name\":\"" + alt.getName() + "\"}";;				
 					
 				}
 			}
@@ -286,11 +291,11 @@ public class GoJsFormatter {
 			firstElement = true;
 			for(Consequence cons : consequences){
 				if(firstElement){
-					jsonstring += "{\"name\":\"" + cons.getValue() + "\"}";
+					jsonstring += "{\"name\":\"" + cons.getName() + "\"}";
 					firstElement = false;
 				}
 				else{
-					jsonstring += ",{\"name\":\"" + cons.getValue() + "\"}";;				
+					jsonstring += ",{\"name\":\"" + cons.getName() + "\"}";;				
 					
 				}
 			}
@@ -301,11 +306,11 @@ public class GoJsFormatter {
 			firstElement = true;
 			for(QualityAttribute qualAttr : qualityAttributes){
 				if(firstElement){
-					jsonstring += "{\"name\":\"" + qualAttr.getValue() + "\"}";
+					jsonstring += "{\"name\":\"" + qualAttr.getName()+ "\"}";
 					firstElement = false;
 				}
 				else{
-					jsonstring += ",{\"name\":\"" + qualAttr.getValue() + "\"}";;				
+					jsonstring += ",{\"name\":\"" + qualAttr.getName() + "\"}";;				
 					
 				}
 			}
@@ -316,11 +321,11 @@ public class GoJsFormatter {
 			firstElement = true;
 			for(Rationale rat : rationales){
 				if(firstElement){
-					jsonstring += "{\"name\":\"" + rat.getValue() + "\"}";
+					jsonstring += "{\"name\":\"" + rat.getName() + "\"}";
 					firstElement = false;
 				}
 				else{
-					jsonstring += ",{\"name\":\"" + rat.getValue() + "\"}";;				
+					jsonstring += ",{\"name\":\"" + rat.getName() + "\"}";;				
 					
 				}
 			}

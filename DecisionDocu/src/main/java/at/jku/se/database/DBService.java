@@ -504,7 +504,7 @@ public class DBService {
 		}
 	}
 	
-	public static boolean deleteReltionship(long relationshipid){
+	public static boolean deleteRelationship(long relationshipid){
 		if(relationshipid<1){
 			return false;
 		}

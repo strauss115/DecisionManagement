@@ -13,9 +13,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.Logger;
 
+import at.jku.se.model.DecisionGroup;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
-import at.jku.se.rest.web.pojos.Group;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -42,7 +42,7 @@ public class WebGroupResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Gets all groups", response = Group.class, responseContainer = "List")
+	@ApiOperation(value = "Gets all groups", response = DecisionGroup.class, responseContainer = "List")
 	public Response getAll(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
 		log.debug("GET all groups");
 		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
@@ -57,7 +57,7 @@ public class WebGroupResource {
 	@GET
 	@Path("/{groupName}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Gets group by name", response = Group.class)
+	@ApiOperation(value = "Gets group by name", response = DecisionGroup.class)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No group found with given name") })
 	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "Group name") @PathParam("groupName") String name) {

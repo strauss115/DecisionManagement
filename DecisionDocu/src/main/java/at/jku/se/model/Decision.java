@@ -3,23 +3,19 @@ package at.jku.se.model;
 import java.util.List;
 import java.util.Map;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
 
 public class Decision extends Node {
 
-	private static final Logger log = LogManager.getLogger(Decision.class);
+	// private static final Logger log = LogManager.getLogger(Decision.class);
 
 	private static final String DESCRIPTION = "description";
 	private static final String HAS_AUTHOR = "hasAuthor", HAS_INFLUENCE_FACTOR = "hasInfluenceFactor",
 			HAS_RATIONALE = "hasRationale", HAS_ALTERNATIVE = "hasAlternative", HAS_CONSEQUENCE = "hasConsequence",
-			HAS_QUALITY_ATTRIBUTES = "hasQualityAttribute", HAS_RELATED_DECISIONS = "hasRelatedDecisions",
-			HAS_RESPONSIBLES = "hasResponsibles", HAS_DOCUMENT = "hasDocument";
+			HAS_QUALITY_ATTRIBUTES = "hasQualityAttribute", HAS_RELATED_DECISION = "hasRelatedDecisions",
+			HAS_RESPONSIBLE = "hasResponsibles", HAS_DOCUMENT = "hasDocument";
 
 	// ------------------------------------------------------------------------
 
@@ -39,12 +35,7 @@ public class Decision extends Node {
 
 	@JsonIgnore
 	public String getDescription() {
-		try {
-			return super.getDirectProperties().get(DESCRIPTION);
-		} catch (Exception e) {
-			log.error("Unable to get description");
-			return "";
-		}
+		return getDirectProperty(DESCRIPTION);
 	}
 
 	@JsonIgnore
@@ -56,26 +47,15 @@ public class Decision extends Node {
 
 	@JsonIgnore
 	public String getAuthorId() {
-		List<RelationshipInterface> relations = this.getRelationships().get(HAS_AUTHOR);
-		if (relations.size() == 0) {
-			log.warn("Decision '" + this.getId() + "' has no author");
-			return "-1";
-		}
-		if (relations.size() > 1) {
-			log.warn("Decision '" + this.getId() + "' has multiple authors");
-		}
-		return String.valueOf(relations.get(0).getRelatedNode().getId());
+		Node author = getSingleNodeByRelationship(HAS_AUTHOR, User.class);
+		if (author != null)
+			return String.valueOf(author.getId());
+		return "";
 	}
 
 	@JsonIgnore
 	public void setAuthor(User user) {
-		if (!this.getRelationships().get(HAS_AUTHOR).isEmpty()) {
-			// there is already an author, need to delete old relationships
-			for (RelationshipInterface rel : this.getRelationships().get(HAS_AUTHOR)) {
-				DBService.deleteReltionship(rel.getId());
-			}
-		}
-		this.addRelation(HAS_AUTHOR, user, true);
+		setSingleNodeRelationship(HAS_AUTHOR, user);
 	}
 
 	// ------------------------------------------------------------------------
@@ -112,6 +92,106 @@ public class Decision extends Node {
 		return DBService.deleteNode(rationale.getId());
 	}
 	
-	// TODO add other methods
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Alternative> getAlternatives() {
+		return getNodesByRelationship(HAS_ALTERNATIVE, Alternative.class);
+	}
+	
+	@JsonIgnore
+	public void addAlterantive(Alternative alternative) {
+		this.addRelation(HAS_ALTERNATIVE, alternative, true);
+	}
+	
+	@JsonIgnore
+	public boolean deleteAlternative(Alternative alternative) {
+		return DBService.deleteNode(alternative.getId());
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Consequence> getConsquences() {
+		return getNodesByRelationship(HAS_CONSEQUENCE, Consequence.class);
+	}
+	
+	@JsonIgnore
+	public void addConsequence(Consequence consequence) {
+		this.addRelation(HAS_CONSEQUENCE, consequence, true);
+	}
+	
+	@JsonIgnore
+	public boolean deleteConsequence(Consequence consequence) {
+		return DBService.deleteNode(consequence.getId());
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<QualityAttribute> getQualityAttributes() {
+		return getNodesByRelationship(HAS_QUALITY_ATTRIBUTES, QualityAttribute.class);
+	}
+	
+	@JsonIgnore
+	public void addQualityAttribute(QualityAttribute qualityAttribute) {
+		this.addRelation(HAS_QUALITY_ATTRIBUTES, qualityAttribute, true);
+	}
+	
+	@JsonIgnore
+	public boolean deleteQualityAttribute(QualityAttribute qualityAttribute) {
+		return DBService.deleteNode(qualityAttribute.getId());
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Decision> getRelatedDecisions() {
+		return getNodesByRelationship(HAS_RELATED_DECISION, Decision.class);
+	}
+	
+	@JsonIgnore
+	public void addRelatedDecision(Decision decision) {
+		this.addRelation(HAS_RELATED_DECISION, decision, true);
+	}
+	
+	@JsonIgnore
+	public boolean deleteRelatedDecision(Decision decision) {
+		return deleteRelationByRelatedNode(HAS_RELATED_DECISION, decision);
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<User> getResponsibles() {
+		return getNodesByRelationship(HAS_RESPONSIBLE, User.class);
+	}
+	
+	@JsonIgnore
+	public void addResponsible(User user) {
+		this.addRelation(HAS_RESPONSIBLE, user, true);
+	}
+
+	@JsonIgnore
+	public boolean deleteResponsible(User user) {
+		return deleteRelationByRelatedNode(HAS_RESPONSIBLE, user);
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Document> getDocuments() {
+		return getNodesByRelationship(HAS_DOCUMENT, Document.class);
+	}
+	
+	@JsonIgnore
+	public void addDocument(Document document) {
+		this.addRelation(HAS_DOCUMENT, document, true);
+	}
+	
+	@JsonIgnore
+	public boolean deleteDocument(Document document) {
+		return deleteRelationByRelatedNode(HAS_DOCUMENT, document);
+	}
 
 }

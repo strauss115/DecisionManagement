@@ -55,8 +55,14 @@ public class WebDecisionResource {
 
 				result.setId(String.valueOf(decision.getId()));
 				result.setName(decision.getName());
+				result.setDescription(decision.getDescription());
 				result.setCreationDate(decision.getCreationDate().getDate());
-				// TODO add other attributes - missing db implementation
+				result.setAuthor(decision.getAuthorId());
+				result.setInfluenceFactors(decision.getInfluenceFactors());
+				result.setRationales(decision.getRationales());
+				result.setAlternatives(decision.getAlternatives());
+				result.setQualityAttributes(decision.getQualityAttributes());
+				// TODO related decision, documents, responsible users
 
 				return result;
 			} else {

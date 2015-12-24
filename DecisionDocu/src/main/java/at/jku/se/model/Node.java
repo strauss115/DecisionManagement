@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.jku.se.database.DBService;
+
 public abstract class Node implements NodeInterface {
 
 	private static final Logger log = LogManager.getLogger(Node.class);
@@ -77,6 +79,9 @@ public abstract class Node implements NodeInterface {
 	}
 
 	public Map<String, List<RelationshipInterface>> getRelationships() {
+		if (relationships == null)
+			relationships = new HashMap<String, List<RelationshipInterface>>();
+
 		return relationships;
 	}
 
@@ -156,13 +161,95 @@ public abstract class Node implements NodeInterface {
 		List<T> result = new LinkedList<T>();
 		try {
 			List<RelationshipInterface> relations = this.getRelationships().get(relationship);
-			for (RelationshipInterface rel : relations) {
-				result.add(type.cast(rel.getRelatedNode()));
+			if (relations != null) {
+				for (RelationshipInterface rel : relations) {
+					result.add(type.cast(rel.getRelatedNode()));
+				}
 			}
 		} catch (Exception e) {
-			log.error("Unable to get relationship nodes '" + relationship + "' for node '" + getId() + "'");
+			log.error("Unable to get relationship nodes '" + relationship + "' for node '" + getId() + "': " + e);
 		}
 		return result;
+	}
+
+	/**
+	 * Returns a single related node with a given relationship
+	 * 
+	 * @param relationship
+	 *            Name of the relationship as string
+	 * @param type
+	 *            Type of expected related node
+	 * @return Related node of given type or null if there is no relationship
+	 */
+	protected <T extends Node> T getSingleNodeByRelationship(String relationship, Class<T> type) {
+		List<RelationshipInterface> relations = this.getRelationships().get(relationship);
+		if (relations == null || relations.size() == 0) {
+			log.info("Node '" + getId() + "' has no '" + relationship + "'");
+			return null;
+		}
+		if (relations.size() > 1) {
+			log.warn("Node '" + getId() + "' has multiple '" + relationship
+					+ "' relationships although there should be only one");
+		}
+		return type.cast(relations.get(0).getRelatedNode());
+	}
+
+	/**
+	 * Adds a single node relationship, all other (old) relationships will be
+	 * deleted (without deleting the old node)
+	 * 
+	 * @param relationship
+	 *            Name of the relationship as string
+	 * @param relatedNode
+	 *            Related node to create relationship
+	 */
+	protected <T extends Node> void setSingleNodeRelationship(String relationship, T relatedNode) {
+		List<RelationshipInterface> relations = getRelationships().get(relationship);
+		if (relations.isEmpty()) {
+			log.info("Updating relationship '" + relationship + "' for node '" + getName() + "'");
+			for (RelationshipInterface rel : relations) {
+				DBService.deleteRelationship(rel.getId());
+			}
+		}
+		this.addRelation(relationship, relatedNode, true);
+	}
+
+	/**
+	 * Gets a direct property as string
+	 * 
+	 * @param propertyName
+	 *            Name of the property to get
+	 * @return Property as string or an empty string if direct property was not
+	 *         found
+	 */
+	protected String getDirectProperty(String propertyName) {
+		try {
+			String value = getDirectProperties().get(propertyName);
+			if (value != null)
+				return value;
+		} catch (Exception e) {
+			log.info("Unable to get direct property '" + propertyName + "' for node '" + getName() + "':" + e);
+		}
+		return "";
+	}
+
+	/**
+	 * Deletes a relation to another node (other node still remains in database)
+	 * 
+	 * @param relationship
+	 *            Name of the relationship as string
+	 * @param relatedNode
+	 *            Related node to delete relationship
+	 * @return True if relationship was successfully deleted
+	 */
+	protected <T extends Node> boolean deleteRelationByRelatedNode(String relationship, T relatedNode) {
+		List<RelationshipInterface> relations = getRelationships().get(relationship);
+		for (RelationshipInterface relation : relations) {
+			if (relation.getRelatedNode().getId() == relatedNode.getId()) {
+				return DBService.deleteRelationship(relation.getId());
+			}
+		}
+		return false;
 	}
 
 	// ------------------------------------------------------------------------
