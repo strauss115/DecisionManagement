@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -48,6 +49,9 @@ public class ChatActivity extends AppCompatActivity {
     @ViewById(R.id.send_button)
     Button send;
 
+    @ViewById(R.id.chatheader)
+    TextView chat_header;
+
     @Bean
     ChatAdapter mAdapter;
 
@@ -64,13 +68,14 @@ public class ChatActivity extends AppCompatActivity {
 
     @AfterViews
     void init() {
+        chat_header.setText(UserName+"@"+DecisionName);
         mList.setAdapter(mAdapter);
 
         // connect to the server
         new connectTask().execute("");
 
         // AWUR
-        sleep(1000);
+        sleep(250);
         sendMessage(usr_node_id + "@" + dec_node_id); // Username
         // AWUR ende
     }
@@ -100,6 +105,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
             mClient.run(IPAddress, PORT);
+
             return null;
         }
 

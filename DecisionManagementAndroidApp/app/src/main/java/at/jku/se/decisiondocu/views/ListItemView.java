@@ -36,8 +36,10 @@ public class ListItemView extends LinearLayout {
     void click() {
         new ChatActivity_.IntentBuilder_(getContext())
                 .IPAddress("192.168.0.102")
-                .UserName("5861")
-                .DecisionName("5898")
+                .UserName("Hubert")
+                .DecisionName("Sein, oder nicht sein?")
+                .dec_node_id(5898)
+                .usr_node_id(5861)
                 .start();
     }
 
