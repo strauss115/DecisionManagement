@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
@@ -32,13 +33,15 @@ public class ListItemView extends LinearLayout {
     @ViewById(R.id.decision_creation_date)
     TextView tv_date;
 
+    long dec_node_id;
+
     @Click(R.id.decision_startChat)
     void click() {
         new ChatActivity_.IntentBuilder_(getContext())
-                .IPAddress("192.168.0.102")
+                .IPAddress("192.168.0.103")
                 .UserName("Hubert")
-                .DecisionName("Sein, oder nicht sein?")
-                .dec_node_id(5898)
+                .DecisionName(tv_headline.getText().toString())
+                .dec_node_id(dec_node_id)
                 .usr_node_id(5861)
                 .start();
     }
@@ -55,5 +58,6 @@ public class ListItemView extends LinearLayout {
         tv_author.setText("Author: " + item.getId());
         tv_date.setText("Date: " + item.getCreationDate().toString());
         tv_headline.setText(item.getName());
+        dec_node_id = item.getId();
     }
 }
