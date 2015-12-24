@@ -1,7 +1,5 @@
 package at.jku.se.decisiondocu.restclient;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -21,6 +19,7 @@ public class RestHelper {
 
     public static boolean DEBUG_MODE = true;
 
+   // public static final String BASEURL_OFFLINE = "http://192.168.0.104:8080/DecisionDocu/api/";
     public static final String BASEURL_OFFLINE = "http://itchyaut22.ddns.net:8080/DecisionDocu/api/";
     private static final String BASEURL_ONLINE = "http://ubuntu.mayerb.net:8080/DecisionDocu/api/";
 
