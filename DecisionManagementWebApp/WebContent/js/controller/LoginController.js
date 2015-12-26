@@ -35,8 +35,14 @@ app.controller('LoginController', ['$scope', '$rootScope', '$cookies', '$locatio
                 return false;
             } else {
                 $("#passwordError").hide();
-                Register.query({eMail: $scope.signInEmail, password: $scope.password1, firstName: $scope.firstname, lastName: $scope.lastname}, function (data) {
-                    $("#registerModal").modal('hide');
+                
+                var user = {};
+                user.eMail = $scope.signInEmail;
+                user.password = $scope.password1;
+                user.firstName = $scope.firstname;
+                user.lastName = $scope.lastname;
+                Register.save(user, function(data){
+                     $("#registerModal").modal('hide');
                 }, function (error) {
                     $("#emailError").show();
                 });
