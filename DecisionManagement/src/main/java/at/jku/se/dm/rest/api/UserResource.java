@@ -2,6 +2,7 @@ package at.jku.se.dm.rest.api;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -100,17 +101,14 @@ public class UserResource {
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Registers a new user")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "User saved successfully"),
 			@ApiResponse(code = 500, message = "Unable to register user") })
-	public Response register(@ApiParam(value = "First name") @QueryParam("firstName") String firstName,
-			@ApiParam(value = "Last name") @QueryParam("lastName") String lastName,
-			@ApiParam(value = "Password") @QueryParam("password") String password,
-			@ApiParam(value = "E-mail address") @QueryParam("eMail") String eMail) {
-		log.debug("POST register user '" + eMail + "'");
+	public Response register(User user){
 
 		try {
-			SampleObjectProvider.addUser(eMail, firstName, lastName, password);
+			SampleObjectProvider.addUser(user.getEMail(), user.getFirstName(), user.getLastName(), user.getPassword());
 			return RestResponse.getSuccessResponse();
 		} catch (Exception e) {
 			log.debug("Failed to register new user '" + e + "'");

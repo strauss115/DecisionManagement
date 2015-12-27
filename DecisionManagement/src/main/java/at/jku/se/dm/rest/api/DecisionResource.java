@@ -172,7 +172,6 @@ public class DecisionResource {
 			String result = f2.getGoJsString();
 			System.out.println(result);
 			response = Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
-			RestResponse.addResponseHeaders(response);
 			return response;
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
