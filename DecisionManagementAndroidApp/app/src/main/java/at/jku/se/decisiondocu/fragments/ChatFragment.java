@@ -11,6 +11,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.chat.ChatActivity_;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 /**
  * Created by martin on 30.11.15.
@@ -68,8 +69,7 @@ public class ChatFragment extends Fragment {
             new ChatActivity_.IntentBuilder_(getActivity())
                     .IPAddress(ip)
                     .dec_node_id(DEC_NODE_ID)
-                    .usr_node_id(USR_NODE_ID)
-                    .UserName(user)
+                    .usr_token(SaveSharedPreference.getUserToken(this.getContext()))
                     .DecisionName(decision)
                     .start();
         }

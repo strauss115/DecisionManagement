@@ -18,6 +18,8 @@ import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 import static at.jku.se.decisiondocu.R.id.decision_startChat;
 
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
+
 /**
  * Created by martin on 23.11.15.
  */
@@ -38,11 +40,10 @@ public class ListItemView extends LinearLayout {
     @Click(R.id.decision_startChat)
     void click() {
         new ChatActivity_.IntentBuilder_(getContext())
-                .IPAddress("192.168.0.103")
-                .UserName("Hubert")
+                .IPAddress("192.168.0.101")
                 .DecisionName(tv_headline.getText().toString())
                 .dec_node_id(dec_node_id)
-                .usr_node_id(5861)
+                .usr_token(SaveSharedPreference.getUserToken(this.getContext()))
                 .start();
     }
 

@@ -20,6 +20,12 @@ public class RestHelper {
     public static boolean DEBUG_MODE = true;
 
    // public static final String BASEURL_OFFLINE = "http://192.168.0.104:8080/DecisionDocu/api/";
+
+    /*// AWUR
+    public static final String BASEURL_OFFLINE = "http://192.168.0.101:8080/DecisionDocu/api/";
+    private static final String BASEURL_ONLINE = "http://192.168.0.101:8080/DecisionDocu/api/";
+    */
+
     public static final String BASEURL_OFFLINE = "http://itchyaut22.ddns.net:8080/DecisionDocu/api/";
     private static final String BASEURL_ONLINE = "http://ubuntu.mayerb.net:8080/DecisionDocu/api/";
 

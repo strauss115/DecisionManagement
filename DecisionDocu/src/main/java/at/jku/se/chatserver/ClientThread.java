@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.RelationshipInterface;
@@ -49,7 +50,8 @@ public class ClientThread extends Thread {
 			String[] parts = name.split("@");
 
 			// Get the User Node Object via DBService
-			user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
+			//user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
+			user = SessionManager.getUser(parts[0]);
 			
 			// Get the Node Object via DBService
 			node = DBService.getNodeByID(NodeInterface.class, Integer.parseInt(parts[1]), user, 2);
