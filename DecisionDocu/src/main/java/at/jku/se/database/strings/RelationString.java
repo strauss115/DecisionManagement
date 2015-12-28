@@ -1,21 +1,31 @@
 package at.jku.se.database.strings;
 
 public class RelationString {
-	
-	public final static String PROJECTADMIN = "projectadmin";
-	public final static String HASDECISION = "hasdecision";
-	public final static String HASQUALITYATTRIBUTE = "hasqualityattribute";
-	public final static String CREATOR = "creator";
-	public final static String ISSUE = "issue";
-	public final static String ASSUMPTION = "assumption";
-	public final static String IMPLICATION = "implication";
-	public final static String INFLUENCES = "influences";
-	public final static String ALTERNATIVE = "alternative";
-	public final static String HASPROJECT = "hasProject";
-	public final static String SUBDECISION = "subdecision";
-	public final static String RESPONSIBLE = "responsible";
-	public final static String HASGROUP = "hasgroup";
-	public final static String Message = "message";
-	
 
+	// TODO please check if correct relation strings were used for both APIs !!!
+	
+	// General
+	public final static String CREATOR = "creator";
+
+	// Decision -- relations
+	public static final String HAS_INFLUENCE_FACTOR = "hasInfluenceFactor";
+	public static final String HAS_RATIONALE = "hasRationale";
+	public static final String HAS_ALTERNATIVE = "hasAlternative";
+	public static final String HAS_CONSEQUENCE = "hasConsequence";
+	public static final String HAS_QUALITY_ATTRIBUTES = "hasQualityAttribute";
+	public static final String HAS_RELATED_DECISION = "hasRelatedDecisions";
+	public static final String HAS_RESPONSIBLE = "hasResponsibles";
+	public static final String HAS_DOCUMENT = "hasDocument";
+	// Decision - direct properties
+	public final static String PROJECTADMIN = "projectadmin";
+	public static final String DESCRIPTION = "description";
+	
+	// Project -- relations
+	public final static String HAS_DECISION = "hasdecision";
+	
+	// User -- relations
+	public final static String HAS_PROJECT = "hasProject";
+	
+	// Message -- relations
+	public final static String MESSAGE = "message";
 }

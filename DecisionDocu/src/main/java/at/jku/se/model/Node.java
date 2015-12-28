@@ -251,6 +251,23 @@ public abstract class Node implements NodeInterface {
 		}
 		return false;
 	}
+	
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Helper method to get a list of Ids for a list of nodes
+	 * 
+	 * @param nodes
+	 *            Nodes to get it
+	 * @return List of Ids as string
+	 */
+	public static <T extends Node> List<String> getListOfIds(List<T> nodes) {
+		List<String> result = new LinkedList<String>();
+		for (T node : nodes) {
+			result.add(String.valueOf(node.getId()));
+		}
+		return result;
+	}
 
 	// ------------------------------------------------------------------------
 

@@ -5,18 +5,9 @@ package at.jku.se.rest.response;
  */
 public abstract class ResponseData {
 	
-	private String session;
 	private String id;
 	
 	// ------------------------------------------------------------------------
-	
-	public String getSession() {
-		return session;
-	}
-	
-	public void setSession(String session) {
-		this.session = session;
-	}
 	
 	public String getId() {
 		return id;

@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
+import at.jku.se.model.Node;
 import at.jku.se.model.User;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
@@ -53,14 +54,14 @@ public class WebUserResource {
 		try {
 			if (user != null) {
 				WebUser result = new WebUser();
-
+				// --
 				result.setId(String.valueOf(user.getId()));
 				result.setEMail(user.getEmail());
 				result.setFirstName(user.getName());
 				result.setLastName(user.getLastname());
 				result.setAdmin(user.isAdmin());
-				// TODO add teams - database implementation missing
-
+				result.setTeams(Node.getListOfIds(DBService.getAllProjectsOfUser(user)));
+				// --
 				return result;
 			} else {
 				log.error("Unable to convert user because of null reference");

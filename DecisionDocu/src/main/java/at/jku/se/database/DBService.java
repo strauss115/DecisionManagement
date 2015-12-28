@@ -143,7 +143,7 @@ public class DBService {
 		try{
 			Project project = getAllNodes(Project.class, user, 1, 3, null," id(n1)="+projectid+" ").get(0);
 			List<Decision> decisions = new ArrayList<Decision>();
-			for(RelationshipInterface rel:project.getRelationships().get(RelationString.HASDECISION)){
+			for(RelationshipInterface rel:project.getRelationships().get(RelationString.HAS_DECISION)){
 				try{
 					decisions.add((Decision) rel.getRelatedNode());
 				}catch (Exception e){}
@@ -194,7 +194,7 @@ public class DBService {
 			return false;
 		}
 		try{
-			return addRelationship(user.getId(),RelationString.HASPROJECT,projectId)>0;
+			return addRelationship(user.getId(),RelationString.HAS_PROJECT,projectId)>0;
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -540,7 +540,7 @@ public class DBService {
 	
 	public static Message createMessage(String message, long relatedNode, long creatorid){
 		Message messageNode = new Message(message);
-		messageNode = createRelationshipWithNode(messageNode, RelationString.Message, relatedNode, creatorid);
+		messageNode = createRelationshipWithNode(messageNode, RelationString.MESSAGE, relatedNode, creatorid);
 		return messageNode;
 	}
 	
