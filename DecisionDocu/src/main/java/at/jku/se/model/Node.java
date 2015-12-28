@@ -135,17 +135,6 @@ public abstract class Node implements NodeInterface {
 		directProperties.put(key, value);
 	}
 
-	@Override
-	public boolean updateNodeInDatabase() {
-		// TODO
-		return true;
-	}
-
-	public NodeInterface createNodeInDatabase() {
-		// TODO
-		return null;
-	}
-
 	// ------------------------------------------------------------------------
 
 	/**
@@ -251,7 +240,30 @@ public abstract class Node implements NodeInterface {
 		}
 		return false;
 	}
-	
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Checks if this node has a direct relationship (1 level) to the other
+	 * given node id
+	 * 
+	 * @param otherNodeId
+	 *            Other node to check relationship
+	 * @return True if node has a relationship to other node
+	 */
+	public boolean isRelatedToNode(long otherNodeId) {
+		Map<String, List<RelationshipInterface>> allRelations = getRelationships();
+
+		for (List<RelationshipInterface> relations : allRelations.values()) {
+			for (RelationshipInterface relation : relations) {
+				if (relation.getRelatedNode().getId() == otherNodeId) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	// ------------------------------------------------------------------------
 
 	/**

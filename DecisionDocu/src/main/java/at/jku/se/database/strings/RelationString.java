@@ -22,7 +22,7 @@ public class RelationString {
 	public final static String HAS_DECISION = "hasdecision";
 	
 	// User -- relations
-	public final static String HAS_PROJECT = "hasProject";
+	public final static String HAS_PROJECT = "hasproject";
 	
 	// Message -- relations
 	public final static String HAS_MESSAGE = "message";

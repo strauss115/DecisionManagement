@@ -1,11 +1,15 @@
 package at.jku.se.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import at.jku.se.database.DBService;
+import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
+import at.jku.se.database.strings.RelationString;
 
 public class User extends Node {
 
@@ -36,6 +40,16 @@ public class User extends Node {
 		super();
 	}
 
+	// ------------------------------------------------------------------------
+
+	@JsonIgnore
+	@Override
+	public String getNodeType() {
+		return NodeString.USER;
+	}
+
+	// ------------------------------------------------------------------------
+
 	@JsonIgnore
 	public String getLastname() {
 		try {
@@ -44,6 +58,13 @@ public class User extends Node {
 			return null;
 		}
 	}
+
+	@JsonIgnore
+	public void setLastname(String lastname) {
+		super.addDirectProperty("lastname", lastname);
+	}
+
+	// ------------------------------------------------------------------------
 
 	@JsonIgnore
 	public String getEmail() {
@@ -55,6 +76,13 @@ public class User extends Node {
 	}
 
 	@JsonIgnore
+	public void setEmail(String email) {
+		super.addDirectProperty("email", email);
+	}
+
+	// ------------------------------------------------------------------------
+
+	@JsonIgnore
 	public String getPassword() {
 		try {
 			return super.getDirectProperties().get("password");
@@ -62,6 +90,13 @@ public class User extends Node {
 			return null;
 		}
 	}
+
+	@JsonIgnore
+	public void setPassword(String password) {
+		super.addDirectProperty("password", password);
+	}
+
+	// ------------------------------------------------------------------------
 
 	@JsonIgnore
 	public boolean isAdmin() {
@@ -73,24 +108,29 @@ public class User extends Node {
 	}
 
 	@JsonIgnore
-	public void setLastname(String lastname) {
-		super.addDirectProperty("lastname", lastname);
-	}
-
-	@JsonIgnore
-	public void setEmail(String email) {
-		super.addDirectProperty("email", email);
-	}
-
-	@JsonIgnore
-	public void setPassword(String password) {
-		super.addDirectProperty("password", password);
-	}
-
-	@JsonIgnore
 	public void setAdmin(boolean admin) {
 		super.addDirectProperty("isAdmin", "" + admin);
 	}
+
+	// ------------------------------------------------------------------------
+
+	@JsonIgnore
+	public List<Project> getProjects() {
+		return getNodesByRelationship(RelationString.HAS_PROJECT, Project.class);
+	}
+	
+	@JsonIgnore
+	public void addToProject(Project project) {
+		this.addRelation(RelationString.HAS_PROJECT, project, true);
+		DBService.updateNodeWihtRelationships(this, 0);
+	}
+	
+	@JsonIgnore
+	public boolean deleteFromProject(Project project) {
+		return deleteRelationByRelatedNode(RelationString.HAS_PROJECT, project);
+	}
+	
+	// ------------------------------------------------------------------------
 
 	@Override
 	public Map<String, String> getDirectProperties() {

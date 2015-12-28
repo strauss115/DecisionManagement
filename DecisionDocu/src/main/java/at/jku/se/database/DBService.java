@@ -34,16 +34,19 @@ import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 import at.jku.se.model.Alternative;
+import at.jku.se.model.Consequence;
 import at.jku.se.model.Message;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Decision;
 import at.jku.se.model.DecisionGroup;
+import at.jku.se.model.Document;
 import at.jku.se.model.InfluenceFactor;
 import at.jku.se.model.Node;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Project;
 import at.jku.se.model.Property;
 import at.jku.se.model.QualityAttribute;
+import at.jku.se.model.Rationale;
 import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
@@ -80,6 +83,9 @@ public class DBService {
 			constructors.put(NodeString.ALTERNATIVE, Alternative.class.getConstructor(type));
 			constructors.put(NodeString.PROPERTY, Property.class.getConstructor(type));
 			constructors.put(NodeString.MESSAGE, Message.class.getConstructor(type));
+			constructors.put(NodeString.CONSEQUENCE, Consequence.class.getConstructor(type));
+			constructors.put(NodeString.DOCUMENT, Document.class.getConstructor(type));
+			constructors.put(NodeString.RATIONALE, Rationale.class.getConstructor(type));
 		}catch (Exception e){}
 	}
 	

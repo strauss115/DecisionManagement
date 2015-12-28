@@ -10,4 +10,7 @@ public class NodeString {
 	public static final String ALTERNATIVE = "Alternative";
 	public static final String PROPERTY = "Property";
 	public static final String MESSAGE = "Message";
+	public static final String CONSEQUENCE = "Consequence";
+	public static final String DOCUMENT = "Document";
+	public static final String RATIONALE = "Rationale";
 }

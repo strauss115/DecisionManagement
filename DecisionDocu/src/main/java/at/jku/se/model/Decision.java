@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
+import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 
@@ -30,6 +31,14 @@ public class Decision extends Node {
 	// ------------------------------------------------------------------------
 
 	@JsonIgnore
+	@Override
+	public String getNodeType() {
+		return NodeString.DECISION;
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
 	public String getDescription() {
 		return getDirectProperty(PropertyString.DESCRIPTION);
 	}
@@ -37,6 +46,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void setDescription(String description) {
 		super.addDirectProperty(PropertyString.DESCRIPTION, description);
+		DBService.updateNode(this, 0);
 	}
 
 	// ------------------------------------------------------------------------
@@ -52,6 +62,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void setAuthor(User user) {
 		setSingleNodeRelationship(RelationString.HAS_CREATOR, user);
+		DBService.updateNode(this, 0);
 	}
 
 	// ------------------------------------------------------------------------
@@ -64,6 +75,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addInfluenceFactor(InfluenceFactor influenceFactor) {
 		this.addRelation(RelationString.HAS_INFLUENCE_FACTOR, influenceFactor, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore
@@ -81,6 +93,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addRationale(Rationale rationale) {
 		this.addRelation(RelationString.HAS_RATIONALE, rationale, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore
@@ -98,6 +111,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addAlterantive(Alternative alternative) {
 		this.addRelation(RelationString.HAS_ALTERNATIVE, alternative, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore
@@ -115,6 +129,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addConsequence(Consequence consequence) {
 		this.addRelation(RelationString.HAS_CONSEQUENCE, consequence, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore
@@ -132,6 +147,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addQualityAttribute(QualityAttribute qualityAttribute) {
 		this.addRelation(RelationString.HAS_QUALITY_ATTRIBUTES, qualityAttribute, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore
@@ -149,6 +165,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addRelatedDecision(Decision decision) {
 		this.addRelation(RelationString.HAS_RELATED_DECISION, decision, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore
@@ -166,6 +183,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addResponsible(User user) {
 		this.addRelation(RelationString.HAS_RESPONSIBLE, user, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 
 	@JsonIgnore
@@ -183,6 +201,7 @@ public class Decision extends Node {
 	@JsonIgnore
 	public void addDocument(Document document) {
 		this.addRelation(RelationString.HAS_DOCUMENT, document, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore

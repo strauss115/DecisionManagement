@@ -19,16 +19,4 @@ public abstract class ResponseData {
 
 	// ------------------------------------------------------------------------
 	
-	public static boolean checkId(String id, String prefix) {
-		if (id.startsWith(prefix))
-			return true;
-		return false;
-	}
-	
-	public static String generateId(String id, String prefix) {
-		if(checkId(id, prefix))
-			return id;
-		return prefix + id;
-	}
-	
 }
