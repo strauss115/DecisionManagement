@@ -39,7 +39,9 @@ public class Server implements Runnable {
 
 				if (clientthreads.size() == maxClientsCount) {
 					PrintStream os = new PrintStream(clientSocket.getOutputStream());
-					os.println("Server too busy. Try later.");
+					MsgWrapper msg = MsgWrapper.dummy();
+					msg.setMessage("Server too busy. Try later.");
+					os.println(msg.toString());
 					os.close();
 					clientSocket.close();
 				}

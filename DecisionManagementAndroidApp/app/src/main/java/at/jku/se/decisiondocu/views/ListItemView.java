@@ -9,11 +9,13 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.rest.Rest;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.chat.ChatActivity;
 import at.jku.se.decisiondocu.chat.ChatActivity_;
 import at.jku.se.decisiondocu.fragments.ChatFragment;
+import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 import static at.jku.se.decisiondocu.R.id.decision_startChat;
@@ -39,8 +41,13 @@ public class ListItemView extends LinearLayout {
 
     @Click(R.id.decision_startChat)
     void click() {
+        String url = RestHelper.GetBaseURLChat();
+        String ip = url.substring(0, url.indexOf(':'));
+        int port = Integer.valueOf(url.substring(url.indexOf(':') + 1, url.length()));
+
         new ChatActivity_.IntentBuilder_(getContext())
-                .IPAddress("192.168.0.101")
+                .IPAddress(ip)
+                .Port(port)
                 .DecisionName(tv_headline.getText().toString())
                 .dec_node_id(dec_node_id)
                 .usr_token(SaveSharedPreference.getUserToken(this.getContext()))
