@@ -1,54 +1,58 @@
-app.controller('LoginController', ['$scope', '$rootScope', '$cookies', '$location', 'Login', 'Register', function ($scope, $rootScope, $cookies, $location, Login, Register) {
-        $scope.eMail = "";
-        $scope.password = "";
-        $scope.loginResponse = "";
+app.controller('LoginController', [ '$scope', '$rootScope', '$cookies',
+		'$location', 'Login', 'Register',
+		function($scope, $rootScope, $cookies, $location, Login, Register) {
+			$scope.eMail = "";
+			$scope.password = "";
+			$scope.loginResponse = "";
 
-        $scope.signInEmail = "";
-        $scope.password1 = "";
-        $scope.password2 = "";
-        $scope.firstname = "";
-        $scope.lastname = "";
+			$scope.signInEmail = "";
+			$scope.password1 = "";
+			$scope.password2 = "";
+			$scope.firstname = "";
+			$scope.lastname = "";
 
-        $scope.login = function () {
-            $scope.token = Login.query({eMail: $scope.eMail, password: $scope.password}, function (data) {
-                $scope.loginResponse = (data);
-                $cookies.Token = $scope.loginResponse.token;
-                $cookies.Mail = $scope.eMail;
-                $location.path("/home");
-                $rootScope.login = true;
-            }, function (error) {
-                $("#loginErrorModal").modal();
-                $rootScope.login = false;
-            });
-        };
+			$scope.login = function() {
 
-        $scope.openRegisterModal = function () {
-            $("#registerModal").modal();
-        };
+				Login.get({
+					"eMail" : $scope.eMail,
+					"password" : $scope.password
+				}, {}, function(data) {
+					$scope.loginResponse = (data);
+					$cookies.Token = $scope.loginResponse.access_token;
+					$cookies.Mail = $scope.eMail;
+					$location.path("/selectTeam");
+					$rootScope.login = true;
+				}, function(error) {
+					$("#loginErrorModal").modal();
+					$rootScope.login = false;
+				});
+			};
 
-        $scope.register = function () {
-            $("#emailError").hide();
-            $("#passwordError").hide();
+			$scope.openRegisterModal = function() {
+				$("#registerModal").modal();
+			};
 
-            if ($scope.password1 != $scope.password2) {
-                $("#passwordError").show();
-                return false;
-            } else {
-                $("#passwordError").hide();
-                
-                var user = {};
-                user.eMail = $scope.signInEmail;
-                user.password = $scope.password1;
-                user.firstName = $scope.firstname;
-                user.lastName = $scope.lastname;
-                Register.save(user, function(data){
-                     $("#registerModal").modal('hide');
-                }, function (error) {
-                    $("#emailError").show();
-                });
+			$scope.register = function() {
+				$("#emailError").hide();
+				$("#passwordError").hide();
 
-            }
-        }
-    }]);
+				if ($scope.password1 != $scope.password2) {
+					$("#passwordError").show();
+					return false;
+				} else {
+					$("#passwordError").hide();
 
+					Register.save({
+						"eMail" : $scope.signInEmail,
+						"password" : $scope.password1,
+						"firstName" : $scope.firstname,
+						"lastName" : $scope.lastname
+					}, {}, function(data) {
+						$("#registerModal").modal('hide');
+					}, function(error) {
+						$("#emailError").show();
+					});
 
+				}
+			}
+		} ]);
