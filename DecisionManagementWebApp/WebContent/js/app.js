@@ -28,9 +28,9 @@ app.directive('goDiagramMindMap', function () {
                                 $(go.TextBlock,
                                         {
                                             name: "TEXT",
-                                            minSize: new go.Size(30, 15),
-                                            editable: true
+                                            minSize: new go.Size(30, 15)    
                                         },
+                                        new go.Binding("editable", "editable"),
                                 // remember not only the text string but the scale and the font in the node data
                                 new go.Binding("text", "text").makeTwoWay(),
                                         new go.Binding("scale", "scale").makeTwoWay(),
@@ -70,37 +70,12 @@ app.directive('goDiagramMindMap', function () {
                                                     alignmentFocus: go.Spot.Left,
                                                     click: addNodeAndLink  // define click behavior for this Button in the Adornment
                                                 },
+                                                
+                                               
+                                                
                                         $(go.TextBlock, "+", // the Button content
-                                                {font: "bold 8pt sans-serif"})
+                                                {font: "bold 8pt sans-serif"}), new go.Binding("visible", "showAdd")
                                                 )
-                                        ),
-                                "nodeTemplate.contextMenu": $(go.Adornment, "Vertical",
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Bigger"),
-                                                {click: function (e, obj) {
-                                                        changeTextSize(obj, 1.1);
-                                                    }}),
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Smaller"),
-                                                {click: function (e, obj) {
-                                                        changeTextSize(obj, 1 / 1.1);
-                                                    }}),
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Bold/Normal"),
-                                                {click: function (e, obj) {
-                                                        toggleTextWeight(obj);
-                                                    }}),
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Layout"),
-                                                {
-                                                    click: function (e, obj) {
-                                                        var adorn = obj.part;
-                                                        adorn.diagram.startTransaction("Subtree Layout");
-                                                        layoutTree(adorn.adornedPart);
-                                                        adorn.diagram.commitTransaction("Subtree Layout");
-                                                    }
-                                                }
-                                        )
                                         ),
                                 "linkTemplate": $(go.Link,
                                         {
@@ -196,29 +171,7 @@ app.directive('goDiagramMindMap', function () {
                 }
             }
 
-            function changeTextSize(obj, factor) {
-                var adorn = obj.part;
-                adorn.diagram.startTransaction("Change Text Size");
-                var node = adorn.adornedPart;
-                var tb = node.findObject("TEXT");
-                tb.scale *= factor;
-                adorn.diagram.commitTransaction("Change Text Size");
-            }
-
-            function toggleTextWeight(obj) {
-                var adorn = obj.part;
-                adorn.diagram.startTransaction("Change Text Weight");
-                var node = adorn.adornedPart;
-                var tb = node.findObject("TEXT");
-                // assume "bold" is at the start of the font specifier
-                var idx = tb.font.indexOf("bold");
-                if (idx < 0) {
-                    tb.font = "bold " + tb.font;
-                } else {
-                    tb.font = tb.font.substr(idx + 5);
-                }
-                adorn.diagram.commitTransaction("Change Text Weight");
-            }
+   
 
             function addNodeAndLink(e, obj) {
                 var adorn = obj.part;
@@ -253,6 +206,7 @@ app.directive('goDiagramMindMap', function () {
 
             function layoutAll() {
                 var root = diagram.findNodeForKey(0);
+
                 if (root === null)
                     return;
                 diagram.startTransaction("Layout");
@@ -365,8 +319,7 @@ app.directive('goDiagramState', function () {
                                 initialContentAlignment: go.Spot.Center,
                                 // have mouse wheel events zoom in and out instead of scroll up and down
                                 "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
-                                // support double-click in background creating a new node
-                                "clickCreatingTool.archetypeNodeData": {text: "new node"},
+                 
                                 // enable undo & redo
                                 "undoManager.isEnabled": true
                             });
