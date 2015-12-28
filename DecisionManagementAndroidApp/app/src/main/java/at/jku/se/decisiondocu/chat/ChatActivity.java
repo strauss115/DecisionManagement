@@ -17,6 +17,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.ChatAdapter;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 import static android.os.SystemClock.sleep;
 
@@ -29,13 +30,10 @@ public class ChatActivity extends AppCompatActivity {
     long dec_node_id;
 
     @Extra
-    long usr_node_id;
+    String usr_token;
 
     @Extra
     String DecisionName;
-
-    @Extra
-    String UserName;
 
     @Extra
     String IPAddress;
@@ -68,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @AfterViews
     void init() {
-        chat_header.setText(UserName+"@"+DecisionName);
+        chat_header.setText(usr_token+"@"+DecisionName);
         mList.setAdapter(mAdapter);
 
         // connect to the server
@@ -76,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // AWUR
         sleep(250);
-        sendMessage(usr_node_id + "@" + dec_node_id); // Username
+        sendMessage(usr_token + "@" + dec_node_id); // Username
         // AWUR ende
     }
 
