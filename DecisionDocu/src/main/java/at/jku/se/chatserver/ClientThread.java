@@ -78,7 +78,7 @@ public class ClientThread extends Thread {
 			// Chatverlauf an diesen Client senden
 			Map<String, List<RelationshipInterface>> rs = node.getRelationships();
 			if (rs.get("message") != null) {
-				for (RelationshipInterface m : rs.get(RelationString.Message)) {
+				for (RelationshipInterface m : rs.get(RelationString.MESSAGE)) {
 					
 					if (m.getRelatedNode() instanceof Message) {
 						
