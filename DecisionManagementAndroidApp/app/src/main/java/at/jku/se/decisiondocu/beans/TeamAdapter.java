@@ -34,22 +34,22 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
 @EBean
 public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
-    private ProgressDialog mDialog;
-    private List<Project> mItems;
+    protected ProgressDialog mDialog;
+    protected List<Project> mItems;
 
     @Bean(RESTProjectFinder.class)
-    TeamFinder mTeamFinder;
+    protected TeamFinder mTeamFinder;
 
     @AfterInject
     void initAdapter() {
         mItems = new ArrayList<>();
-        findAll();
+        find();
     }
 
     @Background
-    void findAll() {
+    public void find() {
         showDialog();
-        List<Project> projects = mTeamFinder.findAll();
+        List<Project> projects = mTeamFinder.find();
         updateItems(projects);
         dismissDialog();
     }

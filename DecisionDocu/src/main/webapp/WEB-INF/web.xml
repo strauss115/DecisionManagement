@@ -43,6 +43,6 @@
  </filter>
  <filter-mapping>
    <filter-name>CorsFilter</filter-name>
-   <url-pattern>/api/*</url-pattern>
+   <url-pattern>/api/web/*</url-pattern>
  </filter-mapping>
 </web-app>

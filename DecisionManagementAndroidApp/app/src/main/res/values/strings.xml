@@ -54,5 +54,8 @@
     <string name="itemname_directProperties">decision direct properties</string>
     <string name="itemname_relationships">decision relationships</string>
     <string name="create_decision">Create Decision</string>
+    <string name="add_team">Add Team</string>
+    <string name="add_team_2">Select team to add</string>
+    <string name="team_pw">Enter team password</string>
 
 </resources>

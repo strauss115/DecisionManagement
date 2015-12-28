@@ -24,6 +24,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
 import at.jku.se.decisiondocu.dialog.CreateDecisionDialog_;
+import at.jku.se.decisiondocu.dialog.ProjectChooserDialog_;
 import at.jku.se.decisiondocu.fragments.ChatFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
@@ -149,8 +150,21 @@ public class MainActivity extends AppCompatActivity {
     void fab_pressed(){
         Snackbar.make(mViewPager, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        CreateDecisionDialog_ creatdialog = new CreateDecisionDialog_();
-        creatdialog.show(getSupportFragmentManager(), "Create new Decision");
+
+        switch (mViewPager.getCurrentItem()) {
+            case 0:
+                ProjectChooserDialog_ dialog = new ProjectChooserDialog_();
+                dialog.show(getSupportFragmentManager(), "Choose project");
+                break;
+            case 1:
+                CreateDecisionDialog_ creatdialog = new CreateDecisionDialog_();
+                creatdialog.show(getSupportFragmentManager(), "Create new Decision");
+                break;
+            default:
+                break;
+        }
+
+
     }
 
 
