@@ -18,9 +18,13 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
+import at.jku.se.model.Alternative;
+import at.jku.se.model.Consequence;
 import at.jku.se.model.Decision;
+import at.jku.se.model.InfluenceFactor;
 import at.jku.se.model.Node;
 import at.jku.se.model.Project;
+import at.jku.se.model.Rationale;
 import at.jku.se.model.User;
 import at.jku.se.rest.web.parser.GoJsFormatter;
 import at.jku.se.rest.web.pojos.WebDecision;
@@ -213,10 +217,22 @@ public class WebDecisionResource {
 		log.debug("GET decisions by id '" + id + "'");
 		WebDecision decision = convertDecision(DBService.getDecisionById(id));
 		if (decision != null) {
+			decision.addAlternative(new Alternative("Alternative 1 very very very long text text very very"));
+			decision.addAlternative(new Alternative("A2"));
+			decision.addAlternative(new Alternative("Alternative 2 middle length"));
+			decision.addInfluenceFactor(new InfluenceFactor("Influence Factor 1 very very very long text text very very"));
+			decision.addInfluenceFactor(new InfluenceFactor("IF 2"));
+			decision.addInfluenceFactor(new InfluenceFactor("IF 3 middle"));
+			decision.addConsequence(new Consequence("Consequence 1 very very very long text text very very"));
+			decision.addConsequence(new Consequence("C 2"));
+			decision.addConsequence(new Consequence("C 3 long text text very very"));
+			decision.addRationale(new Rationale("R 1 very very very very very very long text"));
+			decision.addRationale(new Rationale("R 2"));
+			decision.addRationale(new Rationale("R 3 "));
 			GoJsFormatter f2 = new GoJsFormatter(decision);
 			String result = f2.getGoJsString();
 			System.out.println(result);
-			return RestResponse.getSuccessResponse(result);
+			return Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
