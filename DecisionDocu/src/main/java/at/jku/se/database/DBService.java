@@ -118,8 +118,7 @@ public class DBService {
 	}
 	
 	public static Decision getDecisionById(long decisionId) {
-		// TODO implementation
-		return null;
+		return getNodeByID(Decision.class, decisionId, 2);
 	}
 	
 	public static User getUserByEmail(String email){

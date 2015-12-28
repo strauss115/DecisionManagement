@@ -209,14 +209,11 @@ public class WebDecisionResource {
 			@ApiParam(value = "Decision id", required = true) @QueryParam("id") long id) {
 		log.debug("GET decisions by id '" + id + "'");
 		WebDecision decision = convertDecision(DBService.getDecisionById(id));
-		Response response = null;
 		if (decision != null) {
 			GoJsFormatter f2 = new GoJsFormatter(decision);
 			String result = f2.getGoJsString();
 			System.out.println(result);
-			response = Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
-			RestResponse.addResponseHeaders(response);
-			return response;
+			return RestResponse.getSuccessResponse(result);
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
