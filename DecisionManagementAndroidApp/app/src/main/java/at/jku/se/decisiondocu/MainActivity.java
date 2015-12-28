@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -24,12 +23,12 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
+import at.jku.se.decisiondocu.dialog.CreateDecisionDialog_;
 import at.jku.se.decisiondocu.fragments.ChatFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
-import at.jku.se.decisiondocu.restclient.RestHelper;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -150,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
     void fab_pressed(){
         Snackbar.make(mViewPager, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+        CreateDecisionDialog_ creatdialog = new CreateDecisionDialog_();
+        creatdialog.show(getSupportFragmentManager(), "Create new Decision");
     }
 
 

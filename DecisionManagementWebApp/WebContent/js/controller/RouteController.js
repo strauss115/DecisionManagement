@@ -19,6 +19,7 @@ app.config(['$routeProvider', function ($routeProvider) {
                 .when("/teamAdministration", {templateUrl: "pages/teamAdministration.html", controller: "TeamAdministrationController"})
                 .when("/userProfile", {templateUrl: "pages/userProfile.html", controller: "UserProfileController"})
                 .when("/login", {templateUrl: "pages/login.html", controller: "LoginController"})
+                .when("/selectTeam", {templateUrl: "pages/selectTeam.html", controller: "TeamAdministrationController"})
                 .when("/logout", {templateUrl: "pages/logout.html", controller: "LogoutController"})
 
                 .otherwise("/login", {templateUrl: "login.html", controller: "Home"});
@@ -26,5 +27,10 @@ app.config(['$routeProvider', function ($routeProvider) {
 
 
 app.controller('RouteController', ['$rootScope', '$cookies', function ($rootScope, $cookies) {
-        $rootScope.login = false;
+          $rootScope.showMenu = function(){
+        	if ($cookies['TeamId'] && $cookies['Token']){
+        		return true;
+        	}
+        	return false;
+        };
 }]);

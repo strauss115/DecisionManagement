@@ -54,14 +54,16 @@
                     android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
 
-            <View style="@style/Divider" />
+            <View style="@style/ListDivider" />
         </LinearLayout>
 
         <!-- List View -->
         <ListView
             android:id="@+id/list_view"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:divider="@color/colorAccent"
+            android:dividerHeight="1dip" />
     </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

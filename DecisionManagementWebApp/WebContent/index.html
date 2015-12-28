@@ -84,7 +84,7 @@
                 </div>
                 <!-- /.navbar-header -->
 
-                <ul class="nav navbar-top-links navbar-right" ng-show="login">
+                <ul class="nav navbar-top-links navbar-right" ng-show="showMenu()">
                     <!-- /.dropdown -->
 
                     <!-- /.dropdown -->
@@ -95,7 +95,8 @@
                         </a>
                         <ul class="dropdown-menu dropdown-user">
                             <li><a href="#logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
-                            <li><a href="#userProfile"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
+                            <li><a href="#userProfile"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a href="#selectTeam"><i class="fa fa-exchange"></i> Team change</a></li>
                         </ul>
                         <!-- /.dropdown-user -->
                     </li>
@@ -103,7 +104,7 @@
                 </ul>
                 <!-- /.navbar-top-links -->
 
-                <div class="navbar-default sidebar" role="navigation" ng-show="login">
+                <div class="navbar-default sidebar" role="navigation" ng-show="showMenu()">
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
                             <li>

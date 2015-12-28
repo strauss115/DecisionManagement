@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -16,22 +17,27 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.ChatAdapter;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 import static android.os.SystemClock.sleep;
 
 @EActivity(R.layout.activity_chat)
 public class ChatActivity extends AppCompatActivity {
 
-    private static final int PORT = 2222;
+    @Extra
+    long dec_node_id;
+
+    @Extra
+    String usr_token;
 
     @Extra
     String DecisionName;
 
     @Extra
-    String UserName;
+    String IPAddress;
 
     @Extra
-    String IPAddress;
+    int Port;
 
     @ViewById(R.id.list)
     ListView mList;
@@ -41,6 +47,9 @@ public class ChatActivity extends AppCompatActivity {
 
     @ViewById(R.id.send_button)
     Button send;
+
+    @ViewById(R.id.chatheader)
+    TextView chat_header;
 
     @Bean
     ChatAdapter mAdapter;
@@ -58,14 +67,15 @@ public class ChatActivity extends AppCompatActivity {
 
     @AfterViews
     void init() {
+        chat_header.setText(usr_token + "@" + DecisionName);
         mList.setAdapter(mAdapter);
 
         // connect to the server
         new connectTask().execute("");
 
         // AWUR
-        sleep(1000);
-        sendMessage(UserName + "@" + DecisionName); // Username
+        sleep(250);
+        sendMessage(usr_token + "@" + dec_node_id); // Username
         // AWUR ende
     }
 
@@ -79,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public class connectTask extends AsyncTask<String,String,Client> {
+    public class connectTask extends AsyncTask<String, String, Client> {
 
         @Override
         protected Client doInBackground(String... message) {
@@ -93,7 +103,8 @@ public class ChatActivity extends AppCompatActivity {
                     publishProgress(message);
                 }
             });
-            mClient.run(IPAddress, PORT);
+            mClient.run(IPAddress, Port);
+
             return null;
         }
 

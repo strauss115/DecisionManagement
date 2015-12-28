@@ -55,8 +55,14 @@ public class WebDecisionResource {
 
 				result.setId(String.valueOf(decision.getId()));
 				result.setName(decision.getName());
+				result.setDescription(decision.getDescription());
 				result.setCreationDate(decision.getCreationDate().getDate());
-				// TODO add other attributes - missing db implementation
+				result.setAuthor(decision.getAuthorId());
+				result.setInfluenceFactors(decision.getInfluenceFactors());
+				result.setRationales(decision.getRationales());
+				result.setAlternatives(decision.getAlternatives());
+				result.setQualityAttributes(decision.getQualityAttributes());
+				// TODO related decision, documents, responsible users
 
 				return result;
 			} else {
@@ -203,14 +209,11 @@ public class WebDecisionResource {
 			@ApiParam(value = "Decision id", required = true) @QueryParam("id") long id) {
 		log.debug("GET decisions by id '" + id + "'");
 		WebDecision decision = convertDecision(DBService.getDecisionById(id));
-		Response response = null;
 		if (decision != null) {
 			GoJsFormatter f2 = new GoJsFormatter(decision);
 			String result = f2.getGoJsString();
 			System.out.println(result);
-			response = Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
-			RestResponse.addResponseHeaders(response);
-			return response;
+			return RestResponse.getSuccessResponse(result);
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}

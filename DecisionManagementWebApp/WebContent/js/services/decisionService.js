@@ -1,13 +1,16 @@
 /**
  * service for the authentification
  */
-var decisionServices = angular.module('decisionServices', ['ngResource']);
+var decisionServices = angular.module('decisionServices', ['ngResource', 'ngCookies']);
 
 
-decisionServices.factory('LoadGraph', ['$resource',
-    function ($resource) {
-        return $resource(serverAddress + '/DecisionManagement/rest/decision/getGraphAsJsonById', {}, {
-            query: {method: 'GET', isArray: false}
+decisionServices.factory('LoadGraph', ['$resource', '$cookies',
+    function ($resource, $cookies) {
+        return $resource(serverAddress + '/DecisionDocu/api/web/decision/getGraphAsJsonById', {}, {
+        	 get: {
+        	        headers: {
+        	            'token': $cookies['Token']
+        	        }
+        	    }
         });
     }]);
-

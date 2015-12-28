@@ -4,10 +4,11 @@ app.controller('EditDecisionController', ['$scope', '$cookies', 'LoadGraph', fun
 
 
 
-        LoadGraph.query({id: "D1"}, function (data) {
+        LoadGraph.get({id: "5884"}, function (data) {
+        	alert(data);
             $scope.model = new go.Model.fromJson(
                     {"class": "go.TreeModel",
-                        "nodeDataArray": data['decisionNodes']})
+                        "nodeDataArray": data})
         }, function (error) {
         });
 
