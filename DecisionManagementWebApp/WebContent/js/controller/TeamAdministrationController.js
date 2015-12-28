@@ -1,5 +1,6 @@
-app.controller('TeamAdministrationController', ['$scope', '$rootScope', '$cookies', '$location', 'Teams', function($scope, $rootScope, $cookies, $location, Teams) {
-  $scope.teams = Teams.query();
+app.controller('TeamAdministrationController', ['$scope',  '$cookies', '$location', 'Teams', function($scope, $cookies, $location, Teams) {
+  //$scope.teams = Teams.query();
+	$scope.teams = {};
   $scope.selectedTeam = 0;
   $scope.openRegisterModal = function (id) {
 	  $scope.selectedTeam = id;
@@ -18,7 +19,6 @@ app.controller('TeamAdministrationController', ['$scope', '$rootScope', '$cookie
   $scope.selectTeam = function (id){
 	  $cookies.TeamId = id;
 	  $location.path("/home");
-	  $scope.$apply();
   }
 }]);
 
