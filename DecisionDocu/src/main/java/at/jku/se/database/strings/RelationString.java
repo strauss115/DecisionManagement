@@ -5,7 +5,7 @@ public class RelationString {
 	// TODO please check if correct relation strings were used for both APIs !!!
 	
 	// General
-	public final static String CREATOR = "creator";
+	public final static String HAS_CREATOR = "creator";
 
 	// Decision -- relations
 	public static final String HAS_INFLUENCE_FACTOR = "hasInfluenceFactor";
@@ -15,10 +15,8 @@ public class RelationString {
 	public static final String HAS_QUALITY_ATTRIBUTES = "hasQualityAttribute";
 	public static final String HAS_RELATED_DECISION = "hasRelatedDecisions";
 	public static final String HAS_RESPONSIBLE = "hasResponsibles";
-	public static final String HAS_DOCUMENT = "hasDocument";
-	// Decision - direct properties
-	public final static String PROJECTADMIN = "projectadmin";
-	public static final String DESCRIPTION = "description";
+	public static final String HAS_DOCUMENT = "hasDocuments";
+	public final static String HAS_PROJECTADMIN = "projectadmin";
 	
 	// Project -- relations
 	public final static String HAS_DECISION = "hasdecision";
@@ -27,5 +25,5 @@ public class RelationString {
 	public final static String HAS_PROJECT = "hasProject";
 	
 	// Message -- relations
-	public final static String MESSAGE = "message";
+	public final static String HAS_MESSAGE = "message";
 }

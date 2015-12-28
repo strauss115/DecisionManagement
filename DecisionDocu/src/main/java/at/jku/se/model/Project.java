@@ -9,31 +9,36 @@ import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 
 public class Project extends Node {
+	
+	// ------------------------------------------------------------------------
 
 	public Project(String name, User admin, String password) {
 		super(name);
-		this.addRelation(RelationString.PROJECTADMIN, admin, true);
+		this.addRelation(RelationString.HAS_PROJECTADMIN, admin, true);
 		this.addDirectProperty(PropertyString.PASSWORD, password);
 	}
 
 	public Project() {
 		super();
 	}
+	
+	// ------------------------------------------------------------------------
 
 	@JsonIgnore
 	public String getPassword() {
-		try{
-		return super.getDirectProperties().get(PropertyString.PASSWORD);
-		}catch (Exception e){
-			e.printStackTrace();
-			return null;
-		}
+		return getDirectProperty(PropertyString.PASSWORD);
 	}
 
 	@JsonIgnore
 	public void setPassword(String password) {
 		super.addDirectProperty(PropertyString.PASSWORD, password);
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	
+	
+	// ------------------------------------------------------------------------
 
 	@Override
 	public Map<String, String> getDirectProperties() {

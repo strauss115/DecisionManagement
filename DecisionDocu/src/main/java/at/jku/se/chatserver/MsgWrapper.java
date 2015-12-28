@@ -52,7 +52,7 @@ public class MsgWrapper {
 			mTimestamp = (ts == null ? new CustomDate(System.currentTimeMillis()) : new CustomDate(Long.parseLong(ts)));
 		}
 			
-		List<RelationshipInterface> creators = msg.getRelationships().get(RelationString.CREATOR);
+		List<RelationshipInterface> creators = msg.getRelationships().get(RelationString.HAS_CREATOR);
 		if (creators != null && creators.size() > 0) {
 			try {
                 for (RelationshipInterface ri : creators) {

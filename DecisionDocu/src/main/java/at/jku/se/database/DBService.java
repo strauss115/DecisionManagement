@@ -540,7 +540,7 @@ public class DBService {
 	
 	public static Message createMessage(String message, long relatedNode, long creatorid){
 		Message messageNode = new Message(message);
-		messageNode = createRelationshipWithNode(messageNode, RelationString.MESSAGE, relatedNode, creatorid);
+		messageNode = createRelationshipWithNode(messageNode, RelationString.HAS_MESSAGE, relatedNode, creatorid);
 		return messageNode;
 	}
 	
@@ -586,8 +586,8 @@ public class DBService {
 		if(creatorid>0&&creatorid!=node.getId()){
 			try{
 				User creator = getNodeByID(User.class,creatorid,0);
-				long relid = addRelationship(node.getId(),RelationString.CREATOR,creator.getId());
-				node.addRelation(RelationString.CREATOR, new Relationship(relid,creator,true));
+				long relid = addRelationship(node.getId(),RelationString.HAS_CREATOR,creator.getId());
+				node.addRelation(RelationString.HAS_CREATOR, new Relationship(relid,creator,true));
 			}catch (Exception e){
 				e.printStackTrace();
 			}

@@ -8,5 +8,8 @@ public class PropertyString {
 	public static final String LASTNAME = "lastname";
 	public static final String EMAIL = "email";
 	public static final String ISADMIN = "isAdmin";
+	
+	// Project
+	public static final String DESCRIPTION = "description";
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
+import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 
 public class Decision extends Node {
@@ -30,19 +31,19 @@ public class Decision extends Node {
 
 	@JsonIgnore
 	public String getDescription() {
-		return getDirectProperty(RelationString.DESCRIPTION);
+		return getDirectProperty(PropertyString.DESCRIPTION);
 	}
 
 	@JsonIgnore
 	public void setDescription(String description) {
-		super.addDirectProperty(RelationString.DESCRIPTION, description);
+		super.addDirectProperty(PropertyString.DESCRIPTION, description);
 	}
 
 	// ------------------------------------------------------------------------
 
 	@JsonIgnore
 	public String getAuthorId() {
-		Node author = getSingleNodeByRelationship(RelationString.CREATOR, User.class);
+		Node author = getSingleNodeByRelationship(RelationString.HAS_CREATOR, User.class);
 		if (author != null)
 			return String.valueOf(author.getId());
 		return "";
@@ -50,7 +51,7 @@ public class Decision extends Node {
 
 	@JsonIgnore
 	public void setAuthor(User user) {
-		setSingleNodeRelationship(RelationString.CREATOR, user);
+		setSingleNodeRelationship(RelationString.HAS_CREATOR, user);
 	}
 
 	// ------------------------------------------------------------------------
