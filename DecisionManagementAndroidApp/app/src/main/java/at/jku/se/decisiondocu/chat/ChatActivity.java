@@ -24,8 +24,6 @@ import static android.os.SystemClock.sleep;
 @EActivity(R.layout.activity_chat)
 public class ChatActivity extends AppCompatActivity {
 
-    private static final int PORT = 2222;
-
     @Extra
     long dec_node_id;
 
@@ -37,6 +35,9 @@ public class ChatActivity extends AppCompatActivity {
 
     @Extra
     String IPAddress;
+
+    @Extra
+    int Port;
 
     @ViewById(R.id.list)
     ListView mList;
@@ -66,7 +67,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @AfterViews
     void init() {
-        chat_header.setText(usr_token+"@"+DecisionName);
+        chat_header.setText(usr_token + "@" + DecisionName);
         mList.setAdapter(mAdapter);
 
         // connect to the server
@@ -88,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public class connectTask extends AsyncTask<String,String,Client> {
+    public class connectTask extends AsyncTask<String, String, Client> {
 
         @Override
         protected Client doInBackground(String... message) {
@@ -102,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
                     publishProgress(message);
                 }
             });
-            mClient.run(IPAddress, PORT);
+            mClient.run(IPAddress, Port);
 
             return null;
         }

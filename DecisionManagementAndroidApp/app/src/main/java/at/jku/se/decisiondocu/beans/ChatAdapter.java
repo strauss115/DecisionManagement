@@ -5,12 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import at.jku.se.decisiondocu.restclient.client.model.MsgWrapper;
 import at.jku.se.decisiondocu.views.ChatListItemView;
 import at.jku.se.decisiondocu.views.ChatListItemView_;
 
@@ -20,10 +24,12 @@ import at.jku.se.decisiondocu.views.ChatListItemView_;
 @EBean
 public class ChatAdapter extends BaseAdapter {
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @RootContext
     Context context;
 
-    private ArrayList<String> mListItems;
+    private ArrayList<MsgWrapper> mListItems;
 
     @AfterInject
     void initAdapter() {
@@ -31,11 +37,16 @@ public class ChatAdapter extends BaseAdapter {
     }
 
     public void appendData(String data) {
-        mListItems.add(data);
-        notifyDataSetChanged();
+        try {
+            MsgWrapper msg = mapper.readValue(data, MsgWrapper.class);
+            mListItems.add(msg);
+            notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    void setData(ArrayList<String> data) {
+    void setData(ArrayList<MsgWrapper> data) {
         mListItems = data;
         notifyDataSetChanged();
     }
@@ -50,7 +61,7 @@ public class ChatAdapter extends BaseAdapter {
     @Override
     //get the data of an item from a specific position
     //i represents the position of the item in the list
-    public String getItem(int i) {
+    public MsgWrapper getItem(int i) {
         return mListItems.get(i);
     }
 

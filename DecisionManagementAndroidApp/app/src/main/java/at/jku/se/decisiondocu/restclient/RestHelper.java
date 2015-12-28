@@ -17,23 +17,46 @@ import javax.ws.rs.core.FeatureContext;
  */
 public class RestHelper {
 
+    // -------------------------------------------------------------------------------------
+
     public static boolean DEBUG_MODE = true;
 
-   // public static final String BASEURL_OFFLINE = "http://192.168.0.104:8080/DecisionDocu/api/";
+    public static final int PORT_TOMCAT = 8080;
+    public static final int PORT_CHAT   = 2222;
 
-    /*// AWUR
-    public static final String BASEURL_OFFLINE = "http://192.168.0.101:8080/DecisionDocu/api/";
-    private static final String BASEURL_ONLINE = "http://192.168.0.101:8080/DecisionDocu/api/";
-    */
+    public static final String HOST_OFFLINE = "192.168.0.16";
+    public static final String HOST_ONLINE = "ubuntu.mayerb.net";
+    public static final String REST_BASEDIR = "/DecisionDocu/api/";
 
-    public static final String BASEURL_OFFLINE = "http://itchyaut22.ddns.net:8080/DecisionDocu/api/";
-    private static final String BASEURL_ONLINE = "http://ubuntu.mayerb.net:8080/DecisionDocu/api/";
+    // -------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return
+     */
     public static String GetBaseURL() {
-        String url = (DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE);
-        if (url.endsWith("/")) {
+        return GetBaseURL(true);
+    }
+
+    /**
+     *
+     * @param trimEnd
+     * @return
+     */
+    public static String GetBaseURL(boolean trimEnd) {
+        String url = "http://" + (DEBUG_MODE ? HOST_OFFLINE : HOST_ONLINE) + ":" + PORT_TOMCAT + REST_BASEDIR;
+        if (trimEnd && url.endsWith("/")) {
             url = url.substring(0, url.length() - 1);
         }
+        return url;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static String GetBaseURLChat() {
+        String url = (DEBUG_MODE ? HOST_OFFLINE : HOST_ONLINE) + ":" + PORT_CHAT;
         return url;
     }
 
@@ -53,7 +76,7 @@ public class RestHelper {
                 client = ClientBuilder.newClient().register(AndroidFriendlyFeature.class);
             } catch (Exception e) {}
         }
-        return client.target((DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE));
+        return client.target(GetBaseURL(false));
     }
 
     /**
@@ -69,7 +92,7 @@ public class RestHelper {
                 client2 = ClientBuilder.newClient(clientConfig).register(AndroidFriendlyFeature.class);
             } catch (Exception e) {}
         }
-        return client2.target((DEBUG_MODE ? BASEURL_OFFLINE : BASEURL_ONLINE));
+        return client2.target(GetBaseURL(false));
     }
 
     /**
