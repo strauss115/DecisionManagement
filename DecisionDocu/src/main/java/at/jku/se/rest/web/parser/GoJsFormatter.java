@@ -36,7 +36,7 @@ public class GoJsFormatter {
 		  goJSConnects.add(obj);
 		  //System.out.println(obj);
 	}
-		
+
 	/**
 	 * Adds a parametrized node to the Go JS graph with location attibutes and parent dependency.
 	 * Also adds the connections between nodes.
@@ -248,90 +248,12 @@ public class GoJsFormatter {
 		
 	}
 	
-	public GoJsFormatter(String s){
-		resultJSON = formatGoJsString(s);
-	}
 	
 	public GoJsFormatter(WebDecision decision){
-		if (decision != null) {
-			String jsonstring = "{\"name\":\"" + decision.getName() + "\", \"children\": [";
-			// add influence factors
-			jsonstring += "{\"name\":\"Influence Factor\", \"children\":[";
-			List<InfluenceFactor> influenceFactors = decision.getInfluenceFactors();
-			boolean firstElement = true;
-			for(InfluenceFactor inf : influenceFactors){
-				if(firstElement){
-					jsonstring += "{\"name\":\"" + inf.getName() + "\"}";
-					firstElement = false;
-				}
-				else{
-					jsonstring += ",{\"name\":\"" + inf.getName() + "\"}";;				
-					
-				}
-			}
-			jsonstring += "]},";
-			// add alternatives
-			jsonstring += "{\"name\":\"Alternatives\", \"children\":[";
-			List<Alternative> alternatives = decision.getAlternatives();
-			firstElement = true;
-			for(Alternative alt : alternatives){
-				if(firstElement){
-					jsonstring += "{\"name\":\"" + alt.getName() + "\"}";
-					firstElement = false;
-				}
-				else{
-					jsonstring += ",{\"name\":\"" + alt.getName() + "\"}";;				
-					
-				}
-			}
-			jsonstring += "]},";
-			// add consequences
-			jsonstring += "{\"name\":\"Consequences\", \"children\":[";
-			List<Consequence> consequences = decision.getConsequences();
-			firstElement = true;
-			for(Consequence cons : consequences){
-				if(firstElement){
-					jsonstring += "{\"name\":\"" + cons.getName() + "\"}";
-					firstElement = false;
-				}
-				else{
-					jsonstring += ",{\"name\":\"" + cons.getName() + "\"}";;				
-					
-				}
-			}
-			jsonstring += "]},";
-			// add quality attributes
-			jsonstring += "{\"name\":\"Quality Attributes\", \"children\":[";
-			List<QualityAttribute> qualityAttributes = decision.getQualityAttributes();
-			firstElement = true;
-			for(QualityAttribute qualAttr : qualityAttributes){
-				if(firstElement){
-					jsonstring += "{\"name\":\"" + qualAttr.getName()+ "\"}";
-					firstElement = false;
-				}
-				else{
-					jsonstring += ",{\"name\":\"" + qualAttr.getName() + "\"}";;				
-					
-				}
-			}
-			jsonstring += "]},";
-			// add rationales
-			jsonstring += "{\"name\":\"Rationales\", \"children\":[";
-			List<Rationale> rationales = decision.getRationales();
-			firstElement = true;
-			for(Rationale rat : rationales){
-				if(firstElement){
-					jsonstring += "{\"name\":\"" + rat.getName() + "\"}";
-					firstElement = false;
-				}
-				else{
-					jsonstring += ",{\"name\":\"" + rat.getName() + "\"}";;				
-					
-				}
-			}
-			jsonstring += "]} ]}";
-			resultJSON = formatGoJsString(jsonstring);
-		}		
-	}
-	
+			String decisionAsJsonString = "[";
+			decisionAsJsonString += "{\"key\": 0, \"text\": \"Mind Map\", \"loc\": \"0 0\"}";
+			
+			decisionAsJsonString += "]";
+			resultJSON = decisionAsJsonString;
+	}		
 }
