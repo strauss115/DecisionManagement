@@ -272,14 +272,38 @@ public class WebDecisionResource {
 			decision.addRationale(new Rationale("R 1 very very very very very very long text"));
 			decision.addRationale(new Rationale("R 2"));
 			decision.addRationale(new Rationale("R 3 "));
-			GoJsFormatter f2 = new GoJsFormatter(decision);
-			String result = f2.getGoJsString();
+			String result = GoJsFormatter.convertDecisionToGoJsJson(decision);
 			System.out.println(result);
 			return Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
+	@GET
+	@Path("/getTeamGraphsForConnectionAsJsonByTeamId")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Gets a JSON formatted graph for web app decisions relationships")
+	public Response getTeamGraphsForConnectionAsJson(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Team id", required = true) @QueryParam("teamId") long teamId) {
+		log.debug("GET decisions by team id '" + teamId + "'");
+		
+		if (!SessionManager.verifySession(token)) {
+			return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+		}
+		
+		Project team = DBService.getNodeByID(Project.class, teamId, 2);
 
+		if (team != null) {
+			List<Decision> decisions = team.getDecisions();
+			if (decisions != null && !decisions.isEmpty()) {
+				List<WebDecision> webDecisions = convertDecision(decisions);
+				String result = GoJsFormatter.convertDecisionsToRelationshipsOverviewGraph(webDecisions);
+				System.out.println(result);
+				return Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
+			}
+		}
+		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+	}
 	// ------------------------------------------------------------------------
 
 	@GET

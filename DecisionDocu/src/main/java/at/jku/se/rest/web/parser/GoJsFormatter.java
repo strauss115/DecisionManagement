@@ -6,6 +6,7 @@ import org.json.simple.parser.*;
 
 import at.jku.se.model.Alternative;
 import at.jku.se.model.Consequence;
+import at.jku.se.model.Decision;
 import at.jku.se.model.InfluenceFactor;
 import at.jku.se.model.QualityAttribute;
 import at.jku.se.model.Rationale;
@@ -14,18 +15,12 @@ import at.jku.se.rest.web.pojos.*;
 
 public class GoJsFormatter {
 
-	private static String resultJSON = "";
-	
-	public String getGoJsString(){
-		return resultJSON;
-	}
-	
-	
-	public GoJsFormatter(){
-		
-	}
-	
-	public GoJsFormatter(WebDecision decision){
+	/**
+	 * method to convert a decision to a go-js-graph (json)
+	 * @param decision decision
+	 * @return decision graph as json
+	 */
+	public static String convertDecisionToGoJsJson(WebDecision decision){
 			String decisionAsJsonString = "[";
 			decisionAsJsonString += "{\"key\": 0, \"text\": \"" + decision.getName() + "\", \"loc\": \"0 0\", \"editable\": false, \"showAdd\": false}";
 			// configuration
@@ -79,6 +74,14 @@ public class GoJsFormatter {
 				key++;				
 			}
 			decisionAsJsonString += "]";
-			resultJSON = decisionAsJsonString;
-	}		
+			return decisionAsJsonString;
+	}	
+	/**
+	 * Method to convert decisions
+	 * @return
+	 */
+	public static String convertDecisionsToRelationshipsOverviewGraph(List<WebDecision> decisions){
+		String json = "{\"data\":[{\"key\": 0, \"loc\": \"120 120\", \"text\": \"Entscheidung 1\"},{\"key\": 1, \"loc\": \"330 120\", \"text\": \"Entscheidung 2\"}],\"relations\":[{\"from\": 0, \"to\": 1, \"text\": \"#influences\", \"curviness\": 20}]}";
+		return json;
+	}
 }
