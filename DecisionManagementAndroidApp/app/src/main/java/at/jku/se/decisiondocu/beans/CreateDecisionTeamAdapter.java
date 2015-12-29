@@ -26,7 +26,7 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
  * Created by martin on 24.11.15.
  */
 @EBean
-public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
+public class CreateDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     private ProgressDialog mDialog;
     private List<Project> mItems;

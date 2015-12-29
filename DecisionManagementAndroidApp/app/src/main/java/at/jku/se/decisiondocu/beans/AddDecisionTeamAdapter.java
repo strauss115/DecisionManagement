@@ -19,19 +19,19 @@ import java.util.List;
 
 import at.jku.se.decisiondocu.asynctask.OnAsyncTaskFinished;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
-import at.jku.se.decisiondocu.views.TeamItemView;
-import at.jku.se.decisiondocu.views.TeamItemView_;
+import at.jku.se.decisiondocu.views.CreateDecisionTeamItemView;
+import at.jku.se.decisiondocu.views.CreateDecisionTeamItemView_;
 
 /**
  * Created by martin on 24.11.15.
  */
 @EBean
-public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
+public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     private ProgressDialog mDialog;
     private List<Project> mItems;
 
-    @Bean(RESTProjectFinder.class)
+    @Bean(RESTProjectByUserFinder.class)
     TeamFinder mTeamFinder;
 
     @AfterInject
@@ -92,12 +92,12 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TeamItemView view;
+        CreateDecisionTeamItemView view;
 
         if (convertView == null) {
-            view = TeamItemView_.build(context, this);
+            view = CreateDecisionTeamItemView_.build(context, this);
         } else {
-            view = (TeamItemView) convertView;
+            view = (CreateDecisionTeamItemView) convertView;
         }
 
         view.bind(getItem(position));

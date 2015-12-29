@@ -54,5 +54,6 @@
     <string name="itemname_directProperties">decision direct properties</string>
     <string name="itemname_relationships">decision relationships</string>
     <string name="create_decision">Create Decision</string>
+    <string name="invalidDecName">Decision name is invalid</string>
 
 </resources>

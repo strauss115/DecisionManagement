@@ -48,6 +48,46 @@ public abstract class Node implements NodeInterface {
 	}
 
 	// ------------------------------------------------------------------------
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((directProperties == null) ? 0 : directProperties.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((relationships == null) ? 0 : relationships.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		if (directProperties == null) {
+			if (other.directProperties != null)
+				return false;
+		} else if (!directProperties.equals(other.directProperties))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (relationships == null) {
+			if (other.relationships != null)
+				return false;
+		} else if (!relationships.equals(other.relationships))
+			return false;
+		return true;
+	}
 
 	@Override
 	public void addRelation(String type, RelationshipInterface relation) {

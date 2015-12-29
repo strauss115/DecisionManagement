@@ -3,7 +3,6 @@ package at.jku.se.decisiondocu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -147,8 +146,6 @@ public class MainActivity extends AppCompatActivity {
     //Eventuell Fenster indem man schnell eine Enscheidung erstellen kann
     @Click(R.id.fab)
     void fab_pressed(){
-        Snackbar.make(mViewPager, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
         CreateDecisionDialog_ creatdialog = new CreateDecisionDialog_();
         creatdialog.show(getSupportFragmentManager(), "Create new Decision");
     }

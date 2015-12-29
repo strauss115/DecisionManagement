@@ -18,8 +18,8 @@ import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.Pair;
-import at.jku.se.decisiondocu.restclient.client.model.Body;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 public class DecisionApi {
     String basePath = RestHelper.GetBaseURL();
@@ -112,7 +112,7 @@ public class DecisionApi {
      * @param body  Decision to insert/update as JSON
      * @return Decision
      */
-    public Decision updateDecision(String token, Body body) throws ApiException {
+    public Decision updateDecision(String token, NodeInterface body) throws ApiException {
         Object postBody = body;
 
         // verify the required parameter 'token' is set

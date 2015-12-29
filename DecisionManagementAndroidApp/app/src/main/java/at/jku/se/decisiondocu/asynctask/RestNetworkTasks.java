@@ -6,13 +6,12 @@ import android.util.Log;
 import android.view.View;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.Project;
+import at.jku.se.decisiondocu.restclient.client.model.RelationString;
 
 /**
  * Created by Benjamin on 19.11.2015.
@@ -76,6 +75,36 @@ public class RestNetworkTasks {
                 return 1;
             }
             return 0;
+        }
+    }
+
+    public static abstract class CreateDecisionTask  extends NetworkTask {
+
+        private final Project project;
+        private final String name;
+
+        protected CreateDecisionTask(View progressBar, View viewToHide, Context context,
+                                   Project project, String name) {
+            super(progressBar,viewToHide,context);
+            this.project=project;
+            this.name=name;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            if(name==null||name.length()<1||project==null){
+                return 0;
+            }
+            Decision dec = new Decision();
+            dec.setName(name);
+            dec.addRelation(RelationString.HASPROJECT, project, true);
+            Log.d("Test", "Test");
+            dec = RestClient.createDecision(dec);
+            Log.d("Test","Test");
+            if(dec==null){
+                return 0;
+            }
+            return 1;
         }
     }
 }

@@ -3,23 +3,11 @@ package at.jku.se.decisiondocu.restclient;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.oltu.oauth2.client.OAuthClient;
-import org.apache.oltu.oauth2.client.URLConnectionClient;
-import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +17,10 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import at.jku.se.decisiondocu.restclient.client.ApiException;
-import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
-import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.restclient.client.model.User;
 
@@ -111,12 +96,34 @@ public class RestClient {
         return dec;
     }
 
+    public static Decision createDecision(Decision decision) {
+        DecisionApi api = new DecisionApi();
+        Decision dec = null;
+        try {
+           dec = api.updateDecision(accessToken, decision);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dec;
+    }
+
 
     public static List<Project> getAllProjects() {
         ProjectApi api = new ProjectApi();
         List<Project> decs = new ArrayList<>();
         try {
             decs = api.getAll(accessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return decs;
+    }
+
+    public static List<Project> getProjectsOfUser() {
+        ProjectApi api = new ProjectApi();
+        List<Project> decs = new ArrayList<>();
+        try {
+            decs = api.get(accessToken);
         } catch (Exception e) {
             e.printStackTrace();
         }

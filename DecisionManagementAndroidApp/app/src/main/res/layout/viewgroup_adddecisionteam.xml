@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:descendantFocusability="blocksDescendants"
+android:orientation="horizontal">
+
+<at.jku.se.decisiondocu.views.SquareImageView
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:scaleType="centerCrop"
+    android:layout_marginRight="10dp"
+    android:id="@+id/imageView1" />
+
+
+    <TextView
+        android:id="@+id/team_name1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/imageView1"
+        android:text="Decision xyz"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>
