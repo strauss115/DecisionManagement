@@ -2,18 +2,9 @@
 <div class="row">
 	<div class="col-md-12">
 		<h1 class="page-header">Team Selection</h1>
-		<div class="panel panel-primary" style="margin-bottom: 2px">
-			<div class="panel-heading" style="cursor:pointer" ng-click="selectTeam(1)">
-				<p class="col-md-11">Team 1</p>
-				<div class="input-group col-md-1 text-right">
-					<i class="fa fa-check"></i>
-				</div>
-			</div>
-		</div>
-
-		<div class="panel panel-primary" style="margin-bottom: 2px">
-			<div class="panel-heading" style="cursor:pointer" ng-click="selectTeam(2)">
-				<p class="col-md-11">Team 2</p>
+		<div ng-repeat="t in teams" class="panel panel-primary" style="margin-bottom: 2px">
+			<div class="panel-heading" style="cursor:pointer" ng-click="selectTeam(t.id)">
+				<p class="col-md-11">{{ t.name }}</p>
 				<div class="input-group col-md-1 text-right">
 					<i class="fa fa-check"></i>
 				</div>
@@ -21,23 +12,14 @@
 		</div>
 
 		<h1 class="page-header">Team Subscription</h1>
-		<div class="panel panel-yellow" style="margin-bottom: 2px">
-			<div ng-click="openRegisterModal(3)" class="panel-heading" style="cursor:pointer">
-				<p class="col-md-11">Team 3</p>
+		<div ng-repeat="t in openTeams" class="panel panel-yellow" style="margin-bottom: 2px">
+			<div ng-click="openRegisterModal(t.id, t.name)" class="panel-heading" style="cursor:pointer">
+				<p class="col-md-11">{{ t.name }}</p>
 				<div class="input-group col-md-1 text-right">
 					<i class="fa fa-key"></i>
 				</div>
 			</div>
 		</div>
-		<div class="panel panel-yellow" style="margin-bottom: 2px">
-			<div ng-click="openRegisterModal(4)" class="panel-heading" style="cursor:pointer">
-				<p class="col-md-11">Team 4</p>
-				<div class="input-group col-md-1 text-right">
-					<i class="fa fa-key"></i>
-				</div>
-			</div>
-		</div>
-
 	</div>
 </div>
 
@@ -59,11 +41,12 @@
 			</div>
 			<div class="modal-body">
 				<form role="form">
+								
 <div class="form-group">
-						<label for="teamPassword"><span
+						<label for="teamName"><span
 							class="fa fa-user"></span>Team</label>
 							<input
-							type="text" class="form-control" id="teamPassword" ng-model="selectedTeam" disabled>
+							type="text" class="form-control" id="teamName" ng-model="selectedTeam" disabled>
 							
 					</div>
 
@@ -75,7 +58,7 @@
 							placeholder="Enter password" ng-required ng-model="teamPassword">
 					</div>
 
-					<button ng-click="register(selectedTeam)" type="submit"
+					<button ng-click="register(selectedTeamId)" type="submit"
 						class="btn btn-default btn-success btn-block">
 						<span class="glyphicon glyphicon-off"></span> Register
 					</button>
