@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
@@ -15,6 +18,10 @@ public class User extends Node {
 
 	// private List<Team> teams; Teams are stored in Relationships
 	// private String picture; Picture might be a Seperate Node
+	
+	private static final Logger log = LogManager.getLogger(User.class);
+	
+	// ------------------------------------------------------------------------
 
 	public User(String email, String firstname, String lastname, boolean isAdmin) {
 		super(firstname);
@@ -91,7 +98,13 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getPassword() {
-		return getDirectProperty(PropertyString.PASSWORD);
+		// need to get password by direct access as getDirectProperties is overwritten
+		try {
+			return super.getDirectProperties().get("password");
+		} catch (Exception e) {
+			log.error("Unable to get password", e);
+			return "";
+		}
 	}
 
 	@JsonIgnore
