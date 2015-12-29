@@ -95,6 +95,17 @@ public class RestClient {
         }
         return dec;
     }
+
+    public static Decision createDecision(Decision decision) {
+        DecisionApi api = new DecisionApi();
+        Decision dec = null;
+        try {
+            dec = api.updateDecision(accessToken, decision);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dec;
+    }
     
     // -----------------------------------------------------------------------------------------
     // PROJECT PART

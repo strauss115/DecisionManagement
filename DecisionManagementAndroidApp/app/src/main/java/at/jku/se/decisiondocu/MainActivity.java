@@ -147,8 +147,6 @@ public class MainActivity extends AppCompatActivity {
     //Eventuell Fenster indem man schnell eine Enscheidung erstellen kann
     @Click(R.id.fab)
     void fab_pressed(){
-        Snackbar.make(mViewPager, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
 
         switch (mViewPager.getCurrentItem()) {
             case 0:
