@@ -77,7 +77,11 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     @Override
     public int getCount() {
-        return mItems.size();
+        try {
+            return mItems.size();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     @Override
