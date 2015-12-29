@@ -123,33 +123,35 @@ public class SearchDetailsActivity extends AppCompatActivity {
         }
         mCreationDate.setText(mDecision.getCreationDate().yyyyMMdd());
 
-        for (Map.Entry<String, String> entry : mDecision.getDirectProperties().entrySet()) {
-            if (entry.getKey().toLowerCase().equals(PropertyString.CREATIONDATE.toLowerCase())) continue;
-            printTextView(entry.getKey() + " --> " + entry.getValue(), mDirectProperties);
+        if (mDecision.getDirectProperties() != null) {
+            for (Map.Entry<String, String> entry : mDecision.getDirectProperties().entrySet()) {
+                if (entry.getKey().toLowerCase().equals(PropertyString.CREATIONDATE.toLowerCase())) continue;
+                printTextView(entry.getKey() + " --> " + entry.getValue(), mDirectProperties);
+            }
         }
 
         if (!mLinearLayoutHashMap.containsKey(mDirectProperties)) {
             printTextView("-", mDirectProperties);
         }
 
+        if (mDecision.getRelationships() != null) {
+            for (Map.Entry<String, List<RelationshipInterface>> entry : mDecision.getRelationships().entrySet()) {
 
-        for (Map.Entry<String, List<RelationshipInterface>> entry : mDecision.getRelationships().entrySet()) {
+                for (RelationshipInterface relationshipInterface : entry.getValue()) {
 
-            for (RelationshipInterface relationshipInterface : entry.getValue()) {
+                    NodeInterface node = relationshipInterface.getRelatedNode();
+                    Log.d("node", node.getNodeType());
 
-                NodeInterface node = relationshipInterface.getRelatedNode();
-                Log.d("node", node.getNodeType());
-
-                switch (node.getNodeType()) {
-                    case NodeString.PROPERTY:
-                        printTextView("Property: " + node.getName(), mRelationships);
-                        break;
-                    case NodeString.ALTERNATIVE:
-                        Alternative a = (Alternative)node;
-                        printTextView("Alternative: " + a.getName(), mRelationships);
-                    default:
-                        break;
-                }
+                    switch (node.getNodeType()) {
+                        case NodeString.PROPERTY:
+                            printTextView("Property: " + node.getName(), mRelationships);
+                            break;
+                        case NodeString.ALTERNATIVE:
+                            Alternative a = (Alternative)node;
+                            printTextView("Alternative: " + a.getName(), mRelationships);
+                        default:
+                            break;
+                    }
 
 
                 /*TextView tv = new TextView(this);
@@ -157,11 +159,10 @@ public class SearchDetailsActivity extends AppCompatActivity {
                 tv.setText(entry.getKey() + " --> " + node.getName() + "(" + node.getNodeType() + ")");
                 testView.addView(tv);*/
 
+                }
+
             }
-
         }
-
-
     }
 
     private void printTextView(String content, LinearLayout view) {
