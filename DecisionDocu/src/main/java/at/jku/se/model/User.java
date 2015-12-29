@@ -52,7 +52,7 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getLastname() {
-		return super.getDirectProperty(PropertyString.LASTNAME);
+		return super.getAllDirectProperties().get(PropertyString.LASTNAME);
 	}
 
 	@JsonIgnore
@@ -65,7 +65,7 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getFirstName() {
-		return super.getDirectProperty(PropertyString.FIRSTNAME);
+		return super.getAllDirectProperties().get(PropertyString.FIRSTNAME);
 	}
 
 	@JsonIgnore
@@ -78,7 +78,7 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getEmail() {
-		return super.getDirectProperty(PropertyString.EMAIL);
+		return super.getAllDirectProperties().get(PropertyString.EMAIL);
 	}
 
 	@JsonIgnore
@@ -91,7 +91,7 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getPassword() {
-		return super.getDirectProperty(PropertyString.PASSWORD);
+		return super.getAllDirectProperties().get(PropertyString.PASSWORD);
 	}
 
 	@JsonIgnore
@@ -105,7 +105,7 @@ public class User extends Node {
 	@JsonIgnore
 	public boolean isAdmin() {
 		try {
-			return Boolean.parseBoolean(super.getDirectProperty(PropertyString.IS_ADMIN));
+			return Boolean.parseBoolean(super.getAllDirectProperties().get(PropertyString.IS_ADMIN));
 		} catch (Exception e) {
 			return false;
 		}
