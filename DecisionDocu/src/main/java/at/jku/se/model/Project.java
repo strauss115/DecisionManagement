@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import at.jku.se.database.DBService;
 import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
@@ -43,6 +44,7 @@ public class Project extends Node {
 	@JsonIgnore
 	public void setPassword(String password) {
 		super.addDirectProperty(PropertyString.PASSWORD, password);
+		DBService.updateNode(this, 0);
 	}
 	
 	// ------------------------------------------------------------------------
@@ -55,6 +57,7 @@ public class Project extends Node {
 	@JsonIgnore
 	public void setAdmin(User user) {
 		setSingleNodeRelationship(RelationString.HAS_PROJECTADMIN, user);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	// ------------------------------------------------------------------------
@@ -67,6 +70,7 @@ public class Project extends Node {
 	@JsonIgnore
 	public void addDecision(Decision decision) {
 		this.addRelation(RelationString.HAS_DECISION, decision, true);
+		DBService.updateNodeWihtRelationships(this, 0);
 	}
 	
 	@JsonIgnore

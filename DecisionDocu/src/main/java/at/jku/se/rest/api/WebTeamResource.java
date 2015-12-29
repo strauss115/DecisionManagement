@@ -172,30 +172,231 @@ public class WebTeamResource {
 		}
 	}
 
+	@POST
+	@Path("{id}/addUser")
+	@ApiOperation(value = "Adds a user to a team")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User successfully added to team"),
+			@ApiResponse(code = 204, message = "User or team not found"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Server Error") })
+	public Response addUserToProject(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the team", required = true) @PathParam("id") long teamId,
+			@ApiParam(value = "User id", required = true) @QueryParam("userId") long userId,
+			@ApiParam(value = "Password of the team, only necessary when user is not admin") @QueryParam("password") String password) {
+		log.debug("POST addUser '" + userId + "' to team '" + teamId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			User user = DBService.getNodeByID(User.class, userId, 1);
+			User curUser = SessionManager.getUser(token);
+
+			if (team != null && user != null) {
+				// only allow action if current user is admin (general or of
+				// team) or password is correct
+				if (curUser.isAdmin() || team.getAdmin().getId() == curUser.getId()
+						|| team.getPassword().equals(password)) {
+					log.debug("Adding user to team");
+					user.addToProject(team);
+					return RestResponse.getSuccessResponse();
+				} else {
+					log.warn("Team password is wrong");
+					return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+				}
+			} else {
+				log.error("Team or user not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+		} catch (Exception e) {
+			log.debug("Unable to add user to team", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+
+	@POST
+	@Path("{id}/removeUser")
+	@ApiOperation(value = "Removes a user from a team")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User successfully removes from team"),
+			@ApiResponse(code = 204, message = "User or team not found"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Server Error") })
+	public Response removeUserFromProject(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the team", required = true) @PathParam("id") long teamId,
+			@ApiParam(value = "User id", required = true) @QueryParam("userId") long userId) {
+		log.debug("POST removeUser '" + userId + "' from team '" + teamId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			User user = DBService.getNodeByID(User.class, userId, 1);
+			User curUser = SessionManager.getUser(token);
+
+			if (team != null && user != null) {
+				if (team.getAdmin().getId() == curUser.getId() || curUser.isAdmin()) {
+					log.debug("Removing user from team");
+					user.deleteFromProject(team);
+					return RestResponse.getSuccessResponse();
+				} else {
+					log.warn("User is not admin of team");
+					return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+				}
+			} else {
+				log.error("Team or user not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+		} catch (Exception e) {
+			log.debug("Unable to remove user from team", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+
+	@POST
+	@Path("{id}/setName")
+	@ApiOperation(value = "Changes name of team")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Name successfully changed"),
+			@ApiResponse(code = 204, message = "User or team not found"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Server Error") })
+	public Response changeName(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the team", required = true) @PathParam("id") long teamId,
+			@ApiParam(value = "New name", required = true) @QueryParam("name") String value) {
+		log.debug("POST setName '" + value + "' for team '" + teamId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			User curUser = SessionManager.getUser(token);
+
+			if (team != null) {
+				if (team.getAdmin().getId() == curUser.getId() || curUser.isAdmin()) {
+					log.debug("Updating team name");
+					team.setName(value);
+					DBService.updateNode(team, 0);
+					return RestResponse.getSuccessResponse();
+				} else {
+					log.warn("User is not admin of team");
+					return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+				}
+			} else {
+				log.error("Team not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change team name", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@POST
+	@Path("{id}/setPassword")
+	@ApiOperation(value = "Changes password of team")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
+			@ApiResponse(code = 204, message = "User or team not found"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Server Error") })
+	public Response changePassword(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the team", required = true) @PathParam("id") long teamId,
+			@ApiParam(value = "New password", required = true) @QueryParam("name") String value) {
+		log.debug("POST setPassword '" + value + "' for team '" + teamId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			User curUser = SessionManager.getUser(token);
+
+			if (team != null) {
+				if (team.getAdmin().getId() == curUser.getId() || curUser.isAdmin()) {
+					log.debug("Updating team name");
+					team.setPassword(value);
+					DBService.updateNode(team, 0);
+					return RestResponse.getSuccessResponse();
+				} else {
+					log.warn("User is not admin of team");
+					return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+				}
+			} else {
+				log.error("Team not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change team password", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@POST
+	@Path("{id}/setAdmin")
+	@ApiOperation(value = "Changes admin of team")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Admin successfully changed"),
+			@ApiResponse(code = 204, message = "User or team not found"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Server Error") })
+	public Response changeName(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the team", required = true) @PathParam("id") long teamId,
+			@ApiParam(value = "New admin user id", required = true) @QueryParam("adminId") long adminId) {
+		log.debug("POST setAdmin '" + adminId + "' for team '" + teamId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			User curUser = SessionManager.getUser(token);
+			User newAdmin = DBService.getNodeByID(User.class, adminId, 1);
+
+			if (team != null && newAdmin != null) {
+				if (team.getAdmin().getId() == curUser.getId() || curUser.isAdmin()) {
+					log.debug("Updating team admin");
+					team.setAdmin(newAdmin);
+					return RestResponse.getSuccessResponse();
+				} else {
+					log.warn("User is not admin of team");
+					return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+				}
+			} else {
+				log.error("Team and/or admin user not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change team admin", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+
 	@DELETE
-	@Path("/{name}")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Deletes a team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Team deleted successfully"),
 			@ApiResponse(code = 500, message = "Unable to delete team") })
 	public Response delete(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@ApiParam(value = "Team name") @PathParam("name") String name) {
-		log.debug("DELETE team '" + name + "'");
-		return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
+			@ApiParam(value = "Team id") @PathParam("id") long teamId) {
+		log.debug("DELETE team '" + teamId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
 
-		// try {
-		// WebTeam t = SampleObjectProvider.getTeamByName(name);
-		// if (SampleObjectProvider.deleteTeam(t)) {
-		// log.debug("Deleted team successfully");
-		// return RestResponse.getSuccessResponse();
-		// } else
-		// throw new Exception("Could not delete team");
-		// } catch (Exception e) {
-		// log.debug("Failed to delete team '" + e + "'");
-		// return
-		// RestResponse.getSimpleTextResponse(HttpCode.HTTP_500_SERVER_ERROR,
-		// e.getMessage());
-		// }
+			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			User curUser = SessionManager.getUser(token);
+
+			if (team != null && (curUser.isAdmin() || team.getAdmin().getId() == curUser.getId())) {
+				DBService.deleteNode(team.getId());
+				log.debug("Deleted team successfully");
+				return RestResponse.getSuccessResponse();
+			} else {
+				log.warn("User is not admin of team");
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+		} catch (Exception e) {
+			log.debug("Failed to delete team", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
 	}
 
 }
