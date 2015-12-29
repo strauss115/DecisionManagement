@@ -1,7 +1,7 @@
+
 package at.jku.se.database;
 
 import java.lang.reflect.Constructor;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,26 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.glassfish.jersey.client.ClientConfig;
 import org.neo4j.jdbc.Driver;
 import org.neo4j.jdbc.internal.Neo4jConnection;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.jku.se.auth.SessionManager;
-import at.jku.se.database.strings.NodeString;
-import at.jku.se.database.strings.PropertyString;
-import at.jku.se.database.strings.RelationString;
+import at.jku.se.dm.shared.RelationString;
+import at.jku.se.dm.shared.NodeString;
+import at.jku.se.dm.shared.PropertyString;
 import at.jku.se.model.Alternative;
 import at.jku.se.model.Consequence;
 import at.jku.se.model.Message;
@@ -41,7 +31,6 @@ import at.jku.se.model.Decision;
 import at.jku.se.model.DecisionGroup;
 import at.jku.se.model.Document;
 import at.jku.se.model.InfluenceFactor;
-import at.jku.se.model.Node;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Project;
 import at.jku.se.model.Property;
@@ -51,10 +40,8 @@ import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 import at.jku.se.rest.api.ChatResource;
-import at.jku.se.rest.response.HttpCode;
-import at.jku.se.rest.response.RestResponse;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class DBService {
 	
 	private static final Logger log = LogManager.getLogger(ChatResource.class);

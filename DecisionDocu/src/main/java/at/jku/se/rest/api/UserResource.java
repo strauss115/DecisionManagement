@@ -108,6 +108,7 @@ public class UserResource {
 			User u = DBService.getUserByEmail(eMail);
 			if (u != null && u.getPassword().equals(password)) {
 				log.debug("User found!");
+				
 				String token = SessionManager.addSession(u);
 				try {
 					OAuthResponse response = OAuthASResponse

@@ -1,4 +1,4 @@
-package at.jku.se.database.strings;
+package at.jku.se.dm.shared;
 
 public class NodeString {
 	public static final String DECISION = "Decision";

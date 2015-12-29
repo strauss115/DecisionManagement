@@ -7,9 +7,9 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
-import at.jku.se.database.strings.NodeString;
-import at.jku.se.database.strings.PropertyString;
-import at.jku.se.database.strings.RelationString;
+import at.jku.se.dm.shared.NodeString;
+import at.jku.se.dm.shared.PropertyString;
+import at.jku.se.dm.shared.RelationString;
 
 public class Project extends Node {
 	

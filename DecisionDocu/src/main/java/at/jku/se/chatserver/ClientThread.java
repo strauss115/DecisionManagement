@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
-import at.jku.se.database.strings.RelationString;
+import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Message;
 import at.jku.se.model.NodeInterface;

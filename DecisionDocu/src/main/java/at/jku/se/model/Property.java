@@ -3,7 +3,7 @@ package at.jku.se.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import at.jku.se.database.strings.NodeString;
+import at.jku.se.dm.shared.NodeString;
 
 @JsonTypeName("Property")
 public class Property extends Node {

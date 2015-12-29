@@ -2,7 +2,7 @@ package at.jku.se.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import at.jku.se.database.strings.NodeString;
+import at.jku.se.dm.shared.NodeString;
 
 public class Message extends Node {
 	

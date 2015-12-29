@@ -24,7 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
-import at.jku.se.database.strings.RelationString;
+import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.Document;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.User;

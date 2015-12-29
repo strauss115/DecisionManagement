@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import at.jku.se.database.strings.NodeString;
+import at.jku.se.dm.shared.NodeString;
 
 public class DecisionGroup extends Node {
 

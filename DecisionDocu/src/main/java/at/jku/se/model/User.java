@@ -10,9 +10,9 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
-import at.jku.se.database.strings.NodeString;
-import at.jku.se.database.strings.PropertyString;
-import at.jku.se.database.strings.RelationString;
+import at.jku.se.dm.shared.RelationString;
+import at.jku.se.dm.shared.NodeString;
+import at.jku.se.dm.shared.PropertyString;
 
 public class User extends Node {
 

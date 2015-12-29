@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.jku.se.database.strings.PropertyString;
-import at.jku.se.database.strings.RelationString;
+import at.jku.se.dm.shared.RelationString;
+import at.jku.se.dm.shared.PropertyString;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Message;
 import at.jku.se.model.RelationshipInterface;

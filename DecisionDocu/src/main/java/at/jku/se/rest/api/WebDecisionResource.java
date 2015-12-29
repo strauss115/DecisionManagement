@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
-import at.jku.se.database.strings.NodeString;
+import at.jku.se.dm.shared.NodeString;
 import at.jku.se.model.Alternative;
 import at.jku.se.model.Consequence;
 import at.jku.se.model.Decision;
