@@ -100,13 +100,27 @@ public class RestClient {
         DecisionApi api = new DecisionApi();
         Decision dec = null;
         try {
-           dec = api.updateDecision(accessToken, decision);
+            dec = api.updateDecision(accessToken, decision);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return dec;
     }
+    
+    // -----------------------------------------------------------------------------------------
+    // PROJECT PART
+    // -----------------------------------------------------------------------------------------
 
+    public static List<Project> getMyProjects() {
+        ProjectApi api = new ProjectApi();
+        List<Project> decs = new ArrayList<>();
+        try {
+            decs = api.get(accessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return decs;
+    }
 
     public static List<Project> getAllProjects() {
         ProjectApi api = new ProjectApi();
@@ -119,15 +133,15 @@ public class RestClient {
         return decs;
     }
 
-    public static List<Project> getProjectsOfUser() {
+    public static boolean addUserToProject(String projectId, String projectPassword) {
         ProjectApi api = new ProjectApi();
-        List<Project> decs = new ArrayList<>();
         try {
-            decs = api.get(accessToken);
+            String s = api.addUserToProject(accessToken, projectId, projectPassword);
+            if (s != null) return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return decs;
+        return false;
     }
 
 
