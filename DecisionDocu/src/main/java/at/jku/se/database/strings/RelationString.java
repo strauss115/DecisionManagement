@@ -16,6 +16,7 @@ public class RelationString {
 	public static final String HAS_RELATED_DECISION = "hasRelatedDecisions";
 	public static final String HAS_RESPONSIBLE = "hasResponsibles";
 	public static final String HAS_DOCUMENT = "hasDocuments";
+	public static final String HAS_PICTURE = "hasPicture";
 	public final static String HAS_PROJECTADMIN = "projectadmin";
 	
 	// Project -- relations

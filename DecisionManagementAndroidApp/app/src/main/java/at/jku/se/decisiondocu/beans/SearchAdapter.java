@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
-import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.views.ListItemView;
 import at.jku.se.decisiondocu.views.ListItemView_;
 
@@ -86,12 +85,18 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
     private void getData() {
-        Collections.sort(mItems, mComparator);
+        try {
+            Collections.sort(mItems, mComparator);
+        }catch (Exception e){};
     }
 
     @Override
     public int getCount() {
-        return mItems.size();
+        try {
+            return mItems.size();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     @Override

@@ -763,6 +763,7 @@ public class DBService {
 	
 	public static void main (String[] args){
 		User admin = getUserByEmail("admin@example.com");
+		System.out.println(admin.getPassword());
 		/*User normal = getUserByEmail("user1@u3.com");
 		List<Decision>decisions = getAllDecisions(admin);
 
@@ -818,12 +819,12 @@ public class DBService {
 		/*NodeInterface node = getNodeByID(NodeInterface.class,5861,0);
 		System.out.println(node);*/
 		
-		Message m1 = new Message("Chatnachricht 6");
-		Node node = DBService.getNodeByID(Decision.class, 5884, admin, 2);
+		//Message m1 = new Message("Chatnachricht 6");
+		//Node node = DBService.getNodeByID(Decision.class, 5884, admin, 2);
 		//System.out.println(node);
 		//node.addRelation("Message", m1, true);
 		//DBService.updateNodeWihtRelationships(node, admin.getId());
-		createMessage("Chatnachricht 7", node.getId(),admin.getId());
+		//createMessage("Chatnachricht 7", node.getId(),admin.getId());
 	}
 
 }
