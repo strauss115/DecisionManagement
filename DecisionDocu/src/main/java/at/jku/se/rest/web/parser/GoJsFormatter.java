@@ -1,4 +1,6 @@
 package at.jku.se.rest.web.parser;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.json.simple.*;
@@ -81,7 +83,48 @@ public class GoJsFormatter {
 	 * @return
 	 */
 	public static String convertDecisionsToRelationshipsOverviewGraph(List<WebDecision> decisions){
-		String json = "{\"data\":[{\"key\": 0, \"loc\": \"120 120\", \"text\": \"Entscheidung 1\"},{\"key\": 1, \"loc\": \"330 120\", \"text\": \"Entscheidung 2\"}],\"relations\":[{\"from\": 0, \"to\": 1, \"text\": \"#influences\", \"curviness\": 20}]}";
+		String json = "{\"data\":[";
+		
+		//{\"key\": 0, \"loc\": \"120 120\", \"text\": \"Entscheidung 1\"},{\"key\": 1, \"loc\": \"330 120\", \"text\": \"Entscheidung 2\"}],\"relations\":[{\"from\": 0, \"to\": 1, \"text\": \"#influences\", \"curviness\": 20}]}";
+		int count = 0;
+		int y = -200;
+		ArrayList<String> from = new ArrayList<String>();
+		ArrayList<String> to = new ArrayList<String>();
+		// test data
+		String testConnection = "";
+		// add decision nodes
+		for(WebDecision wd : decisions){
+			if(!testConnection.equals("")){
+				LinkedList<String> con = new LinkedList<String>();
+				con.add(testConnection);
+				wd.setRelatedDecisions(con);
+			}
+			if(count != 0){
+				json += ",";
+			}
+			json += "{\"key\":" + wd.getId() + ", \"loc\": \"0 " + y + "\", \"text\": \"" + wd.getName() + "\"}";
+			count++;
+			y += 100;
+			// add decision relationships to from-/to-lists
+			for(String rel : wd.getRelatedDecisions()){
+				from.add(wd.getId());
+				to.add(rel);
+			}
+			testConnection = wd.getId();
+		}
+		// remove duplicated relationships
+		
+		json += "],\"relations\":[";
+		count = 0;
+		// add relationships
+		for(int i = 0; i < from.size();i++){
+			if(count != 0){
+				json += ",";
+			}
+			json += "{\"from\": " + from.get(i) + ", \"to\": " + to.get(i) + ", \"text\": \"#relatedTo\", \"curviness\": 20}";
+			count++;
+		}
+		json += "]}";
 		return json;
 	}
 }

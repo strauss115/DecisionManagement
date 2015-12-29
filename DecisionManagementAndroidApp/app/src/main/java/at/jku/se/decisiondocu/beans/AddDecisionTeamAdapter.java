@@ -77,7 +77,11 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
 
     @Override
     public int getCount() {
-        return mItems.size();
+        try {
+            return mItems.size();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     @Override
