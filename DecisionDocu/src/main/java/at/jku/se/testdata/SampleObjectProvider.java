@@ -75,10 +75,10 @@ public class SampleObjectProvider {
 		teams.add(team1);
 		teams.add(team1);
 		
-		u1.addToTeam(team1);
-		u3.addToTeam(team1);
-		u2.addToTeam(team2);
-		u4.addToTeam(team2);
+		u1.addToProject(team1);
+		u3.addToProject(team1);
+		u2.addToProject(team2);
+		u4.addToProject(team2);
 		
 		dec1.addRelation("decisionteam", team1, true);
 		dec2.addRelation("decisionteam", team1, true);

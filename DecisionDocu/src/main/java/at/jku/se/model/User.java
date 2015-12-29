@@ -19,20 +19,20 @@ public class User extends Node {
 	public User(String email, String firstname, String lastname, boolean isAdmin) {
 		super(firstname);
 		if (email != null && firstname != null && lastname != null) {
-			this.addDirectProperty("lastname", lastname);
-			this.addDirectProperty("email", email);
-			this.addDirectProperty("isAdmin", "" + isAdmin);
+			this.addDirectProperty(PropertyString.LASTNAME, lastname);
+			this.addDirectProperty(PropertyString.EMAIL, email);
+			this.addDirectProperty(PropertyString.IS_ADMIN, "" + isAdmin);
 		}
 	}
 
 	public User(String email, String firstname, String lastname, String password, boolean isAdmin) {
 		super(firstname);
 		if (email != null && firstname != null && lastname != null) {
-			this.addDirectProperty("firstname", firstname);
-			this.addDirectProperty("lastname", lastname);
-			this.addDirectProperty("email", email);
-			this.addDirectProperty("password", password);
-			this.addDirectProperty("isAdmin", "" + isAdmin);
+			this.addDirectProperty(PropertyString.FIRSTNAME, firstname);
+			this.addDirectProperty(PropertyString.LASTNAME, lastname);
+			this.addDirectProperty(PropertyString.EMAIL, email);
+			this.addDirectProperty(PropertyString.PASSWORD, password);
+			this.addDirectProperty(PropertyString.IS_ADMIN, "" + isAdmin);
 		}
 	}
 
@@ -52,48 +52,52 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getLastname() {
-		try {
-			return super.getDirectProperties().get("lastname");
-		} catch (Exception e) {
-			return null;
-		}
+		return getDirectProperty(PropertyString.LASTNAME);
 	}
 
 	@JsonIgnore
-	public void setLastname(String lastname) {
-		super.addDirectProperty("lastname", lastname);
+	public void setLastname(String lastName) {
+		super.addDirectProperty(PropertyString.LASTNAME, lastName);
+		DBService.updateNode(this, 0);
+	}
+
+	// ------------------------------------------------------------------------
+
+	@JsonIgnore
+	public String getFirstName() {
+		return getDirectProperty(PropertyString.FIRSTNAME);
+	}
+
+	@JsonIgnore
+	public void setFirstName(String firstName) {
+		super.addDirectProperty(PropertyString.FIRSTNAME, firstName);
+		DBService.updateNode(this, 0);
 	}
 
 	// ------------------------------------------------------------------------
 
 	@JsonIgnore
 	public String getEmail() {
-		try {
-			return super.getDirectProperties().get("email");
-		} catch (Exception e) {
-			return null;
-		}
+		return getDirectProperty(PropertyString.EMAIL);
 	}
 
 	@JsonIgnore
 	public void setEmail(String email) {
-		super.addDirectProperty("email", email);
+		super.addDirectProperty(PropertyString.EMAIL, email);
+		DBService.updateNode(this, 0);
 	}
 
 	// ------------------------------------------------------------------------
 
 	@JsonIgnore
 	public String getPassword() {
-		try {
-			return super.getDirectProperties().get("password");
-		} catch (Exception e) {
-			return null;
-		}
+		return getDirectProperty(PropertyString.PASSWORD);
 	}
 
 	@JsonIgnore
 	public void setPassword(String password) {
-		super.addDirectProperty("password", password);
+		super.addDirectProperty(PropertyString.PASSWORD, password);
+		DBService.updateNode(this, 0);
 	}
 
 	// ------------------------------------------------------------------------
@@ -101,7 +105,7 @@ public class User extends Node {
 	@JsonIgnore
 	public boolean isAdmin() {
 		try {
-			return Boolean.parseBoolean(super.getDirectProperties().get("isAdmin"));
+			return Boolean.parseBoolean(getDirectProperty(PropertyString.IS_ADMIN));
 		} catch (Exception e) {
 			return false;
 		}
@@ -109,7 +113,7 @@ public class User extends Node {
 
 	@JsonIgnore
 	public void setAdmin(boolean admin) {
-		super.addDirectProperty("isAdmin", "" + admin);
+		super.addDirectProperty(PropertyString.IS_ADMIN, String.valueOf(admin));
 	}
 
 	// ------------------------------------------------------------------------
@@ -118,18 +122,18 @@ public class User extends Node {
 	public List<Project> getProjects() {
 		return getNodesByRelationship(RelationString.HAS_PROJECT, Project.class);
 	}
-	
+
 	@JsonIgnore
 	public void addToProject(Project project) {
 		this.addRelation(RelationString.HAS_PROJECT, project, true);
 		DBService.updateNodeWihtRelationships(this, 0);
 	}
-	
+
 	@JsonIgnore
 	public boolean deleteFromProject(Project project) {
 		return deleteRelationByRelatedNode(RelationString.HAS_PROJECT, project);
 	}
-	
+
 	// ------------------------------------------------------------------------
 
 	@Override
@@ -139,10 +143,6 @@ public class User extends Node {
 		HashMap<String, String> result = new HashMap<String, String>(super.getDirectProperties());
 		result.remove(PropertyString.PASSWORD);
 		return result;
-	}
-
-	public void addToTeam(Project team) {
-		this.addRelation("hasTeam", team, true);
 	}
 
 }
