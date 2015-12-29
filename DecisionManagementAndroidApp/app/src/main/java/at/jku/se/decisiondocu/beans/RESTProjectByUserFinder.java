@@ -15,6 +15,11 @@ public class RESTProjectByUserFinder implements TeamFinder {
 
     @Override
     public List<Project> findAll() {
-        return RestClient.getProjectsOfUser();
+        return RestClient.getMyProjects();
+    }
+
+    @Override
+    public List<Project> find() {
+        return null;
     }
 }

@@ -23,6 +23,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
 import at.jku.se.decisiondocu.dialog.CreateDecisionDialog_;
+import at.jku.se.decisiondocu.dialog.ProjectChooserDialog_;
 import at.jku.se.decisiondocu.fragments.ChatFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
@@ -146,8 +147,19 @@ public class MainActivity extends AppCompatActivity {
     //Eventuell Fenster indem man schnell eine Enscheidung erstellen kann
     @Click(R.id.fab)
     void fab_pressed(){
-        CreateDecisionDialog_ creatdialog = new CreateDecisionDialog_();
-        creatdialog.show(getSupportFragmentManager(), "Create new Decision");
+
+        switch (mViewPager.getCurrentItem()) {
+            case 0:
+                ProjectChooserDialog_ dialog = new ProjectChooserDialog_();
+                dialog.show(getSupportFragmentManager(), "Choose project");
+                break;
+            case 1:
+                CreateDecisionDialog_ creatdialog = new CreateDecisionDialog_();
+                creatdialog.show(getSupportFragmentManager(), "Create new Decision");
+                break;
+            default:
+                break;
+        }
     }
 
 
