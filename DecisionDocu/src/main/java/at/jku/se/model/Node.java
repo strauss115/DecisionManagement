@@ -48,6 +48,46 @@ public abstract class Node implements NodeInterface {
 	}
 
 	// ------------------------------------------------------------------------
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((directProperties == null) ? 0 : directProperties.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((relationships == null) ? 0 : relationships.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		if (directProperties == null) {
+			if (other.directProperties != null)
+				return false;
+		} else if (!directProperties.equals(other.directProperties))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (relationships == null) {
+			if (other.relationships != null)
+				return false;
+		} else if (!relationships.equals(other.relationships))
+			return false;
+		return true;
+	}
 
 	@Override
 	public void addRelation(String type, RelationshipInterface relation) {
@@ -133,17 +173,6 @@ public abstract class Node implements NodeInterface {
 			directProperties = new HashMap<String, String>();
 		}
 		directProperties.put(key, value);
-	}
-
-	@Override
-	public boolean updateNodeInDatabase() {
-		// TODO
-		return true;
-	}
-
-	public NodeInterface createNodeInDatabase() {
-		// TODO
-		return null;
 	}
 
 	// ------------------------------------------------------------------------
@@ -250,6 +279,46 @@ public abstract class Node implements NodeInterface {
 			}
 		}
 		return false;
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Checks if this node has a direct relationship (1 level) to the other
+	 * given node id
+	 * 
+	 * @param otherNodeId
+	 *            Other node to check relationship
+	 * @return True if node has a relationship to other node
+	 */
+	public boolean isRelatedToNode(long otherNodeId) {
+		Map<String, List<RelationshipInterface>> allRelations = getRelationships();
+
+		for (List<RelationshipInterface> relations : allRelations.values()) {
+			for (RelationshipInterface relation : relations) {
+				if (relation.getRelatedNode().getId() == otherNodeId) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Helper method to get a list of Ids for a list of nodes
+	 * 
+	 * @param nodes
+	 *            Nodes to get it
+	 * @return List of Ids as string
+	 */
+	public static <T extends Node> List<String> getListOfIds(List<T> nodes) {
+		List<String> result = new LinkedList<String>();
+		for (T node : nodes) {
+			result.add(String.valueOf(node.getId()));
+		}
+		return result;
 	}
 
 	// ------------------------------------------------------------------------

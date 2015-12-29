@@ -3,6 +3,10 @@ package at.jku.se.model;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import at.jku.se.database.strings.NodeString;
+
 public class InfluenceFactor extends Node {
 
 	public InfluenceFactor(String name) {
@@ -15,4 +19,15 @@ public class InfluenceFactor extends Node {
 
 	public InfluenceFactor() {
 	}
+	
+	// ------------------------------------------------------------------------
+
+	@JsonIgnore
+	@Override
+	public String getNodeType() {
+		return NodeString.INFLUENCEFACTOR;
+	}
+
+	// ------------------------------------------------------------------------
+
 }

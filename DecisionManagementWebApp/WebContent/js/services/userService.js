@@ -11,9 +11,16 @@ userServices.factory('Users', ['$resource',
     }]);
 
 
-userServices.factory('UserPerMail', ['$resource',
-    function ($resource) {
-        return $resource(serverAddress + '/DecisionManagement/rest/user/getByEMail', {}, {
-            query: {method: 'GET', params: {}, isArray: false}
-        });
-    }]);
+userServices.factory('UserPerMail', ['$resource', '$cookies',
+                                       function ($resource, $cookies) {
+                                           return $resource(serverAddress + '/DecisionDocu/api/web/user/:mail', {mail:'@id'}, {
+                                           	 get: {
+                                           		 	isArray: false,
+                                           	        headers: {
+                                           	            'token': $cookies['Token']
+                                           	        }
+                                           	    }
+                                           });
+                                       }]);
+
+

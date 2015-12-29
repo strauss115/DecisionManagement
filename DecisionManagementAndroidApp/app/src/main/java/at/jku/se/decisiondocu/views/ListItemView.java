@@ -7,20 +7,13 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.rest.Rest;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.chat.ChatActivity;
 import at.jku.se.decisiondocu.chat.ChatActivity_;
-import at.jku.se.decisiondocu.fragments.ChatFragment;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
-
-import static at.jku.se.decisiondocu.R.id.decision_startChat;
-
-import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 /**
  * Created by martin on 23.11.15.
@@ -63,9 +56,13 @@ public class ListItemView extends LinearLayout {
     }
 
     public void bind(Decision item) {
-        tv_author.setText("Author: " + item.getId());
-        tv_date.setText("Date: " + item.getCreationDate().toString());
-        tv_headline.setText(item.getName());
-        dec_node_id = item.getId();
+        try {
+            tv_author.setText("Author: " + item.getId());
+            tv_date.setText("Date: " + item.getCreationDate().toString());
+            tv_headline.setText(item.getName());
+            dec_node_id = item.getId();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

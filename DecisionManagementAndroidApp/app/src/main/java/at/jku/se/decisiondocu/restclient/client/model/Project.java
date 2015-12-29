@@ -1,20 +1,22 @@
 package at.jku.se.decisiondocu.restclient.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class Project extends Node {
 
+	@JsonIgnore
 	public int getNrOfDecisions() {
 		return nrOfDecisions;
 	}
-
+	@JsonIgnore
 	public void setNrOfDecisions(int nrOfDecisions) {
 		this.nrOfDecisions = nrOfDecisions;
 	}
 
+	@JsonIgnore
 	private int nrOfDecisions = -1;
 
 	public Project(String name, User admin, String password) {

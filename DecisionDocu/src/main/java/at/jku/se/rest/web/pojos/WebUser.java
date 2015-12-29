@@ -1,6 +1,7 @@
 package at.jku.se.rest.web.pojos;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import at.jku.se.rest.response.ResponseData;
 
@@ -9,13 +10,11 @@ public class WebUser extends ResponseData {
 	/**
 	 * Unique e-mail address
 	 */
-	
 	private String eMail;
 	private String firstName, lastName;
-	private String password; // TODO JsonIgnore is not working...
 	private String urlProfilePicture;
 	private boolean isAdmin;
-	private LinkedList<String> teams;
+	private List<String> teams;
 
 	// ------------------------------------------------------------------------
 
@@ -23,11 +22,10 @@ public class WebUser extends ResponseData {
 
 	}
 
-	public WebUser(String eMail, String firstName, String lastName, String password) {
+	public WebUser(String eMail, String firstName, String lastName) {
 		this.eMail = eMail;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.password = password;
 		
 		this.teams = new LinkedList<String>();
 	}
@@ -58,14 +56,6 @@ public class WebUser extends ResponseData {
 		this.lastName = lastName;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getUrlProfilePicture() {
 		return urlProfilePicture;
 	}
@@ -82,8 +72,12 @@ public class WebUser extends ResponseData {
 		this.isAdmin = isAdmin;
 	}
 
-	public LinkedList<String> getTeams() {
+	public List<String> getTeams() {
 		return teams;
+	}
+	
+	public void setTeams(List<String> teams) {
+		this.teams = teams;
 	}
 
 	public boolean addToTeam(WebTeam team) {

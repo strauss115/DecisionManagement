@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import at.jku.se.database.strings.NodeString;
+
 public class Document extends Node {
 
 	private static final String URL = "URL";
@@ -21,6 +23,14 @@ public class Document extends Node {
 	
 	public Document(String name, Map<String, List<RelationshipInterface>> relations) {
 		super(name, relations);
+	}
+	
+	// ------------------------------------------------------------------------
+
+	@JsonIgnore
+	@Override
+	public String getNodeType() {
+		return NodeString.DOCUMENT;
 	}
 
 	// ------------------------------------------------------------------------

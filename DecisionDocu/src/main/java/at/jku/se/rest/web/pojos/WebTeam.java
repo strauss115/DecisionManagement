@@ -1,6 +1,7 @@
 package at.jku.se.rest.web.pojos;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import at.jku.se.rest.response.ResponseData;
 
@@ -10,13 +11,11 @@ import at.jku.se.rest.response.ResponseData;
  */
 public class WebTeam extends ResponseData {
 	
-	public static final String ID_PREFIX = "T";
-
 	// ------------------------------------------------------------------------
 	
 	private String name;
-	private LinkedList<String> users;
-	private WebUser admin;
+	private List<String> users;
+	private String admin;
 	
 	// ------------------------------------------------------------------------
 	
@@ -24,18 +23,16 @@ public class WebTeam extends ResponseData {
 		
 	}
 	
-	public WebTeam(String id, String name, WebUser admin) {
+	public WebTeam(String id, String name, String admin) {
 		this.name = name;
 		this.admin = admin;
-		setId(ID_PREFIX + name);
 		
 		users = new LinkedList<String>();
 	}
 	
-	public WebTeam(String name, WebUser admin) {
+	public WebTeam(String name, String admin) {
 		this.name = name;
 		this.admin = admin;
-		setId(ID_PREFIX + name);
 		
 		users = new LinkedList<String>();
 	}
@@ -50,12 +47,20 @@ public class WebTeam extends ResponseData {
 		this.name = name;
 	}
 	
-	public WebUser getAdmin() {
+	public String getAdmin() {
 		return admin;
 	}
 	
-	public void setAdmin(WebUser admin) {
+	public void setAdmin(String admin) {
 		this.admin = admin;
+	}
+	
+	public List<String> getUsers() {
+		return users;
+	}
+	
+	public void setUsers(List<String> users) {
+		this.users = users;
 	}
 	
 	public boolean addUser(WebUser user) {

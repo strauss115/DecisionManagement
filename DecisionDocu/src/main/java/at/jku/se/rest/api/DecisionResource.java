@@ -123,12 +123,14 @@ public class DecisionResource {
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "Decision to insert/update as JSON", required = true) String json) {
 		try {
+			log.info("Test: "+json);
 			if(!SessionManager.verifySession(token)){
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
 			Decision dec = mapper.readValue(json, Decision.class);
-			return RestResponse.getSuccessResponse(DBService.updateNodeWihtRelationships(dec, user.getId()));
+			Decision newdec = DBService.updateNodeWihtRelationships(dec, user.getId());
+			return RestResponse.getSuccessResponse(newdec);
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);

@@ -13,8 +13,6 @@ import at.jku.se.rest.response.ResponseData;
 
 public class WebDecision extends ResponseData {
 
-	public static final String ID_PREFIX = "D";
-	
 	// ------------------------------------------------------------------------
 	
 	private String name;
@@ -64,17 +62,6 @@ public class WebDecision extends ResponseData {
 		this.name = name;
 		this.author = author.getEMail();
 		this.creationDate = new Date();
-	}
-	
-	/**
-	 * Constructor used by API for new decision objects
-	 * 
-	 * @param name
-	 * @param author
-	 * @param team
-	 */
-	public WebDecision(String name, WebUser author) {
-		this (generateId(name, ID_PREFIX), name, author);
 	}
 	
 	// ------------------------------------------------------------------------

@@ -5,18 +5,9 @@ package at.jku.se.rest.response;
  */
 public abstract class ResponseData {
 	
-	private String session;
 	private String id;
 	
 	// ------------------------------------------------------------------------
-	
-	public String getSession() {
-		return session;
-	}
-	
-	public void setSession(String session) {
-		this.session = session;
-	}
 	
 	public String getId() {
 		return id;
@@ -27,17 +18,5 @@ public abstract class ResponseData {
 	}
 
 	// ------------------------------------------------------------------------
-	
-	public static boolean checkId(String id, String prefix) {
-		if (id.startsWith(prefix))
-			return true;
-		return false;
-	}
-	
-	public static String generateId(String id, String prefix) {
-		if(checkId(id, prefix))
-			return id;
-		return prefix + id;
-	}
 	
 }

@@ -3,7 +3,6 @@ package at.jku.se.decisiondocu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -163,8 +162,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
-
-
     }
 
 

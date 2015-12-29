@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
+import at.jku.se.model.Node;
 import at.jku.se.model.User;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
@@ -53,14 +54,14 @@ public class WebUserResource {
 		try {
 			if (user != null) {
 				WebUser result = new WebUser();
-
+				// --
 				result.setId(String.valueOf(user.getId()));
 				result.setEMail(user.getEmail());
 				result.setFirstName(user.getName());
 				result.setLastName(user.getLastname());
 				result.setAdmin(user.isAdmin());
-				// TODO add teams - database implementation missing
-
+				result.setTeams(Node.getListOfIds(DBService.getAllProjectsOfUser(user)));
+				// --
 				return result;
 			} else {
 				log.error("Unable to convert user because of null reference");
@@ -159,7 +160,7 @@ public class WebUserResource {
 
 	@DELETE
 	@Path("/{id}")
-	@ApiOperation(value = "Delete a user", notes = "This API method deletes an existing user")
+	@ApiOperation(value = "Delete a user", notes = "Only an administrator or creator (user itself) is able to execute this operation")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server Error"),
 			@ApiResponse(code = 401, message = "Unauthorized") })
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -171,16 +172,194 @@ public class WebUserResource {
 	}
 
 	@PUT
-	@Path("/{mail}/setPermisssion/{admin}")
+	@Path("/{id}/setPermisssion")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Not yet implemented")
+	@ApiOperation(value = "Change permissions of a user", notes = "Only an administrator can execute this operation")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 204, message = "User not found"),
+			@ApiResponse(code = 200, message = "Ok") })
 	public Response setPermission(
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@PathParam("id") long id, @PathParam("admin") boolean admin) {
+			@ApiParam(value = "User id to set permissions", required = true) @PathParam("id") long id,
+			@PathParam("admin") boolean admin) {
 		log.debug("Set admin user '" + id + "' to '" + admin + "'");
 		return api.setPermission(token, id, admin);
 	}
 
-	// TODO Upload user picture
+	@POST
+	@Path("/{id}/setPassword")
+	@ApiOperation(value = "Changes password of user", notes = "An administrator is able to change the password of another user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
+			@ApiResponse(code = 204, message = "User or found"), @ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 500, message = "Server Error") })
+	public Response changePassword(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Id of user, use 0 to change current user's password", required = true) @PathParam("id") long userId,
+			@ApiParam(value = "New password", required = true) @QueryParam("password") String password) {
+		log.debug("POST setPassword for user '" + userId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
 
+			User sessionUser = SessionManager.getUser(token);
+
+			if (userId == 0) {
+				log.debug("Changing user's own password");
+				sessionUser.setPassword(password);
+				return RestResponse.getSuccessResponse();
+			} else {
+				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				if (paramUser != null) {
+					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
+						log.debug("User is admin or changes own password by given id");
+						paramUser.setPassword(password);
+						return RestResponse.getSuccessResponse();
+					} else {
+						log.warn("User is not allowed to change password");
+						return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+					}
+				} else {
+					log.warn("User '" + userId + "' not found");
+					return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+				}
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change user password", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@POST
+	@Path("/{id}/setEmail")
+	@ApiOperation(value = "Changes email of user", notes = "An administrator is able to change the email of another user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
+			@ApiResponse(code = 204, message = "User or found"), @ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 500, message = "Server Error") })
+	public Response changeEmail(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Id of user, use 0 to change current user's email", required = true) @PathParam("id") long userId,
+			@ApiParam(value = "New email", required = true) @QueryParam("email") String email) {
+		log.debug("POST setEmail for user '" + userId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			User sessionUser = SessionManager.getUser(token);
+
+			if (userId == 0) {
+				log.debug("Changing user's own email");
+				sessionUser.setEmail(email);
+				return RestResponse.getSuccessResponse();
+			} else {
+				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				if (paramUser != null) {
+					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
+						log.debug("User is admin or changes own email by given id");
+						paramUser.setEmail(email);
+						return RestResponse.getSuccessResponse();
+					} else {
+						log.warn("User is not allowed to change email");
+						return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+					}
+				} else {
+					log.warn("User '" + userId + "' not found");
+					return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+				}
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change user email", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@POST
+	@Path("/{id}/setFirstName")
+	@ApiOperation(value = "Changes first name of user", notes = "An administrator is able to change the first name of another user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "First name successfully changed"),
+			@ApiResponse(code = 204, message = "User or found"), @ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 500, message = "Server Error") })
+	public Response changeFirstName(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Id of user, use 0 to change current user's first name", required = true) @PathParam("id") long userId,
+			@ApiParam(value = "New first name", required = true) @QueryParam("firstName") String firstName) {
+		log.debug("POST setFirstName '" + firstName + "' for user '" + userId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			User sessionUser = SessionManager.getUser(token);
+
+			if (userId == 0) {
+				log.debug("Changing user's own first name");
+				sessionUser.setFirstName(firstName);
+				return RestResponse.getSuccessResponse();
+			} else {
+				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				if (paramUser != null) {
+					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
+						log.debug("User is admin or changes own first name by given id");
+						paramUser.setFirstName(firstName);
+						return RestResponse.getSuccessResponse();
+					} else {
+						log.warn("User is not allowed to change first name");
+						return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+					}
+				} else {
+					log.warn("User '" + userId + "' not found");
+					return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+				}
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change user's first name", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+
+	@POST
+	@Path("/{id}/setLastName")
+	@ApiOperation(value = "Changes last name of user", notes = "An administrator is able to change the last name of another user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Last name successfully changed"),
+			@ApiResponse(code = 204, message = "User or found"), @ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 500, message = "Server Error") })
+	public Response changeLastName(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Id of user, use 0 to change current user's last name", required = true) @PathParam("id") long userId,
+			@ApiParam(value = "New last name", required = true) @QueryParam("lastName") String lastName) {
+		log.debug("POST setLastName '" + lastName + "' for user '" + userId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			User sessionUser = SessionManager.getUser(token);
+
+			if (userId == 0) {
+				log.debug("Changing user's own last name");
+				sessionUser.setLastname(lastName);
+				return RestResponse.getSuccessResponse();
+			} else {
+				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				if (paramUser != null) {
+					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
+						log.debug("User is admin or changes own last name by given id");
+						paramUser.setLastname(lastName);
+						return RestResponse.getSuccessResponse();
+					} else {
+						log.warn("User is not allowed to change last name");
+						return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+					}
+				} else {
+					log.warn("User '" + userId + "' not found");
+					return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+				}
+			}
+		} catch (Exception e) {
+			log.debug("Unable to change user's last name", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
 }

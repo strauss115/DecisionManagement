@@ -33,9 +33,6 @@ public interface NodeInterface {
 	public Map<String, List<RelationshipInterface>> getRelationships();
 	public void setRelationships(Map<String, List<RelationshipInterface>> relationships);
 	
-	public boolean updateNodeInDatabase();
-	public NodeInterface createNodeInDatabase();
-	
 	@JsonIgnore
 	public String getNodeType();
 	public Map<String, String> getDirectProperties();

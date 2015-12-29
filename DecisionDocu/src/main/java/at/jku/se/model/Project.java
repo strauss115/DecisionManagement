@@ -1,39 +1,84 @@
 package at.jku.se.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import at.jku.se.database.DBService;
+import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 
 public class Project extends Node {
+	
+	// ------------------------------------------------------------------------
 
 	public Project(String name, User admin, String password) {
 		super(name);
-		this.addRelation(RelationString.PROJECTADMIN, admin, true);
+		this.addRelation(RelationString.HAS_PROJECTADMIN, admin, true);
 		this.addDirectProperty(PropertyString.PASSWORD, password);
 	}
 
 	public Project() {
 		super();
 	}
+	
+	// ------------------------------------------------------------------------
 
 	@JsonIgnore
+	@Override
+	public String getNodeType() {
+		return NodeString.PROJECT;
+	}
+
+	// ------------------------------------------------------------------------
+
+	
+	@JsonIgnore
 	public String getPassword() {
-		try{
-		return super.getDirectProperties().get(PropertyString.PASSWORD);
-		}catch (Exception e){
-			e.printStackTrace();
-			return null;
-		}
+		return getDirectProperty(PropertyString.PASSWORD);
 	}
 
 	@JsonIgnore
 	public void setPassword(String password) {
 		super.addDirectProperty(PropertyString.PASSWORD, password);
+		DBService.updateNode(this, 0);
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public User getAdmin() {
+		return getSingleNodeByRelationship(RelationString.HAS_PROJECTADMIN, User.class);
+	}
+	
+	@JsonIgnore
+	public void setAdmin(User user) {
+		setSingleNodeRelationship(RelationString.HAS_PROJECTADMIN, user);
+		DBService.updateNodeWihtRelationships(this, 0);
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Decision> getDecisions() {
+		return getNodesByRelationship(RelationString.HAS_DECISION, Decision.class);
+	}
+	
+	@JsonIgnore
+	public void addDecision(Decision decision) {
+		this.addRelation(RelationString.HAS_DECISION, decision, true);
+		DBService.updateNodeWihtRelationships(this, 0);
+	}
+	
+	@JsonIgnore
+	public boolean deleteDecisionRelation(Decision decision) {
+		return deleteRelationByRelatedNode(RelationString.HAS_DECISION, decision);
+	}
+	
+	// ------------------------------------------------------------------------
 
 	@Override
 	public Map<String, String> getDirectProperties() {

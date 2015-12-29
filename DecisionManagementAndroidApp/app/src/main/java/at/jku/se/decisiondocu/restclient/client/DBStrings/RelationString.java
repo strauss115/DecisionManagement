@@ -1,4 +1,4 @@
-package at.jku.se.database.strings;
+package at.jku.se.decisiondocu.restclient.client.DBStrings;
 
 public class RelationString {
 

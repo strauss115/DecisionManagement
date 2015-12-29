@@ -34,16 +34,19 @@ import at.jku.se.database.strings.NodeString;
 import at.jku.se.database.strings.PropertyString;
 import at.jku.se.database.strings.RelationString;
 import at.jku.se.model.Alternative;
+import at.jku.se.model.Consequence;
 import at.jku.se.model.Message;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Decision;
 import at.jku.se.model.DecisionGroup;
+import at.jku.se.model.Document;
 import at.jku.se.model.InfluenceFactor;
 import at.jku.se.model.Node;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Project;
 import at.jku.se.model.Property;
 import at.jku.se.model.QualityAttribute;
+import at.jku.se.model.Rationale;
 import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
@@ -80,6 +83,9 @@ public class DBService {
 			constructors.put(NodeString.ALTERNATIVE, Alternative.class.getConstructor(type));
 			constructors.put(NodeString.PROPERTY, Property.class.getConstructor(type));
 			constructors.put(NodeString.MESSAGE, Message.class.getConstructor(type));
+			constructors.put(NodeString.CONSEQUENCE, Consequence.class.getConstructor(type));
+			constructors.put(NodeString.DOCUMENT, Document.class.getConstructor(type));
+			constructors.put(NodeString.RATIONALE, Rationale.class.getConstructor(type));
 		}catch (Exception e){}
 	}
 	
@@ -143,7 +149,7 @@ public class DBService {
 		try{
 			Project project = getAllNodes(Project.class, user, 1, 3, null," id(n1)="+projectid+" ").get(0);
 			List<Decision> decisions = new ArrayList<Decision>();
-			for(RelationshipInterface rel:project.getRelationships().get(RelationString.HASDECISION)){
+			for(RelationshipInterface rel:project.getRelationships().get(RelationString.HAS_DECISION)){
 				try{
 					decisions.add((Decision) rel.getRelatedNode());
 				}catch (Exception e){}
@@ -194,7 +200,7 @@ public class DBService {
 			return false;
 		}
 		try{
-			return addRelationship(user.getId(),RelationString.HASPROJECT,projectId)>0;
+			return addRelationship(user.getId(),RelationString.HAS_PROJECT,projectId)>0;
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -540,7 +546,7 @@ public class DBService {
 	
 	public static Message createMessage(String message, long relatedNode, long creatorid){
 		Message messageNode = new Message(message);
-		messageNode = createRelationshipWithNode(messageNode, RelationString.Message, relatedNode, creatorid);
+		messageNode = createRelationshipWithNode(messageNode, RelationString.HAS_MESSAGE, relatedNode, creatorid);
 		return messageNode;
 	}
 	
@@ -586,8 +592,8 @@ public class DBService {
 		if(creatorid>0&&creatorid!=node.getId()){
 			try{
 				User creator = getNodeByID(User.class,creatorid,0);
-				long relid = addRelationship(node.getId(),RelationString.CREATOR,creator.getId());
-				node.addRelation(RelationString.CREATOR, new Relationship(relid,creator,true));
+				long relid = addRelationship(node.getId(),RelationString.HAS_CREATOR,creator.getId());
+				node.addRelation(RelationString.HAS_CREATOR, new Relationship(relid,creator,true));
 			}catch (Exception e){
 				e.printStackTrace();
 			}
