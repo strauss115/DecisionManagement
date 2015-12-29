@@ -144,6 +144,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     };
 
     public void refresh() {
+        findAll();
         getData();
         notifyDataSetChanged();
     }

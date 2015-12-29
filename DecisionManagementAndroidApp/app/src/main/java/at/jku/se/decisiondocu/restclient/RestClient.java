@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
+import at.jku.se.decisiondocu.restclient.client.api.NodeApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
@@ -96,15 +97,15 @@ public class RestClient {
         return dec;
     }
 
-    public static Decision createDecision(Decision decision) {
-        DecisionApi api = new DecisionApi();
-        Decision dec = null;
+    public static String createDecision(Project project) {
+        NodeApi api = new NodeApi();
+        String node = null;
         try {
-            dec = api.updateDecision(accessToken, decision);
+            node = api.createSimpleNode(accessToken, project);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dec;
+        return node;
     }
     
     // -----------------------------------------------------------------------------------------

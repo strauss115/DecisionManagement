@@ -51,7 +51,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/profilePicture/{id}")
-	@Produces({"image/png", "image/jpeg", "image/gif"})
+	@Produces("image/jpeg")
 	@ApiOperation(value = "Upload a user's profile picture", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
@@ -68,8 +68,9 @@ public class DocumentResource {
 			
 			
 			File file = new File(LOCATION_PROFILE_PICTURE+id+".jpg");
-			String mt = new MimetypesFileTypeMap().getContentType(file);
-			return Response.ok(file, mt).build();
+			System.out.println(file.getAbsolutePath());
+			return Response.ok(file).header("Content-Disposition",
+					"attachment; filename=image_from_server.jpg").build();
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);

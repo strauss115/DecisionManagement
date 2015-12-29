@@ -14,7 +14,7 @@ import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.Pair;
-import at.jku.se.decisiondocu.restclient.client.model.Body;
+import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 public class NodeApi {
     String basePath = RestHelper.GetBaseURL();
@@ -46,7 +46,7 @@ public class NodeApi {
      * @param body  JSON Object to insert in the database
      * @return String
      */
-    public String createSimpleNode(String token, Body body) throws ApiException {
+    public String createSimpleNode(String token, NodeInterface body) throws ApiException {
         Object postBody = body;
 
         // verify the required parameter 'token' is set

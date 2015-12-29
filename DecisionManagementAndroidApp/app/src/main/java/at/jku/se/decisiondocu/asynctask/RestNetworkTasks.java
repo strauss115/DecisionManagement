@@ -97,11 +97,10 @@ public class RestNetworkTasks {
             }
             Decision dec = new Decision();
             dec.setName(name);
-            dec.addRelation(RelationString.HASPROJECT, project, true);
-            Log.d("Test", "Test");
-            dec = RestClient.createDecision(dec);
-            Log.d("Test","Test");
-            if(dec==null){
+            project.addRelation(RelationString.HASDECISION, dec, true);
+            String decision = RestClient.createDecision(project);
+            Log.d("Test", decision);
+            if(decision==null){
                 return 0;
             }
             return 1;

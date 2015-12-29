@@ -1,6 +1,7 @@
 package at.jku.se.decisiondocu.views;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,7 +63,8 @@ public class ListItemView extends LinearLayout {
             tv_headline.setText(item.getName());
             dec_node_id = item.getId();
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            Log.d("Dec",item.toString());
         }
     }
 }

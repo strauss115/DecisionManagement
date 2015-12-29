@@ -737,7 +737,7 @@ public class DBService {
 		if(node.getName()!=null&&node.getName().length()>0){
 			match.append("name:\"").append(node.getName()).append("\"").append(", ");
 		}
-		match.append("creationdate:");
+		match.append("creationDate:");
 		if(node.getCreationDate()!=null){
 			match.append(node.getCreationDate().dateToLong());
 		}else{
@@ -754,7 +754,7 @@ public class DBService {
 	}
 	
 	private static ResultSet executeQuery(String query)throws Exception{
-			//System.out.println(query);
+			System.out.println(query);
 			Statement stmt = getDBService().getConnection().createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			stmt.closeOnCompletion();
@@ -762,7 +762,12 @@ public class DBService {
 	}
 	
 	public static void main (String[] args){
-		User admin = getUserByEmail("admin@example.com");
+		User user = getUserByEmail("user1@u1.com");
+		List<Decision> decs = getAllDecisions(user);
+		for(Decision dec:decs){
+			System.out.println(dec.getName()+"  "+dec.getCreationDate());
+		}
+		/*User admin = getUserByEmail("admin@example.com");
 		System.out.println(admin.getPassword());
 		/*User normal = getUserByEmail("user1@u3.com");
 		List<Decision>decisions = getAllDecisions(admin);
