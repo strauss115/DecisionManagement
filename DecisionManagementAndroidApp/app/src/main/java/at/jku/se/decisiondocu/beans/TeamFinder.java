@@ -10,4 +10,5 @@ import at.jku.se.decisiondocu.restclient.client.model.Project;
 public interface TeamFinder {
 
     List<Project> findAll();
+    List<Project> find();
 }

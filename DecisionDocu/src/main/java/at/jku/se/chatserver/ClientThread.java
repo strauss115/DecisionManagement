@@ -121,6 +121,7 @@ public class ClientThread extends Thread {
 					} catch (Exception e1) {
 						log.error(e1);;
 					}
+					log.debug("Message received: '" + line + "' from user '" + user.getEmail() + "'");
 				}
 			}
 			synchronized (this) {

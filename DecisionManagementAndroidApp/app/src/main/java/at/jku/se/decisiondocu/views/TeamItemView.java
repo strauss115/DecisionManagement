@@ -44,6 +44,9 @@ public class TeamItemView extends LinearLayout {
     @ViewById(R.id.team_favourite)
     CheckBox mTeamFavourite;
 
+    @ViewById(R.id.team_members)
+    TextView mTeamMembers;
+
     private BaseAdapter mAdapter;
     private Project mTeam;
 
@@ -91,6 +94,19 @@ public class TeamItemView extends LinearLayout {
             }
         });
 
+    }
+
+    public void bind(Project item, boolean enhanced) {
+
+        if (!enhanced) {
+            bind(item);
+        } else {
+            mTeam = item;
+            mTeamName.setText(item.getName());
+            mTeamDescCnt.setVisibility(INVISIBLE);
+            mTeamFavourite.setVisibility(INVISIBLE);
+            mTeamMembers.setVisibility(INVISIBLE);
+        }
     }
 
     private void notifyTeamOnChanges() {
