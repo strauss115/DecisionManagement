@@ -168,7 +168,7 @@ public class WebDecisionResource {
 			if (team != null) {
 				List<Decision> decisions = team.getDecisions();
 				if (decisions != null && !decisions.isEmpty()) {
-					RestResponse.getSuccessResponse(convertDecision(decisions));
+					return RestResponse.getSuccessResponse(convertDecision(decisions));
 				}
 			}
 		} catch (Exception e) {

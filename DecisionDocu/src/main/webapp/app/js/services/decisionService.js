@@ -26,3 +26,14 @@ decisionServices.factory('LoadConnectionsGraph', ['$resource', '$cookies',
                                                	    }
                                                });
                                            }]);
+decisionServices.factory('DecisionsByTeam', ['$resource', '$cookies',
+                                                  function ($resource, $cookies) {
+                                                      return $resource(serverAddress + '/DecisionDocu/api/web/decision/byTeam/' + $cookies['TeamId'], {}, {
+                                                      	 get: {
+                                                      		 	isArray: true,
+                                                      	        headers: {
+                                                      	            'token': $cookies['Token']
+                                                      	        }
+                                                      	    }
+                                                      });
+                                                  }]);
