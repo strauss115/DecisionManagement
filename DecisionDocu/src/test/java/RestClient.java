@@ -20,7 +20,7 @@ public class RestClient {
 			
 			ClientConfig config = new ClientConfig();
 		    Client client = ClientBuilder.newClient(config);
-			WebTarget service = client.target("http://localhost:8181/DecisionDocu/api/decision");
+			WebTarget service = client.target("http://localhost:8080/DecisionDocu/api/decision");
 			Builder builder = service.request().accept(MediaType.APPLICATION_JSON);
 			builder.header("Token", "g0up9ej1egkmrtveig59ke0adf");
 			Response response = builder.get();
