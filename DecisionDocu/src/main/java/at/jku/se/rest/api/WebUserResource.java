@@ -186,7 +186,7 @@ public class WebUserResource {
 		return api.setPermission(token, id, admin);
 	}
 
-	@POST
+	@PUT
 	@Path("/{id}/setPassword")
 	@ApiOperation(value = "Changes password of user", notes = "An administrator is able to change the password of another user")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
@@ -230,7 +230,7 @@ public class WebUserResource {
 		}
 	}
 	
-	@POST
+	@PUT
 	@Path("/{id}/setEmail")
 	@ApiOperation(value = "Changes email of user", notes = "An administrator is able to change the email of another user")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
@@ -274,7 +274,7 @@ public class WebUserResource {
 		}
 	}
 	
-	@POST
+	@PUT
 	@Path("/{id}/setFirstName")
 	@ApiOperation(value = "Changes first name of user", notes = "An administrator is able to change the first name of another user")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "First name successfully changed"),
@@ -318,7 +318,7 @@ public class WebUserResource {
 		}
 	}
 
-	@POST
+	@PUT
 	@Path("/{id}/setLastName")
 	@ApiOperation(value = "Changes last name of user", notes = "An administrator is able to change the last name of another user")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Last name successfully changed"),

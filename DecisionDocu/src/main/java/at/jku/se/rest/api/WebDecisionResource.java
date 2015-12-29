@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -218,7 +219,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@POST
+	@PUT
 	@Path("/{id}/description")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Sets the description for a decision")
@@ -306,9 +307,9 @@ public class WebDecisionResource {
 	}
 	// ------------------------------------------------------------------------
 
-	@GET
+	@PUT
 	@Path("/{id}/removeAttribute")
-	@ApiOperation(value = "Removes attributes which are existence dependent to a decision (influence factor, rationale, alternatives, consequence, quality attributes, document")
+	@ApiOperation(value = "Removes attributes which are existence dependent to a decision", notes = "influence factor, rationale, alternatives, consequence, quality attributes, document")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = "Unable to add attribute due to server error"),
 			@ApiResponse(code = 401, message = "Unauthorized or not allowed to delete other node"),
 			@ApiResponse(code = 204, message = "Decision id not found"), @ApiResponse(code = 200, message = "Ok") })
@@ -348,7 +349,7 @@ public class WebDecisionResource {
 
 	// ------------------------------------------------------------------------
 
-	@GET
+	@POST
 	@Path("/{id}/addInfluenceFactor")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new influence factor")
@@ -382,7 +383,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("/{id}/addRationale")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new rationale")
@@ -415,7 +416,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("/{id}/addAlternative")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new alternative")
@@ -449,7 +450,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("/{id}/addConsequence")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new Consequence")
@@ -483,7 +484,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@POST
 	@Path("/{id}/addQualityAttribute")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new QualityAttribute")
@@ -517,7 +518,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@PUT
 	@Path("/{id}/addRelatedDecision")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new related decision")
@@ -552,7 +553,7 @@ public class WebDecisionResource {
 		}
 	}
 	
-	@GET
+	@PUT
 	@Path("/{id}/removeRelatedDecision")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Removes a related decision")
@@ -585,7 +586,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@PUT
 	@Path("/{id}/addResponsible")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new responsible")
@@ -619,7 +620,7 @@ public class WebDecisionResource {
 		}
 	}
 
-	@GET
+	@PUT
 	@Path("/{id}/removeResponsible")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Adds a new responsible")
