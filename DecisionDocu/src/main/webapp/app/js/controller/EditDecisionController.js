@@ -2,7 +2,14 @@ app.controller('EditDecisionController', ['$scope', '$cookies', 'LoadEditGraph',
         $scope.model = new go.GraphLinksModel([], []);
 
         $scope.updateGraph = function() {
-        	   alert($scope.selectedDecisionGraph.id);
+        	   alert($scope.selectedDecision);
+               // load chosen graph
+               LoadEditGraph.get({id: $scope.selectedDecision}, function (data) {
+                //alert(data);
+                   $scope.model = new go.Model.fromJson({"class": "go.TreeModel","nodeDataArray": data}),
+                   $scope.model.selectedNodeData = null;
+               }, function (error) {
+               });
         	}
         $scope.model.selectedNodeData = null;
         $scope.decisions = [];

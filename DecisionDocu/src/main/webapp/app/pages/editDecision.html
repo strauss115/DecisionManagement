@@ -27,8 +27,8 @@
 
                     <div class="form-group">
                         <div class="col-lg-10">
-                            <select ng-model="selectedDecisionGraph" ng-change="updateGraph()" class="form-control">
-                                <option ng-repeat="d in decisions" value="d.id" >{{ d.name }}</option>
+                            <select ng-model="selectedDecision" ng-change="updateGraph()" class="form-control">
+                                <option ng-repeat="d in decisions" value="{{d.id}}" >{{ d.name }}</option>
                         </div>
                         </select>
                     </div>
