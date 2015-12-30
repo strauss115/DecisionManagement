@@ -5,65 +5,82 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="3dp" >
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                android:orientation="vertical"
+                android:paddingTop="3dp">
 
-                <Spinner
-                    android:id="@+id/spinner1"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_edittext"
-                    android:entries="@array/sort_options"
-                    android:prompt="@string/sort_prompt" />
-            </LinearLayout>
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_edittext"
+                        android:entries="@array/sort_options"
+                        android:prompt="@string/sort_prompt" />
+                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/inputSearch"
-                    android:paddingLeft="5dp"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_edittext"
-                    android:hint="@string/search_hint"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <EditText
+                        android:id="@+id/inputSearch"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_edittext"
+                        android:hint="@string/search_hint"
+                        android:paddingLeft="5dp"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+
+                <View style="@style/ListDivider" />
             </LinearLayout>
 
-            <View style="@style/ListDivider" />
+            <!-- List View -->
         </LinearLayout>
 
-        <!-- List View -->
-        <ListView
-            android:id="@+id/list_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:divider="@color/colorAccent"
-            android:dividerHeight="1dip" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@color/colorAccent"
+                android:dividerHeight="1dip"
+                android:paddingBottom="10dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

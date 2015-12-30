@@ -46,9 +46,21 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        def STRING = "String"
+        def BASE_PATH = "BASE_PATH"
+
+        Properties p = new Properties();
+        p.load(project.rootProject.file('build.properties').newDataInputStream())
+        def BASE_PATH_VALUE = "\"" + p.getProperty('BASE_PATH') + "\""
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField STRING, BASE_PATH , BASE_PATH_VALUE
+        }
+
+        debug {
+            buildConfigField STRING, BASE_PATH , BASE_PATH_VALUE
         }
     }
 }

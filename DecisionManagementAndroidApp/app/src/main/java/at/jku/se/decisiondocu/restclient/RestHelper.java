@@ -12,6 +12,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
+import at.jku.se.decisiondocu.BuildConfig;
+
 /**
  * Created by Martin on 12.05.15.
  */
@@ -24,9 +26,16 @@ public class RestHelper {
     public static final int PORT_TOMCAT = 8080;
     public static final int PORT_CHAT   = 2222;
 
-    public static final String HOST_OFFLINE = "192.168.0.104";
+    public static String HOST_OFFLINE = "192.168.0.104";
     public static final String HOST_ONLINE = "ubuntu.mayerb.net";
     public static final String REST_BASEDIR = "/DecisionDocu/api/";
+
+    static {
+        if (!BuildConfig.BASE_PATH.isEmpty()) {
+            HOST_OFFLINE = BuildConfig.BASE_PATH;
+        }
+    }
+
 
     // -------------------------------------------------------------------------------------
 
