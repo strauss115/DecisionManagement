@@ -1,5 +1,11 @@
 package at.jku.se.rest.api;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
-import at.jku.se.model.Decision;
+import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Relationship;
 import at.jku.se.model.User;
@@ -33,6 +39,36 @@ public class RelationshipResource {
 	
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static final Logger log = LogManager.getLogger(RelationshipResource.class);
+	
+	private static Map<String, String> relationStrings = new HashMap<>();
+	
+	static {
+		try {
+			Field[] declaredFields = RelationString.class.getDeclaredFields();
+			for (Field field : declaredFields) {
+				if (
+						Modifier.isStatic(field.getModifiers()) && 
+						field.getType().isAssignableFrom(String.class)) {
+					
+					String key = null;
+					String value = null;
+					try {
+						key = field.getName();
+						value = (String) field.get(null);
+					} catch (Exception e) {
+						log.error(e);
+						continue;
+					}
+					if (key != null && value != null) {
+						log.debug("Field: " + key + " -> " + value);
+						relationStrings.put(key, value);
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+	}
 	
 	@POST
 	@Path("/{name}/{fromNode}/{toNode}")
@@ -92,6 +128,22 @@ public class RelationshipResource {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns all possible relationship types", response = String.class, responseContainer = "List")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
+	public Response getRelationStrings(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
+		log.debug("getRelationStrings invoked");
+		
+		if (!SessionManager.verifySession(token)) {
+			return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+		}
+		return RestResponse.getSuccessResponse(relationStrings);
 	}
 
 }

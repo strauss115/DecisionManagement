@@ -3,6 +3,7 @@
 	<name>DecisionDocu</name>
 	<comment></comment>
 	<projects>
+		<project>DecisionManagementShared</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
