@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Server implements Runnable {
+public class Server implements Runnable, ServerListener {
 	private static final Logger log = LogManager.getLogger(Server.class);
 	private ServerSocket serverSocket = null;
 	private Socket clientSocket = null;
@@ -31,22 +31,33 @@ public class Server implements Runnable {
 		while (true) {
 			try {
 				clientSocket = serverSocket.accept();
-				System.out.println("New connection requested...");
-				clientthreads.add(new ClientThread(clientSocket, clientthreads));
-				clientthreads.get(clientthreads.size() - 1).start();
-
-				log.debug(clientthreads.size() + " clients are connected now.");
-
-				if (clientthreads.size() == maxClientsCount) {
-					PrintStream os = new PrintStream(clientSocket.getOutputStream());
-					MsgWrapper msg = MsgWrapper.dummy();
-					msg.setMessage("Server too busy. Try later.");
-					os.println(msg.toString());
-					os.close();
-					clientSocket.close();
+				log.debug("New connection requested from '" + clientSocket.getInetAddress() + "'");
+				
+				synchronized (this) {
+					
+					if (clientthreads.size() == maxClientsCount) {
+						PrintStream os = new PrintStream(clientSocket.getOutputStream());
+						MsgWrapper msg = MsgWrapper.dummy();
+						msg.setMessage("Server too busy. Try later.");
+						os.println(msg.toString());
+						os.close();
+						clientSocket.close();
+					} else {
+						ClientThread newThread = new ClientThread(this, clientSocket);
+						clientthreads.add(newThread);
+						newThread.start();
+						
+						log.debug(clientthreads.size() + " clients are connected now.");	
+					}
 				}
 			} catch (IOException e) {
 				log.error("Error occured", e);
+			}
+			
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}	
 	}
@@ -60,5 +71,25 @@ public class Server implements Runnable {
 				log.error(e);
 			}
 		}
+	}
+
+	@Override
+	public void clientLeft(Socket socket, ClientThread thread) {
+		log.debug("Client: " + socket.getInetAddress() + " leaves chat");
+		synchronized (this) {
+			clientthreads.remove(thread);
+			log.debug(clientthreads.size() + " clients are connected now.");
+		}
+	}
+
+	@Override
+	public void notifyAll(String msg, long nodeId) {
+		synchronized (this) {
+			for (ClientThread thread : clientthreads) {
+				if (thread.getNodeId() == nodeId)
+					thread.os.println(msg);
+			}
+		}
+		
 	}
 }

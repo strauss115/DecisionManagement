@@ -3,7 +3,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,19 +20,19 @@ import at.jku.se.model.User;
 
 public class ClientThread extends Thread {
 	private DataInputStream is = null;
-	private PrintStream os = null;
+	PrintStream os = null;
+	private ServerListener server = null;
 	private Socket clientSocket = null;
 	private String name;
 	
-	private final ArrayList<ClientThread> clientthreads;
 	private static final Logger log = LogManager.getLogger(ClientThread.class);
 	
 	private NodeInterface node = null;
 	private User user = null;
 
-	public ClientThread(Socket clientSocket, ArrayList<ClientThread> clientthreads) {
+	public ClientThread(ServerListener server, Socket clientSocket) {
+		this.server = server;
 		this.clientSocket = clientSocket;
-		this.clientthreads = clientthreads;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -58,10 +57,25 @@ public class ClientThread extends Thread {
 					msg.setMessage("The name should not contain '?' character.");
 					os.println(msg.toString());
 				}
+				
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (name.equals("/quit")) {
+				throw new Exception("Name must not be /quit !");
 			}
 
 			String[] parts = name.split("@");
 
+			if (parts.length >= 2) {
+				log.debug("user: " + parts[0]);
+				log.debug("node: " + parts[1]);
+			}
+			
 			// Get the User Node Object via DBService
 			//user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
 			user = SessionManager.getUser(parts[0]);
@@ -123,6 +137,12 @@ public class ClientThread extends Thread {
 					}
 					log.debug("Message received: '" + line + "' from user '" + user.getEmail() + "'");
 				}
+				
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			synchronized (this) {
 				String message = "The user " + user.getName() + " is leaving the chat room.";
@@ -134,27 +154,27 @@ public class ClientThread extends Thread {
 				}
 			}
 			//os.println("*** Bye " + user.getName() + " ***");
-
-			// close thread
-			synchronized (this) {
-				clientthreads.remove(this);
-			}
 			
 		} catch (IOException e) {
 			log.error(e);
 		}
 		catch (Exception e) {			
 			log.error(e);
-			String message = "The user " + (user == null ? "null" : user.getName()) + " is leaving the chat room.";
+			String message = "The user " + (user == null ? "null" : user.getName()) + "(" + clientSocket.getInetAddress() + ") is leaving the chat room.";
 			Message m = this.saveMessage(message, true);
 			try {
 				this.sendToOtherClients(new MsgWrapper(m).toString());
 			} catch (Exception e1) {
 				log.error(e1);
 			}
-			clientthreads.remove(this);
 		}
 		finally {
+			
+			// close thread
+			synchronized (this) {
+				server.clientLeft(clientSocket, this);
+			}
+			
 			// close streams
 			try {
 				is.close();
@@ -200,20 +220,20 @@ public class ClientThread extends Thread {
 	
 	private Message saveMessage(String message, boolean server) {
 		// TODO: user id switchen falls server msg
-		return DBService.createMessage(message, node.getId(), user.getId());
+		if (node != null && user != null) {
+			return DBService.createMessage(message, node.getId(), user.getId());
+		}
+		return new Message(message);
 	}
 	
 	private void sendToOtherClients(String message) {
-		for (ClientThread thread : clientthreads) {
-			if (thread.getNodeId() == this.getNodeId())
-				thread.os.println(message);
-		}
+		server.notifyAll(message, this.getNodeId());
 	}
 	
-	private void sendToNodesClients(String message) {
+	/*private void sendToNodesClients(String message) {
 		for (ClientThread thread : clientthreads) {
 			if (thread != null && thread.getNodeId() == this.getNodeId())
 				thread.os.println(message);
 		}
-	}
+	}*/
 }

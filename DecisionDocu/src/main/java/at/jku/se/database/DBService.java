@@ -44,7 +44,7 @@ import at.jku.se.rest.api.ChatResource;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class DBService {
 	
-	private static final Logger log = LogManager.getLogger(ChatResource.class);
+	private static final Logger log = LogManager.getLogger(DBService.class);
 	private static final String CONNECT_STRING = "jdbc:neo4j://ubuntu.mayerb.net:7474/";
 	
 	private static Properties properties = new Properties();
@@ -330,7 +330,7 @@ public class DBService {
 				try{
 					uniqueNodes.get(nodeid).setRelationships(relations.get(nodeid));
 				}catch (Exception e){
-					//System.out.println(nodeid);
+					//log.debug(nodeid);
 					e.printStackTrace();
 				}
 			}
@@ -591,7 +591,7 @@ public class DBService {
 	public static <T extends NodeInterface> T updateNodeWihtRelationships(T node, long creatorid){
 		HashSet<T> uniqueNodes = new HashSet<T>();
 		int amount = updateNodesRecursivly(node, creatorid, uniqueNodes);
-		System.out.println(amount);
+		log.debug(amount);
 		return node;
 	}
 	
@@ -624,7 +624,7 @@ public class DBService {
 		}
 		String query = "Match (n) Where id(n)="+nodeid+ " Optional Match (n)-[r]-()"+
 				" Delete n, r Return id(n)";
-		System.out.println(query);
+		log.debug(query);
 		ResultSet rs = null;
 		try {
 			rs = executeQuery(query);
@@ -644,13 +644,13 @@ public class DBService {
 	}
 	
 	public static boolean deleteNode (long nodeid, User user){
-		System.out.println (nodeid);
-		System.out.println(user);
+		log.debug (nodeid);
+		log.debug(user);
 		if(user==null){
 			return false;
 		}
 		if(user.isAdmin()){
-			System.out.println("Admin");
+			log.debug("Admin");
 			return deleteNode(nodeid);
 		}
 		if(nodeid<1){
@@ -741,7 +741,7 @@ public class DBService {
 	}
 	
 	private static ResultSet executeQuery(String query)throws Exception{
-			System.out.println(query);
+			log.debug(query);
 			Statement stmt = getDBService().getConnection().createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			stmt.closeOnCompletion();
@@ -752,16 +752,16 @@ public class DBService {
 		User user = getUserByEmail("user1@u1.com");
 		List<Decision> decs = getAllDecisions(user);
 		for(Decision dec:decs){
-			System.out.println(dec.getName()+"  "+dec.getCreationDate());
+			log.debug(dec.getName()+"  "+dec.getCreationDate());
 		}
 		/*User admin = getUserByEmail("admin@example.com");
-		System.out.println(admin.getPassword());
+		log.debug(admin.getPassword());
 		/*User normal = getUserByEmail("user1@u3.com");
 		List<Decision>decisions = getAllDecisions(admin);
 
 		/*try {
 			List<Decision> teamDecisions = getAllDecisionsOfProject(5526);
-			System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(teamDecisions.toArray(new NodeInterface[0])));
+			log.debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(teamDecisions.toArray(new NodeInterface[0])));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}*/
@@ -769,24 +769,24 @@ public class DBService {
 		
 		/*Add + Delete Relationships
 		Decision dec = getNodeByID(Decision.class,5527,2);
-		System.out.println(dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());
-		System.out.println(addRelationship(dec.getId(),RelationString.HASQUALITYATTRIBUTE,5559));//Alread Existing Relation
+		log.debug(dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());
+		log.debug(addRelationship(dec.getId(),RelationString.HASQUALITYATTRIBUTE,5559));//Alread Existing Relation
 		dec = getNodeByID(Decision.class,5527,2);
-		System.out.println("Amount Quality Attributes: "+dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());
+		log.debug("Amount Quality Attributes: "+dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());
 		long newrelid = addRelationship(dec.getId(),RelationString.HASQUALITYATTRIBUTE,5558);//new Rel
 		dec = getNodeByID(Decision.class,5527,2);
-		System.out.println("Amount Quality Attributes: "+dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());
-		System.out.println("Deleted Relationship:" +deleteReltionship(newrelid));
+		log.debug("Amount Quality Attributes: "+dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());
+		log.debug("Deleted Relationship:" +deleteReltionship(newrelid));
 		dec = getNodeByID(Decision.class,5527,2);
-		System.out.println("Amount Quality Attributes: "+dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());*/
+		log.debug("Amount Quality Attributes: "+dec.getRelationships().get(RelationString.HASQUALITYATTRIBUTE).size());*/
 		
 		/*Update+create+delete Node*/
 		/*Decision dec = getNodeByID(Decision.class,5527,2);
 		dec.setName("Extend System B");
-		System.out.println(updateNode(dec,admin.getId()).getName());//Update Node
+		log.debug(updateNode(dec,admin.getId()).getName());//Update Node
 		Property newissue = new Property("new issue");
-		System.out.println(updateNode(newissue,admin.getId()));//Create Node
-		System.out.println("New node deleted: "+deleteNode(5572));*/
+		log.debug(updateNode(newissue,admin.getId()));//Create Node
+		log.debug("New node deleted: "+deleteNode(5572));*/
 		
 		/*Decision dec = new Decision("Decision 1");
 		Property issue = new Property("Issue 1");
@@ -796,8 +796,8 @@ public class DBService {
 		Property assumption = new Property ("Assumption 1");
 		alt.addRelation(RelationString.ASSUMPTION, assumption, true);
 		assumption.addRelation(RelationString.INFLUENCES, dec, true);
-		System.out.println(dec);
-		System.out.println(updateNodeWihtRelationships(dec, admin.getId()));*/
+		log.debug(dec);
+		log.debug(updateNodeWihtRelationships(dec, admin.getId()));*/
 		
 		/*try {
 			String json = mapper.writeValueAsString(getAllDecisions(admin).toArray(new NodeInterface[0]));
@@ -809,11 +809,11 @@ public class DBService {
 		}*/
 		
 		/*NodeInterface node = getNodeByID(NodeInterface.class,5861,0);
-		System.out.println(node);*/
+		log.debug(node);*/
 		
 		//Message m1 = new Message("Chatnachricht 6");
 		//Node node = DBService.getNodeByID(Decision.class, 5884, admin, 2);
-		//System.out.println(node);
+		//log.debug(node);
 		//node.addRelation("Message", m1, true);
 		//DBService.updateNodeWihtRelationships(node, admin.getId());
 		//createMessage("Chatnachricht 7", node.getId(),admin.getId());
