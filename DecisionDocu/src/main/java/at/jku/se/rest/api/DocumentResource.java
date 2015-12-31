@@ -1,18 +1,14 @@
 package at.jku.se.rest.api;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URI;
+import java.util.List;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -21,20 +17,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -43,6 +33,8 @@ import at.jku.se.database.DBService;
 import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.Document;
 import at.jku.se.model.NodeInterface;
+import at.jku.se.model.Project;
+import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
@@ -85,12 +77,11 @@ public class DocumentResource {
 			return Response.ok(new StreamingOutput(){
 			    @Override
 			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
-			            // TODO Auto-generated method stub
 			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
 			            try {
 			                //ByteArrayInputStream reader = (ByteArrayInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream();     
 			                //byte[] input = new byte[2048];  
-			                java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
+			                //java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
 			                File file = new File(LOCATION_PROFILE_PICTURE+id);
 			                FileInputStream fizip = new FileInputStream(file);
 			                byte[] buffer2 = IOUtils.toByteArray(fizip);
@@ -101,116 +92,7 @@ public class DocumentResource {
 			            }
 			        }
 			    }).build();
-			
-			
-			//System.out.println(file.getAbsolutePath());
-			//return Response.ok((Object)file).build();
-		} catch (Exception e) {
-			log.debug("Error occured!", e);
-			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
-		}
-	}
-	
-	@GET
-	@Path("/test")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@ApiOperation(value = "Upload a user's profile picture", response = Response.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") })
-	public Response getTest(
-			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
-		log.info("Get Profile Picture invoked ...");
-		try {
-			if(!SessionManager.verifySession(token)){
-				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
-			}
-			
-			/*File file = new File(LOCATION_PROFILE_PICTURE+"00.Organizational.pdf");
-			
-			//FileUtils.readFileToString(file));
-			String content =FileUtils.readFileToString(file, "windows-1252");
-			
-			ResponseBuilder response = Response.ok(content);
-			response.header("Content-Disposition",
-					"attachment; filename=new-android-book.pdf");
-			return response.build();*/
-			
-			
-			//return Response.ok(FileUtils.readFileToByteArray(file)).build();
-			
-			return Response.ok(new StreamingOutput(){
-			    @Override
-			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
-			            // TODO Auto-generated method stub
-			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
-			            try {
-			                //ByteArrayInputStream reader = (ByteArrayInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream();     
-			                //byte[] input = new byte[2048];  
-			                java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
-			                File file = new File(LOCATION_PROFILE_PICTURE+"6302");
-			                FileInputStream fizip = new FileInputStream(file);
-			                byte[] buffer2 = IOUtils.toByteArray(fizip);
-			                bus.write(buffer2);
-			            } catch (Exception e) {
-			            // TODO Auto-generated catch block
-			            e.printStackTrace();
-			            }
-			        }
-			    }).build();
-			
-			
-			/*ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
-			
-			File file = new File(LOCATION_PROFILE_PICTURE+"00.Organizational.pdf");
-			FileInputStream fis = new FileInputStream(file);
-			InputStreamReader defaultReader = new InputStreamReader(fis,"windows-1252");
-			/*byte[] fileBytes = new byte[1024];
-			while(defaultReader.read(fileBytes)!=-1){
-				outputStream.write(fileBytes);
-			}*/
-			
-			//return Response.ok(file).build();
-			
-			
-			/*BufferedInputStream inputStream = new BufferedInputStream(fis);
-			byte[] fileBytes = new byte[1024];
-			
-			while(inputStream.read(fileBytes)>0){
-				System.out.println("test");
-			};
-			inputStream.close();
-			return Response.ok(fileBytes).build();*/
-			
-			/*File file = new File(LOCATION_PROFILE_PICTURE+"00.Organizational.pdf");
-			FileInputStream fis = new FileInputStream(file);
-			//InputStreamReader inputstream = new InputStreamReader(fis,"Cp1252");
-			//BufferedReader inputStream = new BufferedReader(inputstream);
-			byte[] fileBytes = new byte[1024];
-			fis.read(fileBytes);
-			//inputStream.close();
-			
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
-			
-			int read = 0;
-            byte[] bytes = new byte[1024];
-            while ((read = fis.read(bytes)) != -1) {
-            	System.out.println("Test");
-                outputStream.write(bytes, 0, read);
-            }*/
-			
-			
-			
-			//return Response.ok(outputStream).build();
-			
-			
-//			File file = new File(LOCATION_PROFILE_PICTURE+"00.Organizational.pdf");
-//			System.out.println(file.getAbsolutePath());
-//			ResponseBuilder rb = Response.ok(file);
-//			rb.header("Content-Disposition", "attachment; filename=\"" + file.getName()+"\"");
-//			Response response = rb.build();
-//			return response;
+
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
@@ -236,9 +118,15 @@ public class DocumentResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
-			NodeInterface node = DBService.getNodeByID(NodeInterface.class, id, 0);
+			NodeInterface node = DBService.getNodeByID(NodeInterface.class, id, 1);
 			if(node==null){
 				return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+			}
+			if(node.getRelationships().containsKey(RelationString.HAS_PICTURE)){
+				for(RelationshipInterface rel:node.getRelationships().get(RelationString.HAS_PICTURE)){
+					DBService.deleteRelationship(rel.getId());
+					//Node und Foto wird nicht gelöscht
+				}
 			}
 			Document doc = new Document();
 			doc.setName(fileFormDataContentDisposition.getFileName());
@@ -333,20 +221,6 @@ public class DocumentResource {
         return qualifiedUploadFilePath;
     }
 	
-	public static void main (String[]args){
-		try{
-		Client client = ClientBuilder.newClient(new ClientConfig());
-		  client.property(ClientProperties.REQUEST_ENTITY_PROCESSING, "CHUNKED");
-		  WebTarget target = client.target(URI.create("http://localhost:8080/DecisionDocu/api/upload/profilePicture/6302"));
-		  File file = new File(LOCATION_PROFILE_PICTURE+"test.png");
-		  OutputStream fileOutputStream = new FileOutputStream(file);
-		  InputStream fileInputStream = target.request().header("token", 1).get(InputStream.class);
-		  writeFile(fileInputStream, fileOutputStream);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-	
 	public static void writeFile(InputStream fileInputStream, OutputStream outputStream) throws IOException {
 		try {
 		  byte[] buffer = new byte[1024];
@@ -363,6 +237,42 @@ public class DocumentResource {
 		 } finally {
 		   outputStream.close();
 		}
+	}
+	
+	public static void main (String[]args){
+		
+		//Add ProfilPicture to Projects
+		User admin = DBService.getUserByEmail("admin@example.com");
+		
+		Document document = new Document("Profile Picture");
+		document = DBService.updateNode(document, admin.getId());
+		
+		File destFile = new File(LOCATION_PROFILE_PICTURE+document.getId());
+		File srcFile = new File(SERVER_UPLOAD_LOCATION_FOLDER+"profil");
+		
+		try {
+			FileUtils.copyFile(srcFile, destFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List<Project> projects = DBService.getAllProjects();
+		for(Project project:projects){
+			DBService.addRelationship(project.getId(), RelationString.HAS_PICTURE, document.getId());
+		}
+		
+		/*try{
+		Client client = ClientBuilder.newClient(new ClientConfig());
+		  client.property(ClientProperties.REQUEST_ENTITY_PROCESSING, "CHUNKED");
+		  WebTarget target = client.target(URI.create("http://localhost:8080/DecisionDocu/api/upload/profilePicture/6302"));
+		  File file = new File(LOCATION_PROFILE_PICTURE+"test.png");
+		  OutputStream fileOutputStream = new FileOutputStream(file);
+		  InputStream fileInputStream = target.request().header("token", 1).get(InputStream.class);
+		  writeFile(fileInputStream, fileOutputStream);
+		}catch (Exception e){
+			e.printStackTrace();
+		}*/
 	}
 	
 

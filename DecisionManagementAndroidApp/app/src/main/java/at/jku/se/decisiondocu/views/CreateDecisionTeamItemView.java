@@ -39,7 +39,7 @@ public class CreateDecisionTeamItemView extends LinearLayout {
     public void bind(Project item) {
         mTeam = item;
         mTeamName.setText(item.getName());
-
+        item.setImageView(mImageView);
     }
 
     private void notifyTeamOnChanges() {

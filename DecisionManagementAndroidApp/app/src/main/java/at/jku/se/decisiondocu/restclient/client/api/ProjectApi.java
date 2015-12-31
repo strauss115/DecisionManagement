@@ -1,7 +1,5 @@
 package at.jku.se.decisiondocu.restclient.client.api;
 
-import android.util.Log;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,9 +17,7 @@ import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.Pair;
 import at.jku.se.decisiondocu.restclient.client.model.Body;
-import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
-import at.jku.se.decisiondocu.restclient.client.model.User;
 
 public class ProjectApi {
     String basePath = RestHelper.GetBaseURL();
@@ -99,6 +95,7 @@ public class ProjectApi {
                     return mapper.readValue(response, new TypeReference<List<Project>>() {
                     });
                 } catch (IOException e) {
+                    e.printStackTrace();
                     return null;
                 }
             } else {
@@ -308,6 +305,7 @@ public class ProjectApi {
                     return mapper.readValue(response, new TypeReference<List<Project>>() {
                     });
                 } catch (IOException e) {
+                    e.printStackTrace();
                     return null;
                 }
             } else {

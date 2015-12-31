@@ -31,7 +31,7 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
     private ProgressDialog mDialog;
     private List<Project> mItems;
 
-    @Bean(RESTProjectByUserFinder.class)
+    @Bean(RESTProjectFinder.class)
     TeamFinder mTeamFinder;
 
     @AfterInject
@@ -43,7 +43,7 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
     @Background
     void findAll() {
         showDialog();
-        List<Project> projects = mTeamFinder.findAll();
+        List<Project> projects = mTeamFinder.find();
         updateItems(projects);
         dismissDialog();
     }

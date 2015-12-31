@@ -30,12 +30,16 @@
                 android:paddingRight="10dp" >
             </LinearLayout>
         </LinearLayout>
-
+        <View style="@style/ListDivider" />
         <!-- List View -->
         <ListView
             android:id="@+id/list_view_teams"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:divider="@color/colorAccent"
+            android:dividerHeight="1dip"
+            android:headerDividersEnabled="false"
+            android:footerDividersEnabled="false" />
     </LinearLayout>
 
 </LinearLayout>

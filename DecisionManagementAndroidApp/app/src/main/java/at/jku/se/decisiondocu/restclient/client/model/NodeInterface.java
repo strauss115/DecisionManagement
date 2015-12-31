@@ -11,13 +11,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@class")
-@JsonSubTypes({ @Type(value = Decision.class, name = "decision"), @Type(value = Property.class, name = "property") 
-, @Type(value = Project.class, name = "project"), @Type(value = User.class, name = "user"), @Type(value = Message.class, name = "message")
-, @Type(value = Alternative.class, name = "alternative"), @Type(value = DecisionGroup.class, name = "decisiongroup")
-, @Type(value = InfluenceFactor.class, name = "influencefactor"), @Type(value = QualityAttribute.class, name = "qualityattribute")})
+@JsonSubTypes({ @Type(value = Decision.class, name = "decision"), @Type(value = Property.class, name = "property")
+		, @Type(value = Project.class, name = "project"), @Type(value = User.class, name = "user"), @Type(value = Message.class, name = "message")
+		, @Type(value = Alternative.class, name = "alternative"), @Type(value = DecisionGroup.class, name = "decisiongroup")
+		, @Type(value = InfluenceFactor.class, name = "influencefactor"), @Type(value = QualityAttribute.class, name = "qualityattribute")
+		, @Type(value = Consequence.class, name = "consequence"), @Type(value = Document.class, name = "document"), @Type(value = Rationale.class, name = "rationale")})
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property="@javaref")
-//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public interface NodeInterface {
 		
 	public long getId();

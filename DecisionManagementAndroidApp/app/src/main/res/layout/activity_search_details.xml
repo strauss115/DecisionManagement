@@ -9,12 +9,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Title"
-        android:textColor="@color/textFieldColor"
+        android:textColor="#ffffff"
         android:textStyle="bold"
-        android:gravity="center"
         android:id="@+id/search_detail_title"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp" />
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@color/colorPrimary" />
 
     <View
         style="@style/Divider"

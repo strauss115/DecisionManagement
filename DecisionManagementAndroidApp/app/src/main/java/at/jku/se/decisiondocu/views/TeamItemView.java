@@ -1,11 +1,6 @@
 package at.jku.se.decisiondocu.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -16,11 +11,9 @@ import android.widget.TextView;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.InputStream;
 import java.util.List;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.beans.Team;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
@@ -80,6 +73,8 @@ public class TeamItemView extends LinearLayout {
 
         mTeamDescCnt.setText("Decisions: " + item.getNrOfDecisions());
 
+        item.setImageView(mImageView);
+
 
         /*if (item.getBitmap() != null) {
             mImageView.setImageBitmap(item.getBitmap());
@@ -106,6 +101,7 @@ public class TeamItemView extends LinearLayout {
             mTeamDescCnt.setVisibility(INVISIBLE);
             mTeamFavourite.setVisibility(INVISIBLE);
             mTeamMembers.setVisibility(INVISIBLE);
+            item.setImageView(mImageView);
         }
     }
 
