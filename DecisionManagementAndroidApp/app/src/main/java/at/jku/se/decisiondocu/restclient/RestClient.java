@@ -1,6 +1,7 @@
 package at.jku.se.decisiondocu.restclient;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -8,6 +9,8 @@ import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -209,8 +212,81 @@ public class RestClient {
             response.close();
         }
         return responseString;
+    }
+
+    public static Bitmap downloadProfilPicture (long id){
+
+        // local variables
+        //ClientConfig clientConfig = null;
+        //Client client = null;
+        WebTarget webTarget = null;
+        Invocation.Builder invocationBuilder = null;
+        Response response = null;
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        int responseCode;
+        String responseMessageFromServer = null;
+        String responseString = null;
+        String qualifiedDownloadFilePath = null;
+
+        try{
+            // invoke service after setting necessary parameters
+            /*clientConfig = new ClientConfig();
+            clientConfig.register(MultiPartFeature.class);
+            client =  ClientBuilder.newClient(clientConfig);
+            client.property("accept", "image/png");
+            webTarget = client.target(httpURL);*/
+
+            webTarget = RestHelper.getWebTargetWithChunckedFeature();
+            webTarget= webTarget.path("upload").path("profilePicture").path(id + "");
+
+            Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
 
 
+            // invoke service
+            invocationBuilder = webTarget.request();
+            invocationBuilder.header("token", 1);
+            //          invocationBuilder.header("Authorization", "Basic " + authorization);
+            response = invocationBuilder.get();
+
+            // get response code
+            responseCode = response.getStatus();
+            System.out.println("Response code: " + responseCode);
+
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed with HTTP error code : " + responseCode);
+            }
+
+            // get response message
+            responseMessageFromServer = response.getStatusInfo().getReasonPhrase();
+            System.out.println("ResponseMessageFromServer: " + responseMessageFromServer);
+
+            // read response string
+            inputStream = response.readEntity(InputStream.class);
+            //qualifiedDownloadFilePath = DOWNLOAD_FILE_LOCATION + "MyJerseyImage.png";
+            //outputStream = new FileOutputStream(qualifiedDownloadFilePath);
+            //byte[] buffer = new byte[1024];
+            //inputStream.read(buffer);
+
+            return BitmapFactory.decodeStream(inputStream);
+            /*int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            // set download SUCCES message to return
+            responseString = "downloaded successfully at " + qualifiedDownloadFilePath;*/
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        finally{
+            // release resources, if any
+            //outputStream.close();
+            response.close();
+            //client.close();
+        }
+        return null;
     }
 
 }

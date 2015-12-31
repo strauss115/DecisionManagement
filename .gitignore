@@ -9,3 +9,5 @@ DecisionManagementAndroidApp/app/app.iml
 DecisionManagementAndroidApp/build.properties
 
 DecisionManagementAndroidApp/build.properties
+DecisionManagementShared/bin/at/jku/se/dm/shared/NodeString.class
+*.class

@@ -106,4 +106,39 @@ public class RestNetworkTasks {
             return 1;
         }
     }
+
+    public static abstract class DownloadProfilPicture  extends NetworkTask {
+
+        private final long id;
+
+        protected DownloadProfilPicture(View progressBar, View viewToHide, Context context,
+                                     long id) {
+            super(progressBar,viewToHide,context);
+            this.id=id;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            Bitmap bitmap =RestClient.downloadProfilPicture(id);
+            System.out.println(bitmap);
+            if(bitmap==null){
+                return 0;
+            }
+
+            //ByteArrayInputStream stream = new ByteArrayInputStream(image);
+
+            /*ByteArrayOutputStream blob = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 , blob);
+            byte[] bitmapdata = blob.toByteArray();*/
+
+            //System.out.println(image.length);
+            /*for(int i=0;i<image.length;i++){
+                System.out.println(image[i]);
+            }*/
+            //Bitmap bitmap = BitmapFactory.decodeByteArray(image,0,image.length,new BitmapFactory.Options());
+
+
+            return 1;
+        }
+    }
 }

@@ -4,6 +4,7 @@ import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.ws.rs.client.Client;
@@ -72,7 +73,7 @@ public class RestHelper {
     //private static final String BASEURL_OFFLINE = "http://www.oracle.com";
     //private static final String BASEURL_ONLINE = "http://www.oracle.com";
 
-    private static Client client, client2;
+    private static Client client, client2, client3;
 
     /**
      * Returniert das WebTarget des Backends inkl. der Registrierung des
@@ -102,6 +103,16 @@ public class RestHelper {
             } catch (Exception e) {}
         }
         return client2.target(GetBaseURL(false));
+    }
+
+    protected static WebTarget getWebTargetWithChunckedFeature() {
+        if (client3 == null) {
+            try {
+                client3 = ClientBuilder.newClient(new ClientConfig()).register(AndroidFriendlyFeature.class);
+                client3.property(ClientProperties.REQUEST_ENTITY_PROCESSING, "CHUNKED");
+            } catch (Exception e) {}
+        }
+        return client3.target(GetBaseURL(false));
     }
 
     /**

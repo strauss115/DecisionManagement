@@ -60,6 +60,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     @AfterViews
     protected void init() {
+        new RestNetworkTasks.DownloadProfilPicture(null,null,null,6302){
+
+        }.execute();
+
 
     }
 
