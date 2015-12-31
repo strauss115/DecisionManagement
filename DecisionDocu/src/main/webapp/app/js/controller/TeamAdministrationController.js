@@ -1,6 +1,6 @@
 app.controller('TeamAdministrationController', [ '$scope', '$cookies',
-		'$location', 'TeamPerId','Teams', 'UserPerMail',
-		function($scope, $cookies, $location, TeamPerId,Teams, UserPerMail) {
+		'$location', 'TeamPerId', 'Teams', 'UserPerMail',
+		function($scope, $cookies, $location, TeamPerId, Teams, UserPerMail) {
 			$scope.teams = [];
 			$scope.openTeams = [];
 			$scope.userId = 0;
@@ -12,8 +12,8 @@ app.controller('TeamAdministrationController', [ '$scope', '$cookies',
 					var arr = new Array();
 					arr = data['teams'];
 					$scope.userId = data['id'];
-					for (var i = 0; i< arr.length; i++) {
-						
+					for (var i = 0; i < arr.length; i++) {
+
 						TeamPerId.get({
 							teamId : arr[i]
 						}, function(data1) {
@@ -24,34 +24,31 @@ app.controller('TeamAdministrationController', [ '$scope', '$cookies',
 						}, function(error) {
 						});
 					}
+					$scope.getOpenTeams();
 				}, function(error) {
 				});
 
 			};
 
-			$scope.getTeams();
-			
-			$scope.getOpenTeams = function(){
-					Teams.get({}, function(data) {
-						var arr = new Array();
-						arr = data;
-						
-						for (var i = 0; i< arr.length; i++) {
-							if (arr[i]['users'].indexOf($scope.userId) == -1){
-								$scope.openTeams.push({
-									"id" : arr[i]['id'],
-									"name" : arr[i]['name']
-								});
-							}
+			$scope.getOpenTeams = function() {
+				Teams.get({}, function(data) {
+					var arr = new Array();
+					arr = data;
+
+					for (var i = 0; i < arr.length; i++) {
+						if (arr[i]['users'].indexOf($scope.userId) == -1) {
+							$scope.openTeams.push({
+								"id" : arr[i]['id'],
+								"name" : arr[i]['name']
+							});
 						}
-						}, function(error) {
-						});
+					}
+				}, function(error) {
+				});
 			}
-			
-			$scope.getOpenTeams();
-			
-			
-			
+
+			$scope.getTeams();
+
 			$scope.selectedTeam = "";
 			$scope.selectedTeamId = 0;
 			$scope.openRegisterModal = function(id, name) {
