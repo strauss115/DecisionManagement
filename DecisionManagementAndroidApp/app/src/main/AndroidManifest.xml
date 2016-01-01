@@ -41,6 +41,8 @@
             android:parentActivityName=".MainActivity_" />
         <activity android:name=".activities.SearchDetailsActivity_"
             android:parentActivityName=".MainActivity_"/>
+        <activity android:name=".activities.SearchNodeDetailsActivity_"
+            android:parentActivityName=".MainActivity_"/>
     </application>
 
 </manifest>

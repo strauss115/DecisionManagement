@@ -36,6 +36,7 @@ import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Project;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
+import at.jku.se.rest.DirectoryManager.DirectoryManager;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
 import io.swagger.annotations.Api;
@@ -52,10 +53,18 @@ public class DocumentResource {
 	
 	//private static final String SERVER_UPLOAD_LOCATION_FOLDER = "/home/ubuntu/www/upload_files/";
 	
-	private static final String SERVER_UPLOAD_LOCATION_FOLDER = "C://";
+	private static String SERVER_UPLOAD_LOCATION_FOLDER = "D://upload_files/";
 	
-	private static final String LOCATION_PROFILE_PICTURE = SERVER_UPLOAD_LOCATION_FOLDER+"profilpictures/";
-	private static final String LOCATION_DOCUMENT = SERVER_UPLOAD_LOCATION_FOLDER+"documents/";
+	private static String LOCATION_PROFILE_PICTURE = SERVER_UPLOAD_LOCATION_FOLDER+"profilpictures/";
+	private static String LOCATION_DOCUMENT = SERVER_UPLOAD_LOCATION_FOLDER+"documents/";
+	
+	static{
+		try{
+			SERVER_UPLOAD_LOCATION_FOLDER = DirectoryManager.getDirectory().getAbsolutePath()+"/upload_files/";
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	@GET
 	@Path("/profilePicture/{id}")

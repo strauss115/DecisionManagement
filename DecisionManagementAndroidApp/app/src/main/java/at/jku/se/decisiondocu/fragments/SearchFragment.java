@@ -1,31 +1,25 @@
 package at.jku.se.decisiondocu.fragments;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.app.ListFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.activities.SearchDetailsActivity_;
+import at.jku.se.decisiondocu.activities.SearchNodeDetailsActivity_;
 import at.jku.se.decisiondocu.beans.SearchAdapter;
-import at.jku.se.decisiondocu.fragments.dummy.DummyContent;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 /**
@@ -92,8 +86,8 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
 
     @ItemClick(R.id.list_view)
     protected void itemClicked(Decision item) {
-        Log.i("ListView", "Item " + item + " clicked!");
-        new SearchDetailsActivity_.IntentBuilder_(getActivity())
+        //Log.i("ListView", "Item " + item + " clicked!");
+        new SearchNodeDetailsActivity_.IntentBuilder_(getActivity())
                 .decisionId(item.getId())
                 .start();
     }

@@ -1,6 +1,7 @@
 package at.jku.se.rest.api;
 
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -82,6 +83,31 @@ public class NodeResource {
 				return RestResponse.getSuccessResponse();
 			}
 			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a single Node", response = Decision.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") }
+	)
+	public Response getSimpleNode(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the node to fetch", required = true) @PathParam("id") long id) {
+		log.info("Get Node '" + id + "' called");
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			User user = SessionManager.getUser(token);
+			return RestResponse.getSuccessResponse(DBService.getNodeByID(NodeInterface.class, id, user, 2));
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);

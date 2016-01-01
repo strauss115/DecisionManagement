@@ -25,6 +25,7 @@ import at.jku.se.decisiondocu.restclient.client.api.NodeApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.restclient.client.model.User;
 
@@ -148,6 +149,24 @@ public class RestClient {
         return false;
     }
 
+    // -----------------------------------------------------------------------------------------
+    // Node PART
+    // -----------------------------------------------------------------------------------------
+
+    public static NodeInterface getNodeWithId(long id) {
+        NodeApi api = new NodeApi();
+        NodeInterface dec = null;
+        try {
+            dec = api.getSimpleNode(accessToken, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dec;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // Document PART
+    // -----------------------------------------------------------------------------------------
 
     private static void safeProfilePicture(Bitmap image, int id){
         try {

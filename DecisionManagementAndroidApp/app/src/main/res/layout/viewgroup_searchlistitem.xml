@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <TableLayout
+        android:id="@+id/table1"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:layout_width="fill_parent">
+    <TableRow
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+    <TextView
+        android:id="@+id/relation_creation_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date: unknown"
+        android:textSize="12sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/relation_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="hasRelation"
+        android:textSize="14sp"
+        android:textColor="@color/colorAccent"/>
+
+    <TextView
+        android:id="@+id/relation_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/relation_name"
+
+        android:text="Typ: unknown"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        />
+    </TableRow>
+    </TableLayout>
+
+    <!-- Service price -->
+
+    <LinearLayout
+        android:layout_below="@+id/table1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/node_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="5dp"
+            android:text="Node xyz"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
