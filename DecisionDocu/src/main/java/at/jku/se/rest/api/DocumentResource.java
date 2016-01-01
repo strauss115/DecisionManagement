@@ -52,7 +52,7 @@ public class DocumentResource {
 	
 	//private static final String SERVER_UPLOAD_LOCATION_FOLDER = "/home/ubuntu/www/upload_files/";
 	
-	private static final String SERVER_UPLOAD_LOCATION_FOLDER = "D://upload_files/";
+	private static final String SERVER_UPLOAD_LOCATION_FOLDER = "C://";
 	
 	private static final String LOCATION_PROFILE_PICTURE = SERVER_UPLOAD_LOCATION_FOLDER+"profilpictures/";
 	private static final String LOCATION_DOCUMENT = SERVER_UPLOAD_LOCATION_FOLDER+"documents/";

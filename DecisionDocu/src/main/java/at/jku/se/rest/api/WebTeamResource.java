@@ -173,7 +173,7 @@ public class WebTeamResource {
 		}
 	}
 
-	@PUT
+	@POST
 	@Path("{id}/addUser")
 	@ApiOperation(value = "Adds a user to a team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "User successfully added to team"),
@@ -216,7 +216,7 @@ public class WebTeamResource {
 		}
 	}
 
-	@PUT
+	@POST
 	@Path("{id}/removeUser")
 	@ApiOperation(value = "Removes a user from a team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "User successfully removes from team"),
@@ -255,7 +255,7 @@ public class WebTeamResource {
 		}
 	}
 
-	@PUT
+	@POST
 	@Path("{id}/setName")
 	@ApiOperation(value = "Changes name of team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Name successfully changed"),
@@ -293,7 +293,7 @@ public class WebTeamResource {
 		}
 	}
 	
-	@PUT
+	@POST
 	@Path("{id}/setPassword")
 	@ApiOperation(value = "Changes password of team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
@@ -331,7 +331,7 @@ public class WebTeamResource {
 		}
 	}
 	
-	@PUT
+	@POST
 	@Path("{id}/setAdmin")
 	@ApiOperation(value = "Changes admin of team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Admin successfully changed"),

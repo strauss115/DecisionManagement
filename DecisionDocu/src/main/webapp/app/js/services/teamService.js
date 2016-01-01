@@ -28,6 +28,17 @@ teamServices.factory('Teams', ['$resource', '$cookies',
                                        });
                                    }]);
 
+teamServices.factory('RegisterTeam', ['$resource', '$cookies',
+                               function ($resource, $cookies) {
+                                   return $resource(serverAddress + '/DecisionDocu/api/web/team/:teamId/addUser?userId=:userId&password=:password', {teamId:'@teamId',userId : '@userId', password: "@password"} , {
+                                   	 save: {
+                                   		 	method: 'POST',
+                                   	        headers: {
+                                   	            'token': $cookies['Token']
+                                   	        }
+                                   	    }
+                                   });
+                               }]);
 
 
 

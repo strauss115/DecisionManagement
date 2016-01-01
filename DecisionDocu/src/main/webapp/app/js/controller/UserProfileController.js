@@ -1,4 +1,4 @@
-app.controller('UserProfileController', ['$scope', '$cookies', 'UserPerMail', function ($scope, $cookies, UserPerMail) {
+app.controller('UserProfileController', ['$scope', '$cookies', 'fileUpload', 'UserPerMail', function ($scope, $cookies, fileUpload, UserPerMail) {
         $scope.email = "";
         $scope.firstname = "";
         $scope.lastname = "";
@@ -13,7 +13,13 @@ app.controller('UserProfileController', ['$scope', '$cookies', 'UserPerMail', fu
             $scope.teams = data['teams'];
         }, function (error) {
         });
-
-
-    }]);
+        
+        $scope.uploadFile = function(){
+            var file = $scope.myFile;
+            console.log('file is ' );
+            console.dir(file);
+            var uploadUrl = serverAddress + "/DecisionDocu/api/upload/profilePicture/" + $cookies['UserId'];
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+}]);
 

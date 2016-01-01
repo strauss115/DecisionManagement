@@ -1,9 +1,9 @@
 app.controller('TeamAdministrationController', [ '$scope', '$cookies',
-		'$location', 'TeamPerId', 'Teams', 'UserPerMail',
-		function($scope, $cookies, $location, TeamPerId, Teams, UserPerMail) {
+		'$location', 'TeamPerId', 'Teams', 'UserPerMail', 'RegisterTeam',
+		function($scope, $cookies, $location, TeamPerId, Teams, UserPerMail, RegisterTeam) {
 			$scope.teams = [];
 			$scope.openTeams = [];
-			$scope.userId = 0;
+
 
 			$scope.getTeams = function() {
 				UserPerMail.get({
@@ -11,7 +11,7 @@ app.controller('TeamAdministrationController', [ '$scope', '$cookies',
 				}, function(data) {
 					var arr = new Array();
 					arr = data['teams'];
-					$scope.userId = data['id'];
+					$cookies.UserId = data['id'];
 					for (var i = 0; i < arr.length; i++) {
 
 						TeamPerId.get({
@@ -36,7 +36,7 @@ app.controller('TeamAdministrationController', [ '$scope', '$cookies',
 					arr = data;
 
 					for (var i = 0; i < arr.length; i++) {
-						if (arr[i]['users'].indexOf($scope.userId) == -1) {
+						if (arr[i]['users'].indexOf($cookies.UserId) == -1) {
 							$scope.openTeams.push({
 								"id" : arr[i]['id'],
 								"name" : arr[i]['name']
@@ -58,11 +58,25 @@ app.controller('TeamAdministrationController', [ '$scope', '$cookies',
 			};
 
 			$scope.register = function(id) {
+				
+				
 				$cookies.TeamId = id;
-				$("#registerModal").modal('hide');
-				$('body').removeClass('modal-open');
-				$('.modal-backdrop').remove();
-				$location.path("/home");
+				RegisterTeam.save({
+					"teamId" : $cookies['TeamId'],
+					"userId" : $cookies['UserId'],
+					'password': $scope.teamPassword
+				}, {}, function(data) {
+					alert(data.status);	
+					$("#registerModal").modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+					$location.path("/home");
+				}, function(error) {
+					alert(error);
+					$("#teamPasswordError").modal();
+				});
+				
+				
 
 			}
 
