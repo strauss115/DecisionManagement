@@ -1,6 +1,8 @@
 var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices', 'decisionServices', 'angularFileUpload']);
 var serverAddress = "http://localhost:8080";
 
+
+
 app.run(function ($rootScope, $cookies, $location) {
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
         if (!$cookies['Token'] && $location.path() != "/login" ) {
@@ -67,10 +69,7 @@ app.directive('goDiagramMindMap', function () {
                                                     alignment: go.Spot.Right,
                                                     alignmentFocus: go.Spot.Left,
                                                     click: addNodeAndLink  // define click behavior for this Button in the Adornment
-                                                },
-                                                
-                                               
-                                                
+                                                },   
                                         $(go.TextBlock, "+", // the Button content
                                                 {font: "bold 8pt sans-serif"}), new go.Binding("visible", "showAdd")
                                                 )
@@ -90,28 +89,6 @@ app.directive('goDiagramMindMap', function () {
                                     return "black";
                                 }).ofObject())
                                         ),
-                                "contextMenu": $(go.Adornment, "Vertical",
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Undo"),
-                                                {click: function (e, obj) {
-                                                        e.diagram.commandHandler.undo();
-                                                    }},
-                                        new go.Binding("visible", "", function (o) {
-                                            return o.diagram.commandHandler.canUndo();
-                                        }).ofObject()),
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Redo"),
-                                                {click: function (e, obj) {
-                                                        e.diagram.commandHandler.redo();
-                                                    }},
-                                        new go.Binding("visible", "", function (o) {
-                                            return o.diagram.commandHandler.canRedo();
-                                        }).ofObject()),
-                                        $("ContextMenuButton",
-                                                $(go.TextBlock, "Save"),
-                                                {click: function (e, obj) {
-                                                        save();
-                                                    }})),
                                 // when the user drags a node, also move/copy/delete the whole subtree starting with that node
                                 "commandHandler.copiesTree": true,
                                 "commandHandler.deletesTree": true,
@@ -168,22 +145,30 @@ app.directive('goDiagramMindMap', function () {
                     return (from ? go.Spot.Right : go.Spot.Left);
                 }
             }
-
-   
-
+            var objGoJsModel;
             function addNodeAndLink(e, obj) {
-                var adorn = obj.part;
-                var diagram = adorn.diagram;
-                diagram.startTransaction("Add Node");
+            	objGoJsModel = obj;
+            	var adorn = obj.part;
                 var oldnode = adorn.adornedPart;
                 var olddata = oldnode.data;
-                // copy the brush and direction to the new node data
-                var newdata = {text: "idea", brush: olddata.brush, dir: olddata.dir, parent: olddata.key};
-                diagram.model.addNodeData(newdata);
-                layoutTree(oldnode);
-                diagram.commitTransaction("Add Node");
+            	jQuery("#headlineAddAttributePanel").text("Add " + olddata.text);
+            	jQuery("#addAttributePanel").modal();
             }
-
+            jQuery("#saveAttributeButton" ).click(function() {
+                  var adorn = objGoJsModel.part;
+                  var diagram = adorn.diagram;
+                  diagram.startTransaction("Add Node");
+                  var oldnode = adorn.adornedPart;
+                  var olddata = oldnode.data;
+                  // copy the brush and direction to the new node data
+                  //"New " + olddata.text
+                  var newdata = {text: jQuery("#addAttributeInputText").val(), brush: olddata.brush, dir: olddata.dir, parent: olddata.key,editable: true, showAdd: false};
+                  
+                  diagram.model.addNodeData(newdata);
+                  layoutTree(oldnode);
+                  diagram.commitTransaction("Add Node");
+                  jQuery("#addAttributeInputText").val("");
+            	});
             function layoutTree(node) {
                 if (node.data.key === 0) {  // adding to the root?
                     layoutAll(); // lay out everything
@@ -275,7 +260,7 @@ app.directive('goDiagramState', function () {
                                                 )
                                         ),
                                 "nodeTemplate.selectionAdornmentTemplate":
-                                        $(go.Adornment, "Spot",
+                                        $(go.Adornment, "Vertical",
                                                 $(go.Panel, "Auto",
                                                         $(go.Shape, {fill: null, stroke: "blue", strokeWidth: 2}),
                                                         $(go.Placeholder)  // this represents the selected Node
@@ -349,7 +334,7 @@ app.directive('goDiagramState', function () {
                 // re-enable normal updates
                 diagram.model.addChangedListener(updateAngular);
             });
-            
+
             diagram.addDiagramListener("Modified", function (e) {
                 var button = document.getElementById("SaveButton");
                 if (button)
@@ -409,6 +394,3 @@ app.directive('goDiagramState', function () {
         }
     };
 });
-
-
-

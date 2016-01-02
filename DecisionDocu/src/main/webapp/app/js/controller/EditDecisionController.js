@@ -47,8 +47,8 @@ app.controller('EditDecisionController', [
 						"name" : obj[i].name,
 						"alternatives" : obj[i].alternatives
 					});
-					alert("alternatives count in decision: " + obj[i].alternatives.length);
-					alert("id of first alternative: " + obj[i].alternatives[0].id);
+					//alert("alternatives count in decision: " + obj[i].alternatives.length);
+					//alert("id of first alternative: " + obj[i].alternatives[0].id);
 				}
 				if (firstElementId != "") {
 					// load the first graph
@@ -108,6 +108,20 @@ app.controller('EditDecisionController', [
 				}, function(data) {
 					alert(data);
 					$scope.updateGraph();
+				}, function(error) {
+				});
+			}
+			// add attribute to decision - after panel-save-click
+			$scope.addDecisionAttributeInPanelClick = function(){
+				//alert($scope.decisionAttributeValueFromPanel);
+				//alert("add" + $("#headlineAddAttributePanel").text().trim().split(" ")[1]);
+				AddAttributeToDecision.save({
+					value : $scope.decisionAttributeValueFromPanel,
+					id : $scope.selectedDecisionId,
+					attribute : "add" + $("#headlineAddAttributePanel").text().trim().split(" ")[1]
+				}, function(data) {
+					alert(data);
+					//$scope.updateGraph();
 				}, function(error) {
 				});
 			}
