@@ -69,7 +69,7 @@ public class DocumentResource {
 	@GET
 	@Path("/profilePicture/{id}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@ApiOperation(value = "Upload a user's profile picture", response = Response.class)
+	@ApiOperation(value = "Get node's profile picture", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 500, message = "Server Error"),
@@ -92,6 +92,48 @@ public class DocumentResource {
 			                //byte[] input = new byte[2048];  
 			                //java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
 			                File file = new File(LOCATION_PROFILE_PICTURE+id);
+			                FileInputStream fizip = new FileInputStream(file);
+			                byte[] buffer2 = IOUtils.toByteArray(fizip);
+			                bus.write(buffer2);
+			            } catch (Exception e) {
+			            // TODO Auto-generated catch block
+			            e.printStackTrace();
+			            }
+			        }
+			    }).build();
+
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@GET
+	@Path("/document/{id}")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@ApiOperation(value = "Get node's document", response = Response.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
+	public Response getDocument(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the related node", required = true) @PathParam("id") final long id) {
+		log.info("Get node's document invoked ...");
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			
+			return Response.ok(new StreamingOutput(){
+			    @Override
+			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
+			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
+			            try {
+			                //ByteArrayInputStream reader = (ByteArrayInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream();     
+			                //byte[] input = new byte[2048];  
+			                //java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
+			                File file = new File(LOCATION_DOCUMENT+id);
 			                FileInputStream fizip = new FileInputStream(file);
 			                byte[] buffer2 = IOUtils.toByteArray(fizip);
 			                bus.write(buffer2);
