@@ -1,8 +1,6 @@
 var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices', 'decisionServices', 'angularFileUpload']);
 var serverAddress = "http://localhost:8080";
 
-
-
 app.run(function ($rootScope, $cookies, $location) {
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
         if (!$cookies['Token'] && $location.path() != "/login" ) {

@@ -35,12 +35,19 @@ app.controller('UserProfileController', [
 			$scope.getUserPicture = function() {
 				UserPicture.get({
 					id : 6356
-				}, function(data) {
-					var obj = angular.fromJson(data);
-					$scope.profilePicture = ("data:" + obj.type + ";base64," + obj.data);
-				}, function(error) {
-					alert("error");
-				});
+				},
+						function(data) {
+							var obj = angular.fromJson(data);
+							$scope.profilePicture = ("data:" + obj.type
+									+ ";base64," + obj.data);
+						}, function(error) {
+							alert("error");
+						});
 			}
 			$scope.getUserPicture();
+
+			$scope.downloadFile = function() {			
+				window.open($scope.profilePicture);
+			}
+
 		} ]);
