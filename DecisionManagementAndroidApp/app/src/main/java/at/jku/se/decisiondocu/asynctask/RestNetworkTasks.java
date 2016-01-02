@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.sql.Timestamp;
 
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.Document;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.restclient.client.model.RelationString;
 
@@ -128,6 +130,27 @@ public class RestNetworkTasks {
                 return 0;
             }
             image = bitmap;
+            return 1;
+        }
+    }
+
+    public static abstract class DownloadDocument  extends NetworkTask {
+
+        protected final Document doc;
+        protected File file;
+
+        protected DownloadDocument(View progressBar, View viewToHide, Context context,
+                                        Document doc) {
+            super(progressBar,viewToHide,context);
+            this.doc=doc;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            file = RestClient.downloadDocument(doc);
+            if(file==null) {
+                return 0;
+            }
             return 1;
         }
     }

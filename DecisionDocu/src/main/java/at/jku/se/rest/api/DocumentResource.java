@@ -31,6 +31,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.dm.shared.RelationString;
+import at.jku.se.model.Decision;
 import at.jku.se.model.Document;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Project;
@@ -55,9 +56,6 @@ public class DocumentResource {
 	
 	private static String SERVER_UPLOAD_LOCATION_FOLDER = "D://upload_files/";
 	
-	private static String LOCATION_PROFILE_PICTURE = SERVER_UPLOAD_LOCATION_FOLDER+"profilpictures/";
-	private static String LOCATION_DOCUMENT = SERVER_UPLOAD_LOCATION_FOLDER+"documents/";
-	
 	static{
 		try{
 			SERVER_UPLOAD_LOCATION_FOLDER = DirectoryManager.getDirectory().getAbsolutePath()+"/upload_files/";
@@ -65,6 +63,9 @@ public class DocumentResource {
 			e.printStackTrace();
 		}
 	}
+	
+	private static String LOCATION_PROFILE_PICTURE = SERVER_UPLOAD_LOCATION_FOLDER+"profilpictures/";
+	private static String LOCATION_DOCUMENT = SERVER_UPLOAD_LOCATION_FOLDER+"documents/";
 	
 	@GET
 	@Path("/profilePicture/{id}")
@@ -295,7 +296,25 @@ public class DocumentResource {
 		//Add ProfilPicture to Projects
 		User admin = DBService.getUserByEmail("admin@example.com");
 		
-		Document document = new Document("Profile Picture");
+		Document document1 = new Document ("Effizientes Erfassen von Architekturentscheidungen.pdf");
+		document1 = DBService.updateNode(document1, admin.getId());
+		
+		File destFile1 = new File(LOCATION_DOCUMENT+document1.getId());
+		File srcFile1 = new File(SERVER_UPLOAD_LOCATION_FOLDER+"Effizientes Erfassen von Architekturentscheidungen.pdf");
+		
+		try {
+			FileUtils.copyFile(srcFile1, destFile1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List<Decision> decs = DBService.getAllDecisions(admin);
+		for(Decision dec:decs){
+			DBService.addRelationship(dec.getId(), RelationString.HAS_DOCUMENT, document1.getId());
+		}
+		
+		/*Document document = new Document("Profile Picture");
 		document = DBService.updateNode(document, admin.getId());
 		
 		File destFile = new File(LOCATION_PROFILE_PICTURE+document.getId());
@@ -311,7 +330,7 @@ public class DocumentResource {
 		List<Project> projects = DBService.getAllProjects();
 		for(Project project:projects){
 			DBService.addRelationship(project.getId(), RelationString.HAS_PICTURE, document.getId());
-		}
+		}*/
 		
 		/*try{
 		Client client = ClientBuilder.newClient(new ClientConfig());

@@ -107,7 +107,7 @@ public class NodeResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
-			return RestResponse.getSuccessResponse(DBService.getNodeByID(NodeInterface.class, id, user, 2));
+			return RestResponse.getSuccessResponse(DBService.getNodeByID(NodeInterface.class, id, 2));
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
