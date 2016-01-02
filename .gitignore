@@ -11,3 +11,7 @@ DecisionManagementAndroidApp/build.properties
 DecisionManagementAndroidApp/build.properties
 DecisionManagementShared/bin/at/jku/se/dm/shared/NodeString.class
 *.class
+DecisionManagement/.settings/org.eclipse.jdt.core.prefs
+DecisionManagementShared/.classpath
+DecisionManagementAndroidApp/app/src/main/java/at/jku/se/decisiondocu/restclient/RestHelper.java
+DecisionManagementShared/.settings/org.eclipse.jdt.core.prefs

@@ -13,6 +13,7 @@ import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.CustomDate;
+import at.jku.se.model.Decision;
 import at.jku.se.model.Message;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.RelationshipInterface;
@@ -49,6 +50,7 @@ public class ClientThread extends Thread {
 			
 			while (true) {
 				msg.setMessage("Retrieving Login Data...");
+				System.out.println(msg.toString());
 				os.println(msg.toString());
 				name = is.readLine().trim();
 				if (name.indexOf('?') == -1) {
@@ -77,7 +79,6 @@ public class ClientThread extends Thread {
 			}
 			
 			// Get the User Node Object via DBService
-			//user = DBService.getNodeByID(User.class, Integer.parseInt(parts[0]), 1);
 			user = SessionManager.getUser(parts[0]);
 			
 			// Get the Node Object via DBService
@@ -99,7 +100,7 @@ public class ClientThread extends Thread {
 						msg = new MsgWrapper((Message)m.getRelatedNode());
 						if (msg != null) {
 							log.debug("Attaching data: " + msg.toString());
-							
+							System.out.println(msg.toString());
 							os.println(msg.toString());
 						}
 					}
@@ -192,7 +193,8 @@ public class ClientThread extends Thread {
 	}
 
 	private String checkLine(String line, String user) {
-		if (line.startsWith("/quit"))
+		return line;
+		/*if (line.startsWith("/quit"))
 			return line;
 		else if (line.startsWith("?"))
 			return line;
@@ -211,7 +213,7 @@ public class ClientThread extends Thread {
 			
 			return "Kommentar '" + comment + "' zur Eigenschaft '" + propertie + "' hinzugefuegt";
 		}
-		return line;
+		return line;*/
 	}
 	
 	public long getNodeId() {
@@ -229,11 +231,4 @@ public class ClientThread extends Thread {
 	private void sendToOtherClients(String message) {
 		server.notifyAll(message, this.getNodeId());
 	}
-	
-	/*private void sendToNodesClients(String message) {
-		for (ClientThread thread : clientthreads) {
-			if (thread != null && thread.getNodeId() == this.getNodeId())
-				thread.os.println(message);
-		}
-	}*/
 }

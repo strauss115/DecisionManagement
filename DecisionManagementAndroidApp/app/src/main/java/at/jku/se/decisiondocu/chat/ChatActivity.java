@@ -3,8 +3,9 @@ package at.jku.se.decisiondocu.chat;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,12 +18,13 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.ChatAdapter;
-import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 import static android.os.SystemClock.sleep;
 
 @EActivity(R.layout.activity_chat)
 public class ChatActivity extends AppCompatActivity {
+
+    private static final String[] RELATIONSHIPS = new String[] { ":influence", ":subdecision", ":hasdecision", ":responsible", ":creator", ":hasgroup" };
 
     @Extra
     long dec_node_id;
@@ -42,8 +44,8 @@ public class ChatActivity extends AppCompatActivity {
     @ViewById(R.id.list)
     ListView mList;
 
-    @ViewById(R.id.editText)
-    EditText editText;
+    @ViewById(R.id.autoCompleteTextView1)
+    AutoCompleteTextView editText;
 
     @ViewById(R.id.send_button)
     Button send;
@@ -65,8 +67,14 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+
+
     @AfterViews
     void init() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, RELATIONSHIPS);
+        editText.setAdapter(adapter);
+        editText.setThreshold(1);
+
         chat_header.setText(usr_token + "@" + DecisionName);
         mList.setAdapter(mAdapter);
 

@@ -31,11 +31,13 @@ android:layout_height="fill_parent"
     android:gravity="bottom"
     >
 
-    <EditText android:inputType="textMultiLine|textNoSuggestions"
-        android:layout_width="0dp"
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView1"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:id="@+id/editText"
-        android:layout_weight="1"/>
+        android:hint="___________________________">
+        <requestFocus />
+    </AutoCompleteTextView>
 
 
     <Button android:layout_width="wrap_content"
