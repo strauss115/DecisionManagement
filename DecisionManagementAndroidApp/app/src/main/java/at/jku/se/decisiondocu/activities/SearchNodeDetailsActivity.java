@@ -27,6 +27,7 @@ import at.jku.se.decisiondocu.beans.NodeFinder;
 import at.jku.se.decisiondocu.beans.RESTNodeFinder;
 import at.jku.se.decisiondocu.beans.RelationAdapter;
 import at.jku.se.decisiondocu.restclient.client.DBStrings.PropertyString;
+import at.jku.se.decisiondocu.restclient.client.model.Document;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 
@@ -107,10 +108,16 @@ public class SearchNodeDetailsActivity extends AppCompatActivity {
 
     @ItemClick(R.id.search_detail_list_view)
     protected void itemClicked(Pair<String, NodeInterface> item) {
-        //Log.i("ListView", "Item " + item + " clicked!");
-        new SearchNodeDetailsActivity_.IntentBuilder_(this)
-                .decisionId(item.second.getId())
-                .start();
+        if(item.second instanceof Document) {
+            new SearchDocumentDetailsActivity_.IntentBuilder_(this)
+                    .relation(item.first)
+                    .decisionId(item.second.getId())
+                    .start();
+        }else {
+            new SearchNodeDetailsActivity_.IntentBuilder_(this)
+                    .decisionId(item.second.getId())
+                    .start();
+        }
         finish();
     }
 

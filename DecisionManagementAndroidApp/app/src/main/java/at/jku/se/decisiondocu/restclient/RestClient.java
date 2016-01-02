@@ -2,6 +2,7 @@ package at.jku.se.decisiondocu.restclient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -9,6 +10,8 @@ import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import at.jku.se.decisiondocu.restclient.client.api.NodeApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.Document;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.restclient.client.model.User;
@@ -172,7 +176,7 @@ public class RestClient {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            System.out.println(uploadProfilePicture(byteArrayOutputStream.toByteArray(),id));
+            System.out.println(uploadProfilePicture(byteArrayOutputStream.toByteArray(), id));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -234,15 +238,11 @@ public class RestClient {
     }
 
     public static Bitmap downloadProfilPicture (long id){
-
-        // local variables
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
         Response response = null;
         InputStream inputStream = null;
-        OutputStream outputStream = null;
         int responseCode;
-        String responseMessageFromServer = null;
 
         try{
 
@@ -256,7 +256,45 @@ public class RestClient {
 
             // get response code
             responseCode = response.getStatus();
-            System.out.println("Download Picture Response code: " + responseCode);
+            System.out.println("Download Document Response code: " + responseCode);
+
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed with HTTP error code : " + responseCode);
+            }
+
+            // read response string
+            inputStream = response.readEntity(InputStream.class);
+            return BitmapFactory.decodeStream(inputStream);
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        finally{
+            response.close();
+        }
+        return null;
+    }
+
+    public static File downloadDocument(Document doc){
+        WebTarget webTarget = null;
+        Invocation.Builder invocationBuilder = null;
+        Response response = null;
+        InputStream inputStream = null;
+        int responseCode;
+
+        try{
+
+            webTarget = RestHelper.getWebTargetWithChunckedFeature();
+            webTarget= webTarget.path("upload").path("document").path(doc.getId() + "");
+
+            // invoke service
+            invocationBuilder = webTarget.request();
+            invocationBuilder.header("token", 1);
+            response = invocationBuilder.get();
+
+            // get response code
+            responseCode = response.getStatus();
+            System.out.println("Download Document Response code: " + responseCode);
 
             if (response.getStatus() != 200) {
                 throw new RuntimeException("Failed with HTTP error code : " + responseCode);
@@ -265,7 +303,32 @@ public class RestClient {
             // read response string
             inputStream = response.readEntity(InputStream.class);
 
-            return BitmapFactory.decodeStream(inputStream);
+            System.out.println(inputStream.toString());
+
+            File file = new File((Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+                    + "/" + doc.getName()));
+
+            int count;
+            OutputStream output = new FileOutputStream(file);
+
+            byte data[] = new byte[1024];
+
+            long total = 0;
+
+            while ((count = inputStream.read(data)) != -1) {
+                total += count;
+
+                // writing data to file
+                output.write(data, 0, count);
+            }
+
+            // flushing output
+            output.flush();
+
+            // closing streams
+            output.close();
+            //inputStream.close();
+            return file;
         }
         catch(Exception ex) {
             ex.printStackTrace();
