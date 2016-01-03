@@ -1,5 +1,7 @@
 package at.jku.se.decisiondocu.chat;
 
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,14 +12,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.ChatAdapter;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
+import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.client.ApiException;
+import at.jku.se.decisiondocu.restclient.client.api.RelationshipApi;
+import at.jku.se.decisiondocu.restclient.client.model.User;
 
 import static android.os.SystemClock.sleep;
 
@@ -25,6 +38,8 @@ import static android.os.SystemClock.sleep;
 public class ChatActivity extends AppCompatActivity {
 
     private static final String[] RELATIONSHIPS = new String[] { ":influence", ":subdecision", ":hasdecision", ":responsible", ":creator", ":hasgroup" };
+
+    protected ProgressDialog mDialog;
 
     @Extra
     long dec_node_id;
@@ -64,17 +79,33 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    @Background
+    public void load() {
+        showDialog();
+        Map<String, String> map = RestClient.getRelationshipStrings();
+        update(map);
+    }
 
+    @UiThread
+    void update(Map<String, String> map) {
+        if (map != null) {
+            Set<String> keySet = map.keySet();
+            String[] keys = new String[keySet.size()];
 
-    @AfterViews
-    void init() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, RELATIONSHIPS);
-        editText.setAdapter(adapter);
-        editText.setThreshold(1);
+            int i = 0;
+            for (Iterator<String> it = keySet.iterator(); it.hasNext(); ) {
+                String s = it.next();
+                keys[i++] = "#" + s;
+            }
 
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, keys);
+            editText.setAdapter(adapter);
+            editText.setThreshold(1);
+        }
         setTitle(DecisionName);
-
         mList.setAdapter(mAdapter);
+
+        dismissDialog();
 
         // connect to the server
         new connectTask().execute("");
@@ -86,6 +117,29 @@ public class ChatActivity extends AppCompatActivity {
         sleep(250);
         sendMessage(startMsg);
         // AWUR ende
+    }
+
+    @UiThread
+    void showDialog() {
+        Log.d("dialog", "showing");
+        if (mDialog == null) {
+            mDialog = new ProgressDialog(this);
+            mDialog.setMessage("please wait...");
+            mDialog.show();
+        }
+    }
+
+    @UiThread
+    void dismissDialog() {
+        Log.d("dialog", "hiding");
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+    }
+
+    @AfterViews
+    void init() {
+        load();
     }
 
     private boolean isMsgValid(String msg) {

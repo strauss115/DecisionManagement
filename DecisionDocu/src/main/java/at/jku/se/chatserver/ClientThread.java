@@ -82,7 +82,7 @@ public class ClientThread extends Thread {
 			user = SessionManager.getUser(parts[0]);
 			
 			// Get the Node Object via DBService
-			node = DBService.getNodeByID(NodeInterface.class, Integer.parseInt(parts[1]), user, 2);
+			node = DBService.getNodeByID(NodeInterface.class, Integer.parseInt(parts[1]), user, 3);
 			//System.out.println(node);
 
 			msg.setMessage("Welcome " + user.getName()
@@ -100,7 +100,6 @@ public class ClientThread extends Thread {
 						msg = new MsgWrapper((Message)m.getRelatedNode());
 						if (msg != null) {
 							log.debug("Attaching data: " + msg.toString());
-							System.out.println(msg.toString());
 							os.println(msg.toString());
 						}
 					}

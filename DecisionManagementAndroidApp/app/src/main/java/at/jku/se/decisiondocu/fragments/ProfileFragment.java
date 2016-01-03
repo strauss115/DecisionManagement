@@ -1,8 +1,10 @@
 package at.jku.se.decisiondocu.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -30,6 +32,9 @@ public class ProfileFragment extends Fragment {
     @ViewById(R.id.profile_email)
     TextView tv_email;
 
+    @ViewById(R.id.profile_image)
+    ImageView imageView;
+
     @AfterViews
     void init() {
         load();
@@ -39,15 +44,22 @@ public class ProfileFragment extends Fragment {
     public void load() {
         showDialog();
         User u = RestClient.getUser(SaveSharedPreference.getUserEmail(getContext()));
-        update(u);
+        Bitmap bitmap = null;
+        if (u != null) {
+            bitmap = RestClient.downloadProfilPicture(u.getId());
+        }
+        update(u, bitmap);
         dismissDialog();
     }
 
     @UiThread
-    void update(User profile) {
+    void update(User profile, Bitmap bitmap) {
         if (profile != null) {
             tv_name.setText(profile.getName() + " " + profile.getLastname());
             tv_email.setText(profile.getEmail());
+        }
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
         }
     }
 

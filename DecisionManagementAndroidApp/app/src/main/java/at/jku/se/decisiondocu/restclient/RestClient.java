@@ -15,7 +15,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -26,6 +28,7 @@ import javax.ws.rs.core.Response;
 import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
 import at.jku.se.decisiondocu.restclient.client.api.NodeApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
+import at.jku.se.decisiondocu.restclient.client.api.RelationshipApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
@@ -166,7 +169,7 @@ public class RestClient {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Node PART
+    // NODE PART
     // -----------------------------------------------------------------------------------------
 
     public static NodeInterface getNodeWithId(long id) {
@@ -181,7 +184,7 @@ public class RestClient {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Document PART
+    // DOCUMENT PART
     // -----------------------------------------------------------------------------------------
 
     private static void safeProfilePicture(Bitmap image, int id){
@@ -349,6 +352,21 @@ public class RestClient {
             response.close();
         }
         return null;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // RELATIONSHIP PART
+    // -----------------------------------------------------------------------------------------
+
+    public static Map<String, String> getRelationshipStrings() {
+        RelationshipApi api = new RelationshipApi();
+        Map<String, String> ret = new HashMap<>();
+        try {
+            ret = api.getRelationshipStrings(accessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 
 }
