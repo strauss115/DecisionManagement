@@ -6,6 +6,7 @@ public class MsgWrapper {
 	private String mCreator;
 	private String mCreatorEmail;
 	private String mMessage;
+	private NodeInterface mNode;
 	
 	public MsgWrapper() {}
 
@@ -41,4 +42,11 @@ public class MsgWrapper {
 		this.mMessage = mMessage;
 	}
 
+	public NodeInterface getNode() {
+		return mNode;
+	}
+
+	public void setNode(NodeInterface mNode) {
+		this.mNode = mNode;
+	}
 }

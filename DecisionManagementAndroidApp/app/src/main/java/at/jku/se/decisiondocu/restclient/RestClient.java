@@ -358,6 +358,10 @@ public class RestClient {
     // RELATIONSHIP PART
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Liefert alle möglichen Relationship Strings des Backends
+     * @return
+     */
     public static Map<String, String> getRelationshipStrings() {
         RelationshipApi api = new RelationshipApi();
         Map<String, String> ret = new HashMap<>();

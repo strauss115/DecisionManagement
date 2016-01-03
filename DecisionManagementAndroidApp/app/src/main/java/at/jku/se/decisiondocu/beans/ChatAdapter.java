@@ -14,6 +14,7 @@ import org.androidannotations.annotations.RootContext;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import at.jku.se.decisiondocu.chat.ChatInterface;
 import at.jku.se.decisiondocu.restclient.client.model.MsgWrapper;
 import at.jku.se.decisiondocu.views.ChatListItemView;
 import at.jku.se.decisiondocu.views.ChatListItemView_;
@@ -25,11 +26,16 @@ import at.jku.se.decisiondocu.views.ChatListItemView_;
 public class ChatAdapter extends BaseAdapter {
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private ChatInterface chatInterface;
 
     @RootContext
     Context context;
 
     private ArrayList<MsgWrapper> mListItems;
+
+    public void setChatInterface(ChatInterface chatInterface) {
+        this.chatInterface = chatInterface;
+    }
 
     @AfterInject
     void initAdapter() {
@@ -83,7 +89,7 @@ public class ChatAdapter extends BaseAdapter {
             view = (ChatListItemView) convertView;
         }
 
-        view.bind(getItem(position));
+        view.bind(getItem(position), chatInterface);
         return view;
 
     }

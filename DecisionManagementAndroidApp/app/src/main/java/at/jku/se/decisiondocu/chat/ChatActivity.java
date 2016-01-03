@@ -30,14 +30,13 @@ import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.api.RelationshipApi;
+import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.User;
 
 import static android.os.SystemClock.sleep;
 
 @EActivity(R.layout.activity_chat)
-public class ChatActivity extends AppCompatActivity {
-
-    private static final String[] RELATIONSHIPS = new String[] { ":influence", ":subdecision", ":hasdecision", ":responsible", ":creator", ":hasgroup" };
+public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     protected ProgressDialog mDialog;
 
@@ -140,6 +139,7 @@ public class ChatActivity extends AppCompatActivity {
     @AfterViews
     void init() {
         load();
+        mAdapter.setChatInterface(this);
     }
 
     private boolean isMsgValid(String msg) {
@@ -188,6 +188,13 @@ public class ChatActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("tag", e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void linkClicked(long id, NodeInterface nodeInterface) {
+        if (editText != null) {
+            editText.append(" @" + id);
         }
     }
 }
