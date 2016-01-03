@@ -20,6 +20,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +70,8 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     private Client mClient;
 
+    private Map<String, String> mMap;
+
     @Click(R.id.send_button)
     void OnBtnClick() {
         String message = editText.getText().toString();
@@ -88,16 +91,18 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
     @UiThread
     void update(Map<String, String> map) {
         if (map != null) {
-            Set<String> keySet = map.keySet();
-            String[] keys = new String[keySet.size()];
+            this.mMap = map;
+
+            Collection<String> collection = map.values();
+            String[] values = new String[collection.size()];
 
             int i = 0;
-            for (Iterator<String> it = keySet.iterator(); it.hasNext(); ) {
+            for (Iterator<String> it = collection.iterator(); it.hasNext(); ) {
                 String s = it.next();
-                keys[i++] = "#" + s;
+                values[i++] = "#" + s;
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, keys);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, values);
             editText.setAdapter(adapter);
             editText.setThreshold(1);
         }

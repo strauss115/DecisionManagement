@@ -2,7 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.jku.decisionManagement</groupId>
   <artifactId>DecisionManagementShared</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
+  <name>Shared Project</name>
+  <packaging>jar</packaging>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>

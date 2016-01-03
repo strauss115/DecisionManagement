@@ -33,6 +33,7 @@ public class ClientThread extends Thread {
 
 	private NodeInterface node = null;
 	private User user = null;
+	private User admin = null;
 	
 	private Map<String, String> nodeToRelation;
 	
@@ -40,6 +41,12 @@ public class ClientThread extends Thread {
 	public ClientThread(ServerListener server, Socket clientSocket) {
 		this.server = server;
 		this.clientSocket = clientSocket;
+		
+		try {
+		admin = DBService.getUserByEmail("admin@example.com");
+		} catch (Exception e) {
+			log.error(e);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -56,7 +63,6 @@ public class ClientThread extends Thread {
 
 			while (true) {
 				msg.setMessage("Retrieving Login Data...");
-				System.out.println(msg.toString());
 				os.println(msg.toString());
 				name = is.readLine().trim();
 				if (name.indexOf('?') == -1) {
@@ -125,9 +131,10 @@ public class ClientThread extends Thread {
 					e1.printStackTrace();
 				}
 			}
-			//---------------------------------------------
-			// --------------------- Start the conversation--------------
-			//-----------------------------------------------------------
+			
+			log.debug("---------------------------------------------");
+			log.debug("--------- start the conversation ------------");
+			log.debug("---------------------------------------------");
 			while (true) {
 				String line = is.readLine();
 				if (line.startsWith("/quit")) {
@@ -248,9 +255,9 @@ public class ClientThread extends Thread {
 			sendError("Relations of type "+relation+ " need already existing node");
 			return;
 		}
-		try {
-			Constructor<?extends NodeInterface> constructor = DBService.getConstructors().get(node.getClass().getSimpleName());
-			System.out.println(constructor);
+		try {	
+			Constructor<?extends NodeInterface> constructor = DBService.getConstructors().get(nodeToRelation.get(relation));
+			log.debug("invoking: " + constructor);
 			NodeInterface createdNode = constructor.newInstance();
 			createdNode.setName(nodename);
 			createdNode = DBService.createRelationshipWithNode(createdNode, relation, node.getId(), user.getId());
@@ -398,9 +405,12 @@ public class ClientThread extends Thread {
 	}
 
 	private Message saveMessage(String message, boolean server) {
-		// TODO: user id switchen falls server msg
 		if (node != null && user != null) {
-			return DBService.createMessage(message, node.getId(), user.getId());
+			if (server && admin != null) {
+				return DBService.createMessage(message, node.getId(), admin.getId());
+			} else {
+				return DBService.createMessage(message, node.getId(), user.getId());
+			}
 		}
 		return new Message(message);
 	}

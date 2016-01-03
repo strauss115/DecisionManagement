@@ -105,11 +105,11 @@ public class MsgWrapper {
 		this.mMessage = mMessage;
 	}
 
-	public NodeInterface getmNode() {
+	public NodeInterface getNode() {
 		return mNode;
 	}
 
-	public void setmNode(NodeInterface mNode) {
+	public void setNode(NodeInterface mNode) {
 		this.mNode = mNode;
 	}
 
