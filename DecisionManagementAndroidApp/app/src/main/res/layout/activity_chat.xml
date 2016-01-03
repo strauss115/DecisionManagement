@@ -1,52 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
-    >
-
-    <TextView
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:text="Username@Decicion Name"
-        android:id="@+id/chatheader"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:transcriptMode="alwaysScroll" />
 
-    <ListView android:id="@+id/list"
-    android:layout_width="fill_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:transcriptMode="alwaysScroll"
-    android:cacheColorHint="#00000000"
-    android:listSelector="@android:color/transparent"
-    android:dividerHeight="0dp"
-    android:divider="@null"
-    />
     <View style="@style/Divider" />
-<LinearLayout android:id="@+id/footer"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="bottom"
-    >
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:hint="___________________________">
-        <requestFocus />
-    </AutoCompleteTextView>
-
-
-    <Button android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/send_button"
-        android:layout_gravity="center_vertical"
-        android:text="send" />
-</LinearLayout>
+        android:gravity="bottom"
+        android:orientation="horizontal">
 
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:hint="___________________________">
+
+            <requestFocus />
+        </AutoCompleteTextView>
+
+
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="send" />
+    </LinearLayout>
 
 
 </LinearLayout>

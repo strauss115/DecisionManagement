@@ -50,9 +50,6 @@ public class ChatActivity extends AppCompatActivity {
     @ViewById(R.id.send_button)
     Button send;
 
-    @ViewById(R.id.chatheader)
-    TextView chat_header;
-
     @Bean
     ChatAdapter mAdapter;
 
@@ -75,15 +72,19 @@ public class ChatActivity extends AppCompatActivity {
         editText.setAdapter(adapter);
         editText.setThreshold(1);
 
-        chat_header.setText(usr_token + "@" + DecisionName);
+        setTitle(DecisionName);
+
         mList.setAdapter(mAdapter);
 
         // connect to the server
         new connectTask().execute("");
 
+        // start msg consists of user token and node id
+        String startMsg = usr_token + "@" + dec_node_id;
+
         // AWUR
         sleep(250);
-        sendMessage(usr_token + "@" + dec_node_id); // Username
+        sendMessage(startMsg);
         // AWUR ende
     }
 

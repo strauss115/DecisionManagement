@@ -3,6 +3,7 @@ package at.jku.se.decisiondocu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -25,6 +27,7 @@ import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
 import at.jku.se.decisiondocu.dialog.CreateDecisionDialog_;
 import at.jku.se.decisiondocu.dialog.ProjectChooserDialog_;
 import at.jku.se.decisiondocu.fragments.ChatFragment_;
+import at.jku.se.decisiondocu.fragments.ProfileFragment_;
 import at.jku.se.decisiondocu.fragments.SearchFragment_;
 import at.jku.se.decisiondocu.fragments.TeamFragment_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     @ViewById(R.id.tabs)
     TabLayout tabLayout;
+
+    @ViewById(R.id.fab)
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -108,7 +114,22 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 2) {
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    fab.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
         tabLayout.setupWithViewPager(mViewPager);
         Instance = this;
     }
@@ -184,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return new SearchFragment_.FragmentBuilder_().build();
                 case 2:
-                    return new ChatFragment_.FragmentBuilder_().build();
+                    return new ProfileFragment_.FragmentBuilder_().build();
                 default:
                     return MainActivity_.PlaceholderFragment_.builder().arg("section_number",position+1).build();
             }
@@ -192,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 4 total pages.
+            // Show 3 total pages.
             return 3;
         }
 
@@ -204,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return "Search";
                 case 2:
-                    return "Chat";
+                    return "Profile";
             }
             return null;
         }

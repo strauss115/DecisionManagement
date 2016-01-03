@@ -79,6 +79,18 @@ public class RestClient {
         return false;
     }
 
+    public static User getUser(String email) {
+        UserApi api = new UserApi();
+        try {
+            User user = api.get(accessToken, email);
+            Log.d("user", user.toString());
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // -----------------------------------------------------------------------------------------
     // DECISION PART
     // -----------------------------------------------------------------------------------------

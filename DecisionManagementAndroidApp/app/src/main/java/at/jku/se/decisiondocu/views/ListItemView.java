@@ -10,11 +10,16 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.List;
+
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.chat.ChatActivity_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.RelationString;
+import at.jku.se.decisiondocu.restclient.client.model.RelationshipInterface;
+import at.jku.se.decisiondocu.restclient.client.model.User;
 
 /**
  * Created by martin on 23.11.15.
@@ -58,8 +63,20 @@ public class ListItemView extends LinearLayout {
 
     public void bind(Decision item) {
         try {
-            tv_author.setText("Author: " + item.getId());
-            tv_date.setText("Date: " + item.getCreationDate().toString());
+
+            String mCreator = "unknown";
+            List<RelationshipInterface> creators = item.getRelationships().get(RelationString.CREATOR);
+            if (creators != null && creators.size() > 0) {
+                try {
+                    User u = (User)creators.get(0).getRelatedNode();
+                    mCreator = u.getEmail();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            tv_author.setText("Author: " + mCreator);
+            tv_date.setText("Date: " + item.getCreationDate().yyyyMMdd());
             tv_headline.setText(item.getName());
             dec_node_id = item.getId();
         }catch (Exception e){
