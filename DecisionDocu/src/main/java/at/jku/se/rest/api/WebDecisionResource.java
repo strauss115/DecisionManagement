@@ -228,7 +228,7 @@ public class WebDecisionResource {
 			@ApiResponse(code = 401, message = "Unauthorized") })
 	public Response setDescription(
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@ApiParam(value = "Decision Id") @PathParam("decisionId") long id,
+			@ApiParam(value = "Decision Id") @PathParam("id") long id,
 			@ApiParam("Description to set") @QueryParam("description") String description) {
 		log.debug("POST set description for '" + id + "' description '" + description + "'");
 		try {
@@ -368,10 +368,18 @@ public class WebDecisionResource {
 			}
 
 			User u = SessionManager.getUser(token);
+			Decision d = DBService.getDecisionById(id);
+			
+			if (d == null) {
+				log.error("Unable to add value, decision '" + id + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			
 			InfluenceFactor node = new InfluenceFactor(value);
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				d.addInfluenceFactor(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
 				log.error("Unable to save new node to database");
@@ -401,10 +409,18 @@ public class WebDecisionResource {
 			}
 
 			User u = SessionManager.getUser(token);
+			Decision d = DBService.getDecisionById(id);
+			
+			if (d == null) {
+				log.error("Unable to add value, decision '" + id + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			
 			Rationale node = new Rationale(value);
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				d.addRationale(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
 				log.error("Unable to save new node to database");
@@ -435,10 +451,18 @@ public class WebDecisionResource {
 			}
 
 			User u = SessionManager.getUser(token);
+			Decision d = DBService.getDecisionById(id);
+			
+			if (d == null) {
+				log.error("Unable to add value, decision '" + id + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			
 			Alternative node = new Alternative(value);
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				d.addAlterantive(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
 				log.error("Unable to save new node to database");
@@ -469,10 +493,18 @@ public class WebDecisionResource {
 			}
 
 			User u = SessionManager.getUser(token);
+			Decision d = DBService.getDecisionById(id);
+			
+			if (d == null) {
+				log.error("Unable to add value, decision '" + id + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			
 			Consequence node = new Consequence(value);
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				d.addConsequence(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
 				log.error("Unable to save new node to database");
@@ -503,10 +535,18 @@ public class WebDecisionResource {
 			}
 
 			User u = SessionManager.getUser(token);
+			Decision d = DBService.getDecisionById(id);
+			
+			if (d == null) {
+				log.error("Unable to add value, decision '" + id + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			
 			QualityAttribute node = new QualityAttribute(value);
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				d.addQualityAttribute(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
 				log.error("Unable to save new node to database");
@@ -540,7 +580,6 @@ public class WebDecisionResource {
 			Decision relatedDecision = DBService.getNodeByID(Decision.class, relatedId, 1);
 			// --
 			if (d != null && relatedDecision != null) {
-
 				d.addRelatedDecision(relatedDecision);
 				return RestResponse.getSuccessResponse();
 			} else {
