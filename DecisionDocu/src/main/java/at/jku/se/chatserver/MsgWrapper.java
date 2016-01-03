@@ -12,6 +12,7 @@ import at.jku.se.dm.shared.RelationString;
 import at.jku.se.dm.shared.PropertyString;
 import at.jku.se.model.CustomDate;
 import at.jku.se.model.Message;
+import at.jku.se.model.NodeInterface;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 
@@ -23,6 +24,7 @@ public class MsgWrapper {
 	private String mCreator;
 	private String mCreatorEmail;
 	private String mMessage;
+	private NodeInterface mNode;
 	
 	public static MsgWrapper dummy() {
 		MsgWrapper msg = new MsgWrapper();
@@ -55,17 +57,20 @@ public class MsgWrapper {
 		List<RelationshipInterface> creators = msg.getRelationships().get(RelationString.HAS_CREATOR);
 		if (creators != null && creators.size() > 0) {
 			try {
-                for (RelationshipInterface ri : creators) {
-                    User u = (User)ri.getRelatedNode();
-                    mCreator = u.getName() + " " + u.getLastname();
-                    mCreatorEmail = u.getEmail();
-                }
+                User u = (User)creators.get(0).getRelatedNode();
+                mCreator = u.getName() + " " + u.getLastname();
+                mCreatorEmail = u.getEmail();
             } catch (Exception e) {
             	log.error(e);
             }
 		} else {
 			mCreator = "server";
 		}
+	}
+	
+	public MsgWrapper(Message msg, NodeInterface createdNode) throws Exception{
+		this(msg);
+		mNode = createdNode;
 	}
 	
 	public CustomDate getTimestamp() {
@@ -98,6 +103,14 @@ public class MsgWrapper {
 
 	public void setMessage(String mMessage) {
 		this.mMessage = mMessage;
+	}
+
+	public NodeInterface getmNode() {
+		return mNode;
+	}
+
+	public void setmNode(NodeInterface mNode) {
+		this.mNode = mNode;
 	}
 
 	@Override

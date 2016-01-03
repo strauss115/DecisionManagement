@@ -76,6 +76,10 @@ public class DBService {
 		}catch (Exception e){}
 	}
 	
+	public static HashMap<String, Constructor<? extends NodeInterface>> getConstructors() {
+		return constructors;
+	}
+
 	public static DBService getDBService() {
 		if (ref == null) {
 			ref = new DBService();
