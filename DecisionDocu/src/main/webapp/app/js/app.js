@@ -31,7 +31,8 @@ app.directive('goDiagramMindMap', function () {
                                             minSize: new go.Size(30, 15)    
                                         },
                                         new go.Binding("editable", "editable"),
-                                // remember not only the text string but the scale and the font in the node data
+                                // remember not only the text string but the
+								// scale and the font in the node data
                                 new go.Binding("text", "text").makeTwoWay(),
                                         new go.Binding("scale", "scale").makeTwoWay(),
                                         new go.Binding("font", "font").makeTwoWay()),
@@ -39,38 +40,56 @@ app.directive('goDiagramMindMap', function () {
                                                 {
                                                     stretch: go.GraphObject.Horizontal,
                                                     strokeWidth: 3, height: 3,
-                                                    // this line shape is the port -- what links connect with
+                                                    // this line shape is the
+													// port -- what links
+													// connect with
                                                     portId: "", fromSpot: go.Spot.LeftRightSides, toSpot: go.Spot.LeftRightSides
                                                 },
                                         new go.Binding("stroke", "brush"),
-                                                // make sure links come in from the proper direction and go out appropriately
+                                                // make sure links come in from
+												// the proper direction and go
+												// out appropriately
                                                 new go.Binding("fromSpot", "dir", function (d) {
                                                     return spotConverter(d, true);
                                                 }),
                                                 new go.Binding("toSpot", "dir", function (d) {
                                                     return spotConverter(d, false);
                                                 })),
-                                        // remember the locations of each node in the node data
+                                        // remember the locations of each node
+										// in the node data
                                         new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-                                        // make sure text "grows" in the desired direction
+                                        // make sure text "grows" in the desired
+										// direction
                                         new go.Binding("locationSpot", "dir", function (d) {
                                             return spotConverter(d, false);
                                         })
                                         ),
                                 "nodeTemplate.selectionAdornmentTemplate": $(go.Adornment, "Spot",
                                         $(go.Panel, "Auto",
-                                                // this Adornment has a rectangular blue Shape around the selected node
+                                                // this Adornment has a
+												// rectangular blue Shape around
+												// the selected node
                                                 $(go.Shape, {fill: null, stroke: "dodgerblue", strokeWidth: 3}),
                                                 $(go.Placeholder, {margin: new go.Margin(4, 4, 0, 4)})
                                                 ),
-                                        // and this Adornment has a Button to the right of the selected node
+                                        // and this Adornment has a Button to
+										// the right of the selected node
                                         $("Button",
                                                 {
                                                     alignment: go.Spot.Right,
                                                     alignmentFocus: go.Spot.Left,
-                                                    click: addNodeAndLink  // define click behavior for this Button in the Adornment
+                                                    click: addNodeAndLink  // define
+																			// click
+																			// behavior
+																			// for
+																			// this
+																			// Button
+																			// in
+																			// the
+																			// Adornment
                                                 },   
-                                        $(go.TextBlock, "+", // the Button content
+                                        $(go.TextBlock, "...", // the Button
+																// content
                                                 {font: "bold 8pt sans-serif"}), new go.Binding("visible", "showAdd")
                                                 )
                                         ),
@@ -89,19 +108,23 @@ app.directive('goDiagramMindMap', function () {
                                     return "black";
                                 }).ofObject())
                                         ),
-                                // when the user drags a node, also move/copy/delete the whole subtree starting with that node
+                                // when the user drags a node, also
+								// move/copy/delete the whole subtree starting
+								// with that node
                                 "commandHandler.copiesTree": true,
                                 "commandHandler.deletesTree": true,
                                 "draggingTool.dragsTree": true,
                                 initialContentAlignment: go.Spot.Center,
                                 "undoManager.isEnabled": true
                             });
-            // whenever a GoJS transaction has finished modifying the model, update all Angular bindings
+            // whenever a GoJS transaction has finished modifying the model,
+			// update all Angular bindings
             function updateAngular(e) {
                 if (e.isTransactionFinished)
                     scope.$apply();
             }
-            // notice when the value of "model" changes: update the Diagram.model
+            // notice when the value of "model" changes: update the
+			// Diagram.model
             scope.$watch("model", function (newmodel) {
                 var oldmodel = diagram.model;
                 if (oldmodel !== newmodel) {
@@ -116,7 +139,8 @@ app.directive('goDiagramMindMap', function () {
                 diagram.model.removeChangedListener(updateAngular);
                 // change the name
                 diagram.startTransaction("change name");
-                // the data property has already been modified, so setDataProperty would have no effect
+                // the data property has already been modified, so
+				// setDataProperty would have no effect
                 var node = diagram.findNodeForData(diagram.model.selectedNodeData);
                 if (node !== null)
                     node.updateTargetBindings("name");
@@ -145,13 +169,45 @@ app.directive('goDiagramMindMap', function () {
                     return (from ? go.Spot.Right : go.Spot.Left);
                 }
             }
+            /*
+			 * Callback function for node-button-click
+			 */
             var objGoJsModel;
             function addNodeAndLink(e, obj) {
             	objGoJsModel = obj;
             	var adorn = obj.part;
                 var oldnode = adorn.adornedPart;
                 var olddata = oldnode.data;
-            	jQuery("#headlineAddAttributePanel").text("Add " + olddata.text);
+                var panelHeaderText;
+                // set header of modal panel
+                switch(olddata.key){
+	                case 0: panelHeaderText = "Edit Decision";
+	                		break;
+	                case 1: panelHeaderText = "Add Influence Factor";
+            				break;
+	                case 2: panelHeaderText = "Add Rationale";
+            				break;
+	                case 3: panelHeaderText = "Add Alternative";
+	                    	break;
+	                case 4: panelHeaderText = "Add Consequence";
+                			break;
+	                case 5: panelHeaderText = "Add Quality Attribute";
+        					break;
+                }
+                jQuery("#headlineAddAttributePanel").text(panelHeaderText);
+                //jQuery("#addAttributeInputText").val(olddata.text);
+                alert(olddata.key);
+                if(olddata.key > 10){
+                	jQuery("#headlineAddAttributePanel").text("Edit Attribute");
+                	jQuery("#addAttributeInputText").val(olddata.text);
+                	jQuery("#fileAdministrationDiv").css("display", "inline"); 
+                	//jQuery("#saveAttributeButton").val("Save");
+                }
+                else{
+                	jQuery("#fileAdministrationDiv").css("display", "none"); 
+                	jQuery("#addAttributeInputText").val("");
+                	//jQuery("#saveAttributeButton").val("Add");
+                }
             	jQuery("#addAttributePanel").modal();
             }
             jQuery("#saveAttributeButton" ).click(function() {
@@ -160,10 +216,11 @@ app.directive('goDiagramMindMap', function () {
                   diagram.startTransaction("Add Node");
                   var oldnode = adorn.adornedPart;
                   var olddata = oldnode.data;
+                  // alert(olddata.key);
                   // copy the brush and direction to the new node data
-                  //"New " + olddata.text
+                  // "New " + olddata.text
                   var newdata = {text: jQuery("#addAttributeInputText").val(), brush: olddata.brush, dir: olddata.dir, parent: olddata.key,editable: true, showAdd: false};
-                  
+
                   diagram.model.addNodeData(newdata);
                   layoutTree(oldnode);
                   diagram.commitTransaction("Add Node");
@@ -172,7 +229,8 @@ app.directive('goDiagramMindMap', function () {
             function layoutTree(node) {
                 if (node.data.key === 0) {  // adding to the root?
                     layoutAll(); // lay out everything
-                } else {  // otherwise lay out only the subtree starting at this parent node
+                } else {  // otherwise lay out only the subtree starting at
+							// this parent node
                     var parts = node.findTreeParts();
                     layoutAngle(parts, node.data.dir === "left" ? 180 : 0);
                 }
@@ -199,16 +257,19 @@ app.directive('goDiagramMindMap', function () {
                 root.findLinksConnected().each(function (link) {
                     var child = link.toNode;
                     if (child.data.dir === "left") {
-                        leftward.add(root); // the root node is in both collections
+                        leftward.add(root); // the root node is in both
+											// collections
                         leftward.add(link);
                         leftward.addAll(child.findTreeParts());
                     } else {
-                        rightward.add(root); // the root node is in both collections
+                        rightward.add(root); // the root node is in both
+												// collections
                         rightward.add(link);
                         rightward.addAll(child.findTreeParts());
                     }
                 });
-                // do one layout and then the other without moving the shared root node
+                // do one layout and then the other without moving the shared
+				// root node
                 layoutAngle(rightward, 0);
                 layoutAngle(leftward, 180);
                 diagram.commitTransaction("Layout");
@@ -233,7 +294,8 @@ app.directive('goDiagramState', function () {
             var diagram = // create a Diagram for the given HTML DIV element
                     $(go.Diagram, element[0],
                             {
-                                "linkTemplate": $(go.Link, // the whole link panel
+                                "linkTemplate": $(go.Link, // the whole link
+															// panel
                                         {curve: go.Link.Bezier, adjusting: go.Link.Stretch, reshapable: true},
                                 new go.Binding("curviness", "curviness"),
                                         new go.Binding("points").makeTwoWay(),
@@ -248,13 +310,21 @@ app.directive('goDiagramState', function () {
                                                                     {0: "rgb(240, 240, 240)", 0.3: "rgb(240, 240, 240)", 1: "rgba(240, 240, 240, 0)"}),
                                                             stroke: null
                                                         }),
-                                                $(go.TextBlock, "transition", // the label
+                                                $(go.TextBlock, "transition", // the
+																				// label
                                                         {
                                                             textAlign: "center",
                                                             font: "10pt helvetica, arial, sans-serif",
                                                             stroke: "black",
                                                             margin: 4,
-                                                            editable: true  // editing the text automatically updates the model data
+                                                            editable: true  // editing
+																			// the
+																			// text
+																			// automatically
+																			// updates
+																			// the
+																			// model
+																			// data
                                                         },
                                                 new go.Binding("text", "text").makeTwoWay())
                                                 )
@@ -263,23 +333,37 @@ app.directive('goDiagramState', function () {
                                         $(go.Adornment, "Vertical",
                                                 $(go.Panel, "Auto",
                                                         $(go.Shape, {fill: null, stroke: "blue", strokeWidth: 2}),
-                                                        $(go.Placeholder)  // this represents the selected Node
+                                                        $(go.Placeholder)  // this
+																			// represents
+																			// the
+																			// selected
+																			// Node
                                                         ),
-                                                // the button to create a "next" node, at the top-right corner
+                                                // the button to create a "next"
+												// node, at the top-right corner
                                                 $("Button",
                                                         {
                                                             alignment: go.Spot.TopRight,
-                                                            click: addNodeAndLink  // this function is defined below
+                                                            click: addNodeAndLink  // this
+																					// function
+																					// is
+																					// defined
+																					// below
                                                         },
                                                 $(go.Shape, "PlusLine", {desiredSize: new go.Size(6, 6)})
                                                         ) // end button
                                                 ),
                                 "nodeTemplate": $(go.Node, "Auto",
                                         new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-                                        // define the node's outer shape, which will surround the TextBlock
+                                        // define the node's outer shape, which
+										// will surround the TextBlock
                                         $(go.Shape, "RoundedRectangle",
                                                 {
-                                                    parameter1: 20, // the corner has a large radius
+                                                    parameter1: 20, // the
+																	// corner
+																	// has a
+																	// large
+																	// radius
                                                     fill: $(go.Brush, "Linear", {0: "rgb(173,216,230)", 1: "rgb(173,216,230)"}),
                                                     stroke: "black",
                                                     portId: "",
@@ -294,24 +378,33 @@ app.directive('goDiagramState', function () {
                                         $(go.TextBlock,
                                                 {
                                                     font: "bold 11pt helvetica, bold arial, sans-serif",
-                                                    editable: true  // editing the text automatically updates the model data
+                                                    editable: true  // editing
+																	// the text
+																	// automatically
+																	// updates
+																	// the model
+																	// data
                                                 },
                                         new go.Binding("text", "text").makeTwoWay())
                                         ),
-                                // start everything in the middle of the viewport
+                                // start everything in the middle of the
+								// viewport
                                 initialContentAlignment: go.Spot.Center,
-                                // have mouse wheel events zoom in and out instead of scroll up and down
+                                // have mouse wheel events zoom in and out
+								// instead of scroll up and down
                                 "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
                  
                                 // enable undo & redo
                                 "undoManager.isEnabled": true
                             });
-            // whenever a GoJS transaction has finished modifying the model, update all Angular bindings
+            // whenever a GoJS transaction has finished modifying the model,
+			// update all Angular bindings
             function updateAngular(e) {
                 if (e.isTransactionFinished)
                     scope.$apply();
             }
-             // notice when the value of "model" changes: update the Diagram.model
+             // notice when the value of "model" changes: update the
+				// Diagram.model
             scope.$watch("model", function (newmodel) {
                 var oldmodel = diagram.model;
                 if (oldmodel !== newmodel) {
@@ -326,7 +419,8 @@ app.directive('goDiagramState', function () {
                 diagram.model.removeChangedListener(updateAngular);
                 // change the name
                 diagram.startTransaction("change name");
-                // the data property has already been modified, so setDataProperty would have no effect
+                // the data property has already been modified, so
+				// setDataProperty would have no effect
                 var node = diagram.findNodeForData(diagram.model.selectedNodeData);
                 if (node !== null)
                     node.updateTargetBindings("name");
@@ -348,7 +442,8 @@ app.directive('goDiagramState', function () {
                         document.title = document.title.substr(0, idx);
                 }
             });
-            // clicking the button inserts a new node to the right of the selected node,
+            // clicking the button inserts a new node to the right of the
+			// selected node,
             // and adds a link to that new node
             function addNodeAndLink(e, obj) {
                 var adorn = obj.part;
@@ -358,17 +453,22 @@ app.directive('goDiagramState', function () {
                 // get the node data for which the user clicked the button
                 var fromNode = adorn.adornedPart;
                 var fromData = fromNode.data;
-                // create a new "State" data object, positioned off to the right of the adorned Node
+                // create a new "State" data object, positioned off to the right
+				// of the adorned Node
                 var toData = {text: "new"};
                 var p = fromNode.location.copy();
                 p.x += 200;
-                toData.loc = go.Point.stringify(p); // the "loc" property is a string, not a Point object
+                toData.loc = go.Point.stringify(p); // the "loc" property is a
+													// string, not a Point
+													// object
                 // add the new node data to the model
                 var model = diagram.model;
                 model.addNodeData(toData);
-                // create a link data from the old node data to the new node data
+                // create a link data from the old node data to the new node
+				// data
                 var linkdata = {
-                    from: model.getKeyForNodeData(fromData), // or just: fromData.id
+                    from: model.getKeyForNodeData(fromData), // or just:
+																// fromData.id
                     to: model.getKeyForNodeData(toData),
                     text: "transition"
                 };
@@ -378,7 +478,8 @@ app.directive('goDiagramState', function () {
                 var newnode = diagram.findNodeForData(toData);
                 diagram.select(newnode);
                 diagram.commitTransaction("Add State");
-                // if the new node is off-screen, scroll the diagram to show the new node
+                // if the new node is off-screen, scroll the diagram to show the
+				// new node
                 diagram.scrollToRect(newnode.actualBounds);
             }
 

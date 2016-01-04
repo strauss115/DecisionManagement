@@ -29,7 +29,7 @@ public class GoJsFormatter {
 			int distanceRight = decision.getName().length() * 7;
 			int distanceLeft = 50;
 			// right side elements (influence factors and rationals)
-			int rightElementsCount = decision.getInfluenceFactors().size() + decision.getRationales().size();
+			int rightElementsCount = decision.getInfluenceFactors().size() + decision.getRationales().size() + decision.getQualityAttributes().size();
 			if(rightElementsCount % 2 != 0){
 				rightElementsCount++;
 			}
@@ -46,32 +46,40 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": 1,\"parent\":0,\"text\":\"Influence Factors\", \"brush\": \"skyblue\", \"dir\": \"right\", \"loc\": \"" + distanceRight + " -22\",\"editable\": false, \"showAdd\": true}";
 			int key = 11;
 			for(InfluenceFactor i : decision.getInfluenceFactors()){
-				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":1,\"text\":\"" + i.getName() + "\", \"brush\": \"skyblue\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": true, \"showAdd\": false}";
+				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":1,\"text\":\"" + i.getName() + "\", \"brush\": \"skyblue\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				rightElementsCount--;
 				key++;				
 			}
 			
 			// add rationals
-			decisionAsJsonString += ",{\"key\": 2,\"parent\":0,\"text\":\"Rationals\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + distanceRight + " 43\",\"editable\": false, \"showAdd\": true}";
+			decisionAsJsonString += ",{\"key\": 2,\"parent\":0,\"text\":\"Rationales\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + distanceRight + " 43\",\"editable\": false, \"showAdd\": true}";
 			key = 21;
 			for(Rationale r : decision.getRationales()){
-				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":2,\"text\":\"" + r.getName() + "\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": true, \"showAdd\": false}";
+				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":2,\"text\":\"" + r.getName() + "\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				rightElementsCount--;
 				key++;				
 			}
 			// add alternatives
-			decisionAsJsonString += ",{\"key\": 3,\"parent\":0,\"text\":\"Alternatives\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " -50\",\"editable\": false, \"showAdd\": true}";
+			decisionAsJsonString += ",{\"key\": 3,\"parent\":0,\"text\":\"Alternatives\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " -100\",\"editable\": false, \"showAdd\": true}";
 			key = 31;
 			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":3,\"text\":\"" + a.getName() + "\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": true, \"showAdd\": false}";
+				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":3,\"text\":\"" + a.getName() + "\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
 			// add consequences
-			decisionAsJsonString += ",{\"key\": 4,\"parent\":0,\"text\":\"Consequences\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 50\",\"editable\": false, \"showAdd\": true}";
+			decisionAsJsonString += ",{\"key\": 4,\"parent\":0,\"text\":\"Consequences\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 0\",\"editable\": false, \"showAdd\": true}";
 			key = 41;
 			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":4,\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": true, \"showAdd\": false}";
+				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":4,\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				leftElementsCount--;
+				key++;				
+			}
+			// add quality attributes
+			decisionAsJsonString += ",{\"key\": 5,\"parent\":0,\"text\":\"Quality Attributes\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 100\",\"editable\": false, \"showAdd\": true}";
+			key = 51;
+			for(QualityAttribute qa : decision.getQualityAttributes()){
+				decisionAsJsonString += ",{\"key\": " + key + ",\"parent\":4,\"text\":\"" + qa.getName() + "\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}

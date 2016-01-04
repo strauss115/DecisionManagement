@@ -260,7 +260,7 @@ public class WebDecisionResource {
 
 		WebDecision decision = convertDecision(DBService.getDecisionById(id));
 		if (decision != null) {
-			decision.addAlternative(new Alternative("Alternative 1 very very very long text text very very"));
+			/*decision.addAlternative(new Alternative("Alternative 1 very very very long text text very very"));
 			decision.addAlternative(new Alternative("A2"));
 			decision.addAlternative(new Alternative("Alternative 2 middle length"));
 			decision.addInfluenceFactor(
@@ -272,7 +272,7 @@ public class WebDecisionResource {
 			decision.addConsequence(new Consequence("C 3 long text text very very"));
 			decision.addRationale(new Rationale("R 1 very very very very very very long text"));
 			decision.addRationale(new Rationale("R 2"));
-			decision.addRationale(new Rationale("R 3 "));
+			decision.addRationale(new Rationale("R 3 "));*/
 			String result = GoJsFormatter.convertDecisionToGoJsJson(decision);
 			System.out.println(result);
 			return Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();
