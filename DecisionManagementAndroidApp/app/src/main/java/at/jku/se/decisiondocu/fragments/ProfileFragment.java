@@ -48,7 +48,8 @@ public class ProfileFragment extends Fragment {
         Bitmap bitmap = null;
         if (u != null) {
             try{
-                long profileid =u.getRelationships().get(RelationString.HAS_PICTURE).get(0).getId();
+                u = (User)RestClient.getNodeWithId(u.getId());
+                long profileid =u.getRelationships().get(RelationString.HAS_PICTURE).get(0).getRelatedNode().getId();
                 if(profileid>0){
                     bitmap = RestClient.downloadProfilPicture(profileid);
                 }
