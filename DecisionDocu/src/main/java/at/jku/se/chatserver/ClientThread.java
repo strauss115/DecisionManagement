@@ -24,7 +24,7 @@ import at.jku.se.model.User;
 
 public class ClientThread extends Thread {
 	private DataInputStream is = null;
-	PrintStream os = null;
+	private PrintStream os = null;
 	private ServerListener server = null;
 	private Socket clientSocket = null;
 	private String name;
@@ -418,4 +418,9 @@ public class ClientThread extends Thread {
 	private void sendToOtherClients(String message) {
 		server.notifyAll(message, this.getNodeId());
 	}
+
+	public PrintStream getOutputStream() {
+		return os;
+	}
+		
 }

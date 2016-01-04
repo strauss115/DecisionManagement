@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -69,7 +70,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/profilePicture/{id}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM})
 	@ApiOperation(value = "Get node's profile picture", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
@@ -84,24 +85,21 @@ public class DocumentResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			
-			return Response.ok(new StreamingOutput(){
-			    @Override
-			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
-			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
-			            try {
-			                //ByteArrayInputStream reader = (ByteArrayInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream();     
-			                //byte[] input = new byte[2048];  
-			                //java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
-			                File file = new File(LOCATION_PROFILE_PICTURE+id);
-			                FileInputStream fizip = new FileInputStream(file);
-			                byte[] buffer2 = IOUtils.toByteArray(fizip);
-			                bus.write(buffer2);
-			            } catch (Exception e) {
-			            // TODO Auto-generated catch block
-			            e.printStackTrace();
-			            }
-			        }
-			    }).build();
+			File file = new File(LOCATION_PROFILE_PICTURE+id);
+            FileInputStream fizip = new FileInputStream(file);
+            byte[] buffer2 = IOUtils.toByteArray(fizip);
+            
+            String fileName = DBService.getNodeByID(Document.class, id, 0).getName();
+            log.debug("filename: " + fileName);
+            String mimeType = URLConnection.guessContentTypeFromName(fileName);
+            log.debug(mimeType);
+            String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
+            
+            String s = new String(java.util.Base64.getEncoder().encode(buffer2));
+     		
+            return Response.ok(json + s + "\"}").build();
+			
+			
 
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
@@ -111,7 +109,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/document/{id}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get node's document", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
@@ -126,7 +124,21 @@ public class DocumentResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			
-			return Response.ok(new StreamingOutput(){
+			File file = new File(LOCATION_DOCUMENT+id);
+            FileInputStream fizip = new FileInputStream(file);
+            byte[] buffer2 = IOUtils.toByteArray(fizip);
+            
+            String fileName = DBService.getNodeByID(Document.class, id, 0).getName();
+            log.debug("filename: " + fileName);
+            String mimeType = URLConnection.guessContentTypeFromName(fileName);
+            log.debug(mimeType);
+            String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
+            
+            String s = new String(java.util.Base64.getEncoder().encode(buffer2));
+     		
+            return Response.ok(json + s + "\"}").build();
+			
+			/*return Response.ok(new StreamingOutput(){
 			    @Override
 			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
 			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
@@ -143,7 +155,7 @@ public class DocumentResource {
 			            e.printStackTrace();
 			            }
 			        }
-			    }).build();
+			    }).build();*/
 
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
@@ -291,6 +303,8 @@ public class DocumentResource {
 		}
 	}
 	
+
+	
 	public static void main (String[]args){
 		
 		//Add ProfilPicture to Projects
@@ -343,6 +357,8 @@ public class DocumentResource {
 		}catch (Exception e){
 			e.printStackTrace();
 		}*/
+		
+		
 	}
 	
 

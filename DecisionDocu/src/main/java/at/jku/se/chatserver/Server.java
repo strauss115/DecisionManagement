@@ -87,7 +87,7 @@ public class Server implements Runnable, ServerListener {
 		synchronized (this) {
 			for (ClientThread thread : clientthreads) {
 				if (thread.getNodeId() == nodeId)
-					thread.os.println(msg);
+					thread.getOutputStream().println(msg);
 			}
 		}
 		
