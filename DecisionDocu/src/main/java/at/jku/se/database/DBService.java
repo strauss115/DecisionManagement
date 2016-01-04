@@ -222,6 +222,10 @@ public class DBService {
 		}
 		return null;
 	}
+	
+	public static <T extends NodeInterface> List<T> getAllNodesOfType(Class<T> type, int level){
+		return getAllNodes(type,level);
+	}
 
 	/**
 	 * Returns all nodes of a spesific class, where user has access

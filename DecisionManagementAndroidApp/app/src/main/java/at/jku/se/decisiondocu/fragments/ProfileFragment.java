@@ -16,6 +16,7 @@ import org.androidannotations.annotations.ViewById;
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.client.DBStrings.RelationString;
 import at.jku.se.decisiondocu.restclient.client.model.User;
 
 /**
@@ -46,7 +47,12 @@ public class ProfileFragment extends Fragment {
         User u = RestClient.getUser(SaveSharedPreference.getUserEmail(getContext()));
         Bitmap bitmap = null;
         if (u != null) {
-            bitmap = RestClient.downloadProfilPicture(u.getId());
+            try{
+                long profileid =u.getRelationships().get(RelationString.HAS_PICTURE).get(0).getId();
+                if(profileid>0){
+                    bitmap = RestClient.downloadProfilPicture(profileid);
+                }
+            }catch (Exception e){}
         }
         update(u, bitmap);
         dismissDialog();

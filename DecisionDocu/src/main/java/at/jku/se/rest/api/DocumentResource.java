@@ -29,9 +29,12 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.dm.shared.RelationString;
+import at.jku.se.model.Alternative;
+import at.jku.se.model.Consequence;
 import at.jku.se.model.Decision;
 import at.jku.se.model.Document;
 import at.jku.se.model.NodeInterface;
+import at.jku.se.model.Project;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 import at.jku.se.rest.DirectoryManager.DirectoryManager;
@@ -313,8 +316,9 @@ public class DocumentResource {
 	
 	public static void main (String[]args){
 		
-		//Add ProfilPicture to Projects
 		User admin = DBService.getUserByEmail("admin@example.com");
+		
+		//Add Document pdf to Alternatives
 		
 		Document document1 = new Document ("Effizientes Erfassen von Architekturentscheidungen.pdf");
 		document1 = DBService.updateNode(document1, admin.getId());
@@ -329,16 +333,39 @@ public class DocumentResource {
 			e.printStackTrace();
 		}
 		
-		List<Decision> decs = DBService.getAllDecisions(admin);
-		for(Decision dec:decs){
-			DBService.addRelationship(dec.getId(), RelationString.HAS_DOCUMENT, document1.getId());
+		List <Alternative> alts = DBService.getAllNodesOfType(Alternative.class, 0);
+		for(Alternative alt:alts){
+			DBService.addRelationship(alt.getId(), RelationString.HAS_DOCUMENT, document1.getId());
 		}
 		
-		/*Document document = new Document("Profile Picture");
+		//Add Document jpg to Consequences
+		
+		Document document2 = new Document ("Document.jpg");
+		document2 = DBService.updateNode(document2, admin.getId());
+		
+		File destFile2 = new File(LOCATION_DOCUMENT+document2.getId());
+		File srcFile2 = new File(SERVER_UPLOAD_LOCATION_FOLDER+"document.jpg");
+		
+		try {
+			FileUtils.copyFile(srcFile2, destFile2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List <Consequence> cons = DBService.getAllNodesOfType(Consequence.class, 0);
+		for(Consequence con:cons){
+			DBService.addRelationship(con.getId(), RelationString.HAS_DOCUMENT, document2.getId());
+		}
+		
+		
+		//Add ProfilePicture to Projects and Users
+		
+		Document document = new Document("Profile Picture.jpg");
 		document = DBService.updateNode(document, admin.getId());
 		
 		File destFile = new File(LOCATION_PROFILE_PICTURE+document.getId());
-		File srcFile = new File(SERVER_UPLOAD_LOCATION_FOLDER+"profil");
+		File srcFile = new File(SERVER_UPLOAD_LOCATION_FOLDER+"profil.jpg");
 		
 		try {
 			FileUtils.copyFile(srcFile, destFile);
@@ -350,7 +377,14 @@ public class DocumentResource {
 		List<Project> projects = DBService.getAllProjects();
 		for(Project project:projects){
 			DBService.addRelationship(project.getId(), RelationString.HAS_PICTURE, document.getId());
-		}*/
+		}
+		
+		List<User> users = DBService.getAllUser();
+		for(User user:users){
+			DBService.addRelationship(user.getId(), RelationString.HAS_PICTURE, document.getId());
+		}
+		
+		
 		
 		/*try{
 		Client client = ClientBuilder.newClient(new ClientConfig());
