@@ -28,8 +28,8 @@
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView1"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:hint="___________________________">
+            android:layout_weight="1"
+            android:layout_height="40dp">
 
             <requestFocus />
         </AutoCompleteTextView>

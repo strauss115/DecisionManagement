@@ -173,10 +173,23 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         @Override
         protected ChatClient doInBackground(String... message) {
 
-            mChatClient = new ChatClient(chatInterface); // create ChatClient
+            mChatClient = new ChatClient(new ChatClient.OnMessageReceived() {
+                @Override
+                //here the messageReceived method is implemented
+                public void messageReceived(String message) {
+                    //this method calls the onProgressUpdate
+                    publishProgress(message);
+                }
+            }); // create ChatClient
             mChatClient.run(IPAddress, Port);
 
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            mAdapter.appendData(values[0]);
         }
     }
 
@@ -194,11 +207,6 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void messageReceived(String message) {
-        mAdapter.appendData(message);
     }
 
     @Override

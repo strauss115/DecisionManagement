@@ -7,8 +7,6 @@ import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
  */
 public interface ChatInterface {
 
-    void messageReceived(String message);
-
     /**
      * Should get inkoked when a user clicks on a link in a chat message
      *

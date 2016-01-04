@@ -16,7 +16,7 @@ import java.net.Socket;
 public class ChatClient {
 
     public static final String QUIT_MESSAGE = "/quit";
-    private ChatInterface mMessageListener = null;
+    private OnMessageReceived mMessageListener = null;
     private boolean mRun = false;
     private PrintWriter out;
     private BufferedReader in;
@@ -25,7 +25,7 @@ public class ChatClient {
      * Constructor of the class. OnMessagedReceived listens for the messages
      * received from server
      */
-    public ChatClient(ChatInterface listener) {
+    public ChatClient(OnMessageReceived listener) {
         mMessageListener = listener;
     }
 
@@ -103,5 +103,9 @@ public class ChatClient {
             Log.e("TCP", "C: Error", e);
         }
 
+    }
+
+    public interface OnMessageReceived {
+        public void messageReceived(String message);
     }
 }
