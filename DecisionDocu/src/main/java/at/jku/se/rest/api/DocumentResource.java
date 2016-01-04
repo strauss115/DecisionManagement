@@ -1,6 +1,5 @@
 package at.jku.se.rest.api;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,10 +16,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -35,7 +32,6 @@ import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.Decision;
 import at.jku.se.model.Document;
 import at.jku.se.model.NodeInterface;
-import at.jku.se.model.Project;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 import at.jku.se.rest.DirectoryManager.DirectoryManager;
@@ -70,7 +66,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/profilePicture/{id}")
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM})
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get node's profile picture", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
@@ -90,9 +86,14 @@ public class DocumentResource {
             byte[] buffer2 = IOUtils.toByteArray(fizip);
             
             String fileName = DBService.getNodeByID(Document.class, id, 0).getName();
-            log.debug("filename: " + fileName);
             String mimeType = URLConnection.guessContentTypeFromName(fileName);
-            log.debug(mimeType);
+            
+            if (mimeType == null) {
+            	fileName = "test.jpg";
+            	mimeType = URLConnection.guessContentTypeFromName(fileName);
+            }
+            log.debug("filename: '" + fileName + "', type: '" + mimeType + "'");
+
             String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
             
             String s = new String(java.util.Base64.getEncoder().encode(buffer2));
@@ -129,9 +130,14 @@ public class DocumentResource {
             byte[] buffer2 = IOUtils.toByteArray(fizip);
             
             String fileName = DBService.getNodeByID(Document.class, id, 0).getName();
-            log.debug("filename: " + fileName);
             String mimeType = URLConnection.guessContentTypeFromName(fileName);
-            log.debug(mimeType);
+            
+            if (mimeType == null) {
+            	fileName = "test.jpg";
+            	mimeType = URLConnection.guessContentTypeFromName(fileName);
+            }
+            
+            log.debug("filename: '" + fileName + "', type: '" + mimeType + "'");
             String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
             
             String s = new String(java.util.Base64.getEncoder().encode(buffer2));
