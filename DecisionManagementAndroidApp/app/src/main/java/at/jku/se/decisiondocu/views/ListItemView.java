@@ -13,7 +13,7 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.chat.ChatActivity_;
+import at.jku.se.decisiondocu.activities.ChatActivity_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;

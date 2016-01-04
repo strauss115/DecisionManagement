@@ -1,5 +1,6 @@
 package at.jku.se.decisiondocu.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,7 +21,10 @@ import at.jku.se.decisiondocu.R;
 
 /**
  * Created by Benjamin on 19.11.2015.
+ * <p/>
+ * Dialog for uploading photos to the backend
  */
+@SuppressLint("ValidFragment")
 public class PhotoUploadDialog extends DialogFragment {
 
     private static final int RESULT_LOAD_IMAGE = 1;
@@ -29,8 +33,8 @@ public class PhotoUploadDialog extends DialogFragment {
 
     private ImageView imageToUpload;
 
-    public PhotoUploadDialog(ImageView imageToUpload){
-        this.imageToUpload=imageToUpload;
+    public PhotoUploadDialog(ImageView imageToUpload) {
+        this.imageToUpload = imageToUpload;
     }
 
     @Override
@@ -41,9 +45,9 @@ public class PhotoUploadDialog extends DialogFragment {
                 .setItems(R.array.picture_option, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(which==0){
+                        if (which == 0) {
                             uploadFromMediaCenter();
-                        }else{
+                        } else {
                             uploadWithCamera();
                         }
 
@@ -60,36 +64,35 @@ public class PhotoUploadDialog extends DialogFragment {
 
     private void uploadFromMediaCenter() {
         Log.i("Upload", "FromMediaCenter");
-        if(mayRequestMedia()) {
+        if (mayRequestMedia()) {
             try {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 getActivity().startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void uploadWithCamera(){
+    private void uploadWithCamera() {
         Log.i("Upload", "WithCamera");
         try {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             getActivity().startActivityForResult(intent, RESULT_TAKE_IMAGE);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private boolean mayRequestMedia(){
+    private boolean mayRequestMedia() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.i("RequestMedia", "first"); //Having Permission
             return true;
-        }
-        else if (getActivity().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.i("RequestMedia","second"); //Having Permission
+        } else if (getActivity().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.i("RequestMedia", "second"); //Having Permission
             return true;
-        }else {
-            Log.i("RequestMedia","third");//ask for Permission
+        } else {
+            Log.i("RequestMedia", "third");//ask for Permission
             getActivity().requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
         }
         return false;
@@ -109,7 +112,9 @@ public class PhotoUploadDialog extends DialogFragment {
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 imageToUpload.setImageBitmap(imageBitmap);
             }
-        }catch (Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.chat.ChatActivity_;
+import at.jku.se.decisiondocu.activities.ChatActivity_;
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 
 /**

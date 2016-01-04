@@ -1,9 +1,8 @@
-package at.jku.se.decisiondocu.chat;
+package at.jku.se.decisiondocu.activities;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -24,15 +23,26 @@ import java.util.Map;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.adapters.ChatAdapter;
+import at.jku.se.decisiondocu.chat.ChatClient;
+import at.jku.se.decisiondocu.chat.ChatInterface;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 import static android.os.SystemClock.sleep;
 
+/**
+ * Created by martin on 03.01.16.
+ * <p/>
+ * Activity that represents the client side chat functionality.
+ * It consists of a listview with chat messages, an autoCompleteTextView and a Button
+ */
 @EActivity(R.layout.activity_chat)
 public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     protected ProgressDialog mDialog;
+    private ChatClient mChatClient;
+
+    // extra attributes for intent builder
 
     @Extra
     long dec_node_id;
@@ -61,10 +71,9 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
     @Bean
     ChatAdapter mAdapter;
 
-    private Client mClient;
-
-    private Map<String, String> mMap;
-
+    /**
+     * Send Button Click Listener
+     */
     @Click(R.id.send_button)
     void OnBtnClick() {
         String message = editText.getText().toString();
@@ -84,7 +93,8 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
     @UiThread
     void update(Map<String, String> map) {
         if (map != null) {
-            this.mMap = map;
+
+            // generate possible hashtags
 
             Collection<String> collection = map.values();
             String[] values = new String[collection.size()];
@@ -105,7 +115,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         dismissDialog();
 
         // connect to the server
-        new connectTask().execute("");
+        new connectTask(this).execute("");
 
         // start msg consists of user token and node id
         String startMsg = usr_token + "@" + dec_node_id;
@@ -118,7 +128,6 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     @UiThread
     void showDialog() {
-        Log.d("dialog", "showing");
         if (mDialog == null) {
             mDialog = new ProgressDialog(this);
             mDialog.setMessage("please wait...");
@@ -128,7 +137,6 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     @UiThread
     void dismissDialog() {
-        Log.d("dialog", "hiding");
         if (mDialog != null) {
             mDialog.dismiss();
         }
@@ -145,48 +153,52 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
     }
 
     private void sendMessage(String message) {
-        if (mClient != null) {
-            mClient.sendMessage(message);
+        if (mChatClient != null) {
+            mChatClient.sendMessage(message);
         }
     }
 
-    public class connectTask extends AsyncTask<String, String, Client> {
+    /**
+     * Async Task for connecting to the chatserver.
+     * Once the connection is established, client and server can exchange messages over the socket.
+     */
+    public class connectTask extends AsyncTask<String, String, ChatClient> {
 
-        @Override
-        protected Client doInBackground(String... message) {
+        private ChatInterface chatInterface;
 
-            //we create a Client object and
-            mClient = new Client(new Client.OnMessageReceived() {
-                @Override
-                //here the messageReceived method is implemented
-                public void messageReceived(String message) {
-                    //this method calls the onProgressUpdate
-                    publishProgress(message);
-                }
-            });
-            mClient.run(IPAddress, Port);
-
-            return null;
+        public connectTask(ChatInterface chatInterface) {
+            this.chatInterface = chatInterface;
         }
 
         @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-            mAdapter.appendData(values[0]);
+        protected ChatClient doInBackground(String... message) {
+
+            mChatClient = new ChatClient(chatInterface); // create ChatClient
+            mChatClient.run(IPAddress, Port);
+
+            return null;
+        }
+    }
+
+    /**
+     * Clean up when user clicks the back - button
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mChatClient != null) {
+            try {
+                mChatClient.sendMessage(ChatClient.QUIT_MESSAGE);
+                mChatClient.stopClient();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mClient != null) {
-            try {
-                mClient.sendMessage(Client.QUIT_MESSAGE);
-                mClient.stopClient();
-            } catch (Exception e) {
-                Log.d("tag", e.getMessage());
-            }
-        }
+    public void messageReceived(String message) {
+        mAdapter.appendData(message);
     }
 
     @Override

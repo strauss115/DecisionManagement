@@ -22,6 +22,10 @@ import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 /**
  * Created by martin on 28.12.15.
+ *
+ * Dialog for adding a user to a project group
+ * The REST Call works asynchronously with the @Background annotation
+ *
  */
 @EFragment(R.layout.fragmentdialog_addproject)
 public class ProjectChooserDialog extends DialogFragment {
@@ -61,8 +65,7 @@ public class ProjectChooserDialog extends DialogFragment {
     void result(boolean success) {
         if (success) {
             Log.d("btn", "success");
-        }
-        else {
+        } else {
             Log.e("btn", "failure");
         }
         dismiss();

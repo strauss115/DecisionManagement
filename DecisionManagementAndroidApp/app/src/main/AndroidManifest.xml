@@ -30,10 +30,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="at.jku.se.decisiondocu.LoginActivity_" />
         </activity>
-        <activity android:name=".chat.ChatActivity_"
+        <activity android:name=".activities.ChatActivity_"
             android:parentActivityName=".MainActivity_" />
-        <activity android:name=".activities.SearchDetailsActivity_"
-            android:parentActivityName=".MainActivity_"/>
         <activity android:name=".activities.SearchNodeDetailsActivity_"
             android:parentActivityName=".MainActivity_"/>
         <activity android:name=".activities.SearchDocumentDetailsActivity_"

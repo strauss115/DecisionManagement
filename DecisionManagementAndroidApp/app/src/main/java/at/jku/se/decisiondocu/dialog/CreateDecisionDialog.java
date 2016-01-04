@@ -20,6 +20,10 @@ import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 /**
  * Created by Benjamin on 24.12.2015.
+ *
+ * Dialog for creating a new decision. It uses the AddDecisionTeamAdapter for displaying the projects.
+ * The REST Call works asynchronously
+ *
  */
 @EFragment(R.layout.fragmentdialog_add)
 public class CreateDecisionDialog extends DialogFragment {
@@ -41,30 +45,29 @@ public class CreateDecisionDialog extends DialogFragment {
 
     @AfterViews
     void init() {
-        getDialog().getWindow().setLayout(400,LinearLayout.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setLayout(400, LinearLayout.LayoutParams.WRAP_CONTENT);
         spinner.setAdapter(mAdapter);
-
     }
 
     @Click(R.id.add_btn_submit)
     void submit() {
-        Log.d("btn", "submit");
         Project project = null;
-        try{
+        try {
             project = new Project();
-            project.setId(((Project)spinner.getSelectedItem()).getId());
+            project.setId(((Project) spinner.getSelectedItem()).getId());
             String decname = text.getText().toString();
-            if(project == null||decname==null || decname.length()<5){
+            if (project == null || decname == null || decname.length() < 5) {
                 text.setError(getString(R.string.invalidDecName));
                 text.requestFocus();
                 return;
             }
 
-            new RestNetworkTasks.CreateDecisionTask(bar,layout,getContext(),project,decname){
+            // async create decision
+            new RestNetworkTasks.CreateDecisionTask(bar, layout, getContext(), project, decname) {
                 @Override
                 protected void onPostExecute(Integer success) {
                     super.onPostExecute(success);
-                    if (success>0) {
+                    if (success > 0) {
                         close();
                     } else {
                         text.setError(getString(R.string.invalidDecName));
@@ -75,17 +78,12 @@ public class CreateDecisionDialog extends DialogFragment {
 
             }.execute();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
-    private void close(){
+    private void close() {
         dismiss();
     }
-
-
-
 }
