@@ -12,8 +12,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.MainActivity;
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.beans.Team;
-import at.jku.se.decisiondocu.beans.TeamAdapter;
+import at.jku.se.decisiondocu.beans.adapters.TeamAdapter;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 @EFragment(R.layout.fragment_team)

@@ -15,7 +15,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
-import at.jku.se.decisiondocu.beans.AddDecisionTeamAdapter;
+import at.jku.se.decisiondocu.beans.adapters.AddDecisionTeamAdapter;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 
 /**

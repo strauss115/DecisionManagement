@@ -1,4 +1,4 @@
-package at.jku.se.decisiondocu.beans;
+package at.jku.se.decisiondocu.beans.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,12 +21,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import at.jku.se.decisiondocu.beans.RESTDecisionFinder;
+import at.jku.se.decisiondocu.beans.interfaces.DecisionFinder;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.views.ListItemView;
 import at.jku.se.decisiondocu.views.ListItemView_;
 
 /**
  * Created by martin on 23.11.15.
+ *
+ * Adapter, used for the Decision Search Fragment
+ * It contains a list of Decision Objects and uses ListItemView.
+ *
  */
 @EBean
 public class SearchAdapter extends BaseAdapter implements Filterable {
@@ -61,7 +67,6 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
     @UiThread
     void showDialog() {
-        Log.d("dialog", "showing");
         if (mDialog == null) {
             mDialog = new ProgressDialog(context);
             mDialog.setMessage("please wait...");
@@ -71,7 +76,6 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
     @UiThread
     void dismissDialog() {
-        Log.d("dialog", "hiding");
         if (mDialog != null) {
             mDialog.dismiss();
         }
@@ -87,14 +91,16 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     private void getData() {
         try {
             Collections.sort(mItems, mComparator);
-        }catch (Exception e){};
+        } catch (Exception e) {
+        }
+        ;
     }
 
     @Override
     public int getCount() {
         try {
             return mItems.size();
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }

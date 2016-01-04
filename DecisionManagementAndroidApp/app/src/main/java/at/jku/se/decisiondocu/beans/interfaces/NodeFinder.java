@@ -1,4 +1,4 @@
-package at.jku.se.decisiondocu.beans;
+package at.jku.se.decisiondocu.beans.interfaces;
 
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
@@ -7,5 +7,10 @@ import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
  */
 public interface NodeFinder {
 
+    /**
+     * Returns a certain NodeInterface Object
+     * @param id id of the Node to find
+     * @return
+     */
     NodeInterface find(long id);
 }

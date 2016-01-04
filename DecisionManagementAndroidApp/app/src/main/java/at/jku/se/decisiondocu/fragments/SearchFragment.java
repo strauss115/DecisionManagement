@@ -19,7 +19,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.activities.SearchNodeDetailsActivity_;
-import at.jku.se.decisiondocu.beans.SearchAdapter;
+import at.jku.se.decisiondocu.beans.adapters.SearchAdapter;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 
 /**

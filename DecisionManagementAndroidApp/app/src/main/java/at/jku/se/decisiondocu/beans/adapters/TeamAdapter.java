@@ -1,4 +1,4 @@
-package at.jku.se.decisiondocu.beans;
+package at.jku.se.decisiondocu.beans.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,31 +17,36 @@ import org.androidannotations.annotations.UiThread;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.jku.se.decisiondocu.asynctask.OnAsyncTaskFinished;
+import at.jku.se.decisiondocu.beans.RESTProjectFinder;
+import at.jku.se.decisiondocu.beans.interfaces.TeamFinder;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
-import at.jku.se.decisiondocu.views.CreateDecisionTeamItemView;
-import at.jku.se.decisiondocu.views.CreateDecisionTeamItemView_;
+import at.jku.se.decisiondocu.views.TeamItemView;
+import at.jku.se.decisiondocu.views.TeamItemView_;
 
 /**
  * Created by martin on 24.11.15.
+ *
+ * Adapter, used for the Project Overview Fragment.
+ * It contains a list of Project Objects and uses TeamItemView.
+ *
  */
 @EBean
-public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
+public class TeamAdapter extends BaseAdapter {
 
-    private ProgressDialog mDialog;
-    private List<Project> mItems;
+    protected ProgressDialog mDialog;
+    protected List<Project> mItems;
 
     @Bean(RESTProjectFinder.class)
-    TeamFinder mTeamFinder;
+    protected TeamFinder mTeamFinder;
 
     @AfterInject
     void initAdapter() {
         mItems = new ArrayList<>();
-        findAll();
+        find();
     }
 
     @Background
-    void findAll() {
+    public void find() {
         showDialog();
         List<Project> projects = mTeamFinder.find();
         updateItems(projects);
@@ -56,7 +61,6 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
 
     @UiThread
     void showDialog() {
-        Log.d("dialog", "showing");
         if (mDialog == null) {
             mDialog = new ProgressDialog(context);
             mDialog.setMessage("please wait...");
@@ -66,7 +70,6 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
 
     @UiThread
     void dismissDialog() {
-        Log.d("dialog", "hiding");
         if (mDialog != null) {
             mDialog.dismiss();
         }
@@ -79,7 +82,7 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
     public int getCount() {
         try {
             return mItems.size();
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -96,20 +99,15 @@ public class AddDecisionTeamAdapter extends BaseAdapter implements OnAsyncTaskFi
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        CreateDecisionTeamItemView view;
+        TeamItemView view;
 
         if (convertView == null) {
-            view = CreateDecisionTeamItemView_.build(context, this);
+            view = TeamItemView_.build(context, this);
         } else {
-            view = (CreateDecisionTeamItemView) convertView;
+            view = (TeamItemView) convertView;
         }
 
         view.bind(getItem(position));
         return view;
-    }
-
-    @Override
-    public void finished() {
-        notifyDataSetChanged();
     }
 }

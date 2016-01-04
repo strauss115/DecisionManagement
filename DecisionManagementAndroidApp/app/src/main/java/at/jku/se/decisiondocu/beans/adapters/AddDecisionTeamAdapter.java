@@ -1,4 +1,4 @@
-package at.jku.se.decisiondocu.beans;
+package at.jku.se.decisiondocu.beans.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,31 +17,36 @@ import org.androidannotations.annotations.UiThread;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.jku.se.decisiondocu.asynctask.OnAsyncTaskFinished;
+import at.jku.se.decisiondocu.beans.RESTProjectFinder;
+import at.jku.se.decisiondocu.beans.interfaces.TeamFinder;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
-import at.jku.se.decisiondocu.views.TeamItemView;
-import at.jku.se.decisiondocu.views.TeamItemView_;
+import at.jku.se.decisiondocu.views.CreateDecisionTeamItemView;
+import at.jku.se.decisiondocu.views.CreateDecisionTeamItemView_;
 
 /**
  * Created by martin on 24.11.15.
+ *
+ * Adapter, used for the Create Decision Dialog.
+ * It contains a list of Project Objects and uses CreateDecisionTeamItemView.
+ *
  */
 @EBean
-public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
+public class AddDecisionTeamAdapter extends BaseAdapter {
 
-    protected ProgressDialog mDialog;
-    protected List<Project> mItems;
+    private ProgressDialog mDialog;
+    private List<Project> mItems;
 
     @Bean(RESTProjectFinder.class)
-    protected TeamFinder mTeamFinder;
+    TeamFinder mTeamFinder;
 
     @AfterInject
     void initAdapter() {
         mItems = new ArrayList<>();
-        find();
+        findAll();
     }
 
     @Background
-    public void find() {
+    void findAll() {
         showDialog();
         List<Project> projects = mTeamFinder.find();
         updateItems(projects);
@@ -56,7 +61,6 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     @UiThread
     void showDialog() {
-        Log.d("dialog", "showing");
         if (mDialog == null) {
             mDialog = new ProgressDialog(context);
             mDialog.setMessage("please wait...");
@@ -66,7 +70,6 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     @UiThread
     void dismissDialog() {
-        Log.d("dialog", "hiding");
         if (mDialog != null) {
             mDialog.dismiss();
         }
@@ -79,7 +82,7 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
     public int getCount() {
         try {
             return mItems.size();
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -96,20 +99,15 @@ public class TeamAdapter extends BaseAdapter implements OnAsyncTaskFinished {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TeamItemView view;
+        CreateDecisionTeamItemView view;
 
         if (convertView == null) {
-            view = TeamItemView_.build(context, this);
+            view = CreateDecisionTeamItemView_.build(context, this);
         } else {
-            view = (TeamItemView) convertView;
+            view = (CreateDecisionTeamItemView) convertView;
         }
 
         view.bind(getItem(position));
         return view;
-    }
-
-    @Override
-    public void finished() {
-        notifyDataSetChanged();
     }
 }

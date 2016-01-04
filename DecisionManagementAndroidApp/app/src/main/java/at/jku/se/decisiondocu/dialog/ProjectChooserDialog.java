@@ -15,8 +15,8 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.beans.TeamAdapter;
-import at.jku.se.decisiondocu.beans.TeamChooserAdapter;
+import at.jku.se.decisiondocu.beans.adapters.TeamAdapter;
+import at.jku.se.decisiondocu.beans.adapters.TeamChooserAdapter;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 

@@ -1,4 +1,4 @@
-package at.jku.se.decisiondocu.beans;
+package at.jku.se.decisiondocu.beans.adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -21,21 +21,20 @@ import at.jku.se.decisiondocu.views.ChatListItemView_;
 
 /**
  * Created by martin on 14.12.15.
+ *
+ * Adapter, used for the ChatActivity.
+ * It contains a list of MsgWrapper Objects that represent a single chat message
+ *
  */
 @EBean
 public class ChatAdapter extends BaseAdapter {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private ChatInterface chatInterface;
+    private ArrayList<MsgWrapper> mListItems;
 
     @RootContext
     Context context;
-
-    private ArrayList<MsgWrapper> mListItems;
-
-    public void setChatInterface(ChatInterface chatInterface) {
-        this.chatInterface = chatInterface;
-    }
 
     @AfterInject
     void initAdapter() {
@@ -57,28 +56,26 @@ public class ChatAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setChatInterface(ChatInterface chatInterface) {
+        this.chatInterface = chatInterface;
+    }
 
     @Override
     public int getCount() {
-        //getCount() represents how many items are in the list
         return mListItems.size();
     }
 
     @Override
-    //get the data of an item from a specific position
-    //i represents the position of the item in the list
     public MsgWrapper getItem(int i) {
         return mListItems.get(i);
     }
 
     @Override
-    //get the position id of the item from the list
     public long getItemId(int i) {
         return 0;
     }
 
     @Override
-
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ChatListItemView view;

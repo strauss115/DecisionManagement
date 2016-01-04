@@ -1,4 +1,4 @@
-package at.jku.se.decisiondocu.beans;
+package at.jku.se.decisiondocu.beans.adapters;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,9 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
 
 /**
  * Created by martin on 28.12.15.
+ * <p/>
+ * Adapter, used for the Team Chooser Dialog
+ * It extends TeamAdapter to use another find() strategy.
  */
 @EBean
 public class TeamChooserAdapter extends TeamAdapter {

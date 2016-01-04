@@ -1,7 +1,6 @@
 package at.jku.se.decisiondocu.chat;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -23,16 +21,11 @@ import org.androidannotations.annotations.ViewById;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import at.jku.se.decisiondocu.R;
-import at.jku.se.decisiondocu.beans.ChatAdapter;
-import at.jku.se.decisiondocu.login.SaveSharedPreference;
+import at.jku.se.decisiondocu.beans.adapters.ChatAdapter;
 import at.jku.se.decisiondocu.restclient.RestClient;
-import at.jku.se.decisiondocu.restclient.client.ApiException;
-import at.jku.se.decisiondocu.restclient.client.api.RelationshipApi;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
-import at.jku.se.decisiondocu.restclient.client.model.User;
 
 import static android.os.SystemClock.sleep;
 

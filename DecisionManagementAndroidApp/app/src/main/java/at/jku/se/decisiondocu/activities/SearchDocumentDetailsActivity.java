@@ -30,9 +30,9 @@ import java.util.HashMap;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
-import at.jku.se.decisiondocu.beans.NodeFinder;
+import at.jku.se.decisiondocu.beans.interfaces.NodeFinder;
 import at.jku.se.decisiondocu.beans.RESTNodeFinder;
-import at.jku.se.decisiondocu.beans.RelationAdapter;
+import at.jku.se.decisiondocu.beans.adapters.RelationAdapter;
 import at.jku.se.decisiondocu.restclient.client.DBStrings.RelationString;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
