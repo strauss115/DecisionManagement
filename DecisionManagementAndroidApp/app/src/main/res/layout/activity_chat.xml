@@ -41,6 +41,14 @@
 
             <Button
                 style="?android:attr/buttonStyleSmall"
+                android:id="@+id/chat_show_node"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_info_details"
+                android:text=""/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
                 android:id="@+id/chat_take_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
@@ -99,6 +100,13 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         }
     }
 
+    @Click(R.id.chat_show_node)
+    void ShowNodeClick() {
+        new SearchNodeDetailsActivity_.IntentBuilder_(this)
+                .decisionId(dec_node_id)
+                .start();
+    }
+
     @OnActivityResult(RESULT_TAKE_IMAGE)
     void PictureBtnResult(int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
@@ -148,15 +156,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         dismissDialog();
 
         // connect to the server
-        new connectTask().execute("");
-
-        // start msg consists of user token and node id
-        String startMsg = usr_token + "@" + dec_node_id;
-
-        // AWUR
-        sleep(250);
-        sendMessage(startMsg);
-        // AWUR ende
+        new connectTask(this).execute("");
     }
 
     @UiThread
@@ -185,10 +185,13 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         return msg.length() > 0;
     }
 
-    private void sendMessage(String message) {
+    private boolean sendMessage(String message) {
+        Log.d("sending", message);
         if (mChatClient != null) {
             mChatClient.sendMessage(message);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -196,6 +199,12 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
      * Once the connection is established, client and server can exchange messages over the socket.
      */
     public class connectTask extends AsyncTask<String, String, ChatClient> {
+
+        private ChatActivity activity;
+
+        public connectTask(ChatActivity activity) {
+            this.activity = activity;
+        }
 
         @Override
         protected ChatClient doInBackground(String... message) {
@@ -208,6 +217,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
                     publishProgress(message);
                 }
             }); // create ChatClient
+            mChatClient.setConnectionListener(activity);
             mChatClient.run(IPAddress, Port);
 
             return null;
@@ -234,7 +244,20 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
                 e.printStackTrace();
             }
         }
-        sleep(2000);
+
+    }
+
+    @Override
+    public void connected() {
+        sleep(350);
+        sendStartMsg();
+    }
+
+    @UiThread
+    void sendStartMsg() {
+        // start msg consists of user token and node id
+        String startMsg = usr_token + "@" + dec_node_id;
+        sendMessage(startMsg);
     }
 
     @Override
@@ -243,9 +266,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
             editText.append(" @" + id);
         }
 
-        /*finish();
-
-        sleep(1000);
+        finish();
 
         String url = RestHelper.GetBaseURLChat();
         String ip = url.substring(0, url.indexOf(':'));
@@ -257,6 +278,6 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
                 .DecisionName(nodeInterface.getName())
                 .dec_node_id(id)
                 .usr_token(SaveSharedPreference.getUserToken(this))
-                .start();*/
+                .start();
     }
 }

@@ -17,6 +17,7 @@ public class ChatClient {
 
     public static final String QUIT_MESSAGE = "/quit";
     private OnMessageReceived mMessageListener = null;
+    private ChatInterface mChatListener;
     private boolean mRun = false;
     private PrintWriter out;
     private BufferedReader in;
@@ -45,6 +46,10 @@ public class ChatClient {
         mRun = false;
     }
 
+    public void setConnectionListener(ChatInterface listener) {
+        this.mChatListener = listener;
+    }
+
     /**
      * Run method
      * @param ip IP - Address of the server
@@ -64,6 +69,8 @@ public class ChatClient {
             // create a socket to make the connection with the server
             Socket socket = new Socket(serverAddr, port);
             Log.e("TCP Server IP", ip);
+
+            if (mChatListener != null) mChatListener.connected();
 
             try {
                 String serverMessage = null;
