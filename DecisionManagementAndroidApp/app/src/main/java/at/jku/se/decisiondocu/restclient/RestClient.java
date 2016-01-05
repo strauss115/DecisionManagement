@@ -32,7 +32,6 @@ import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
 import at.jku.se.decisiondocu.restclient.client.api.NodeApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
 import at.jku.se.decisiondocu.restclient.client.api.RelationshipApi;
-import at.jku.se.decisiondocu.restclient.client.api.UploadApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
@@ -74,12 +73,17 @@ public class RestClient {
         return null;
     }
 
-    public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap profil) {
+    public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap bitmap) {
         UserApi api = new UserApi();
         try {
             User user = api.register(firstname, lastname, password, email);
             Log.d("user", "created! (" + user.toString() + ")");
             USERS.add(email + ":" + password);
+
+            if (bitmap != null) {
+                saveProfilePicture(bitmap, user.getId());
+            }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -192,7 +196,7 @@ public class RestClient {
     // DOCUMENT PART
     // -----------------------------------------------------------------------------------------
 
-    private static void safeProfilePicture(Bitmap image, int id) {
+    private static void saveProfilePicture(Bitmap image, long id) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -269,7 +273,7 @@ public class RestClient {
         return true;
     }
 
-    private static String uploadProfilePicture(byte[] fileContent, int id) throws Exception {
+    private static String uploadProfilePicture(byte[] fileContent, long id) throws Exception {
         // local variables
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
@@ -282,7 +286,7 @@ public class RestClient {
         try {
             // invoke service after setting necessary parameters
             webTarget = RestHelper.getWebTargetWithMultiFeature();
-            webTarget = webTarget.path("upload").path("profilePicture");
+            webTarget = webTarget.path("upload").path("profilePicture").path(id + "");
             Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
 
             // set file upload values

@@ -14,7 +14,7 @@ public class StartupListener implements ServletContextListener {
 
 	private static final Logger log = LogManager.getLogger(StartupListener.class);
 	
-	private Server mServer;
+	private ChatServer mServer;
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent e) {
@@ -36,7 +36,7 @@ public class StartupListener implements ServletContextListener {
 			log.error(e1);
 		}
 		
-		mServer = new Server();
+		mServer = new ChatServer();
 		new Thread(mServer).start();
 	}
 

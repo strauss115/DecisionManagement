@@ -141,35 +141,27 @@ public class UserResource {
 			@ApiParam(value = "Last name of the user", required = true) @QueryParam("lastName") String lastName,
 			@ApiParam(value = "Password of the user", required = true) @QueryParam("password") String password,
 			@ApiParam(value = "EMail of the user", required = true) @QueryParam("eMail") String eMail) {
-		log.debug("Register '" + eMail + "'");
-
-        log.debug("firstName: " + firstName);
-        log.debug("lastName: " + lastName);
-        log.debug("password: " + password);
-        log.debug("eMail: " + eMail);
-
-        User user = new User();
-        user.setAdmin(false);
-        user.setEmail(eMail);
-        user.setName(firstName);
-        user.setLastname(lastName);
-        user.setPassword(password);
+		log.debug("Register '" + eMail + "' invoked");
 
         try {
-        	User existinguser = null;
-        	try{
-        		existinguser = DBService.getUserByEmail(eMail);
-        	}catch (Exception e){
-        		log.debug("Error occured!", e);
-        	}
-        	if(existinguser!=null){
-        		return RestResponse.getResponse(HttpCode.HTTP_400_BAD_REQUEST);
-        	}
-        	log.debug(user.getPassword());
-        	user = DBService.updateNode(user, -1);
-        	
+	        if (DBService.getUserByEmail(eMail) != null) {
+	        	return RestResponse.getResponse(HttpCode.HTTP_400_BAD_REQUEST);
+	        }
+        } catch (Exception e) {
+        	log.error(e);
+        }
+        
+        User user = new User();
+        
+        try {
+            user.setAdmin(false);
+            user.setEmail(eMail);
+            user.setName(firstName);
+            user.setLastname(lastName);
+            user.setPassword(password);
+        	user = DBService.updateNode(user, -1);        	
 		} catch (Exception e) {
-			log.debug("Error occured!", e);
+			log.error(e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 

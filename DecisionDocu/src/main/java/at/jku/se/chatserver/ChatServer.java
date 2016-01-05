@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Server implements Runnable, ServerListener {
-	private static final Logger log = LogManager.getLogger(Server.class);
+public class ChatServer implements Runnable, ServerListener {
+	private static final Logger log = LogManager.getLogger(ChatServer.class);
 	private ServerSocket serverSocket = null;
 	private Socket clientSocket = null;
 	private static final int portNumber = 2222;
