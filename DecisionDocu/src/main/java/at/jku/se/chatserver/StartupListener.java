@@ -9,11 +9,17 @@ import javax.servlet.annotation.WebListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * WebListener object. Used to start the chat server on application startup.
+ * It closes the server socket on application stop.
+ * 
+ * @author martin
+ *
+ */
 @WebListener
 public class StartupListener implements ServletContextListener {
 
 	private static final Logger log = LogManager.getLogger(StartupListener.class);
-	
 	private ChatServer mServer;
 	
 	@Override
@@ -39,5 +45,4 @@ public class StartupListener implements ServletContextListener {
 		mServer = new ChatServer();
 		new Thread(mServer).start();
 	}
-
 }

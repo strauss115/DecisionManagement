@@ -1,7 +1,8 @@
 package at.jku.se.chatserver;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.Socket;
@@ -22,8 +23,14 @@ import at.jku.se.model.Property;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 
+/**
+ * This class represents a server-client chat communication.
+ * Each conversation about a certain node needs an object of this class to communicate.
+ * @author martin
+ *
+ */
 public class ClientThread extends Thread {
-	private DataInputStream is = null;
+	private BufferedReader is = null;
 	private PrintStream os = null;
 	private ServerListener server = null;
 	private Socket clientSocket = null;
@@ -37,7 +44,11 @@ public class ClientThread extends Thread {
 	
 	private Map<String, String> nodeToRelation;
 	
-
+	/**
+	 * Constructor
+	 * @param server Server object that can handle ServerListener method invokes
+	 * @param clientSocket Socket connection
+	 */
 	public ClientThread(ServerListener server, Socket clientSocket) {
 		this.server = server;
 		this.clientSocket = clientSocket;
@@ -49,12 +60,14 @@ public class ClientThread extends Thread {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * Run method. Gets called when the thread is started.
+	 */
 	public void run() {
 
 		try {
 			// create streams
-			is = new DataInputStream(clientSocket.getInputStream());
+			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			os = new PrintStream(clientSocket.getOutputStream());
 
 			while (true) {
@@ -92,8 +105,6 @@ public class ClientThread extends Thread {
 			
 			nodeToRelation = NodeToRelationMap.NodeToRelationMap.get(node.getClass().getSimpleName());
 			
-			// System.out.println(node);
-
 			sendError("Welcome " + user.getName() + " to '" + node.getName()
 					+ "' chat room.\nTo leave enter /quit in a new line.");
 
@@ -131,7 +142,7 @@ public class ClientThread extends Thread {
 				try {
 					this.sendToOtherClients(getMsgWrapper(message).toString());
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					log.error(e1);
 				}
 			}
 			
@@ -385,29 +396,10 @@ public class ClientThread extends Thread {
 		return msg;
 	}
 
-	/*private String checkLine(String line, String user) {
-		if (line.startsWith("/quit"))
-			return line;
-		if (line.startsWith("?"))
-			return line;
-		if (line.startsWith("#") && !line.contains("@")) {// Propertie with
-																// value
-			return "Property '"
-					+ line.substring(1, line.length()).split(" ", 2)[0]
-					+ "' mit dem Wert '"
-					+ line.substring(1, line.length()).split(" ", 2)[1]
-					+ "' zur entscheidung hinzugefuegt";
-		} else if (line.startsWith("@") && line.contains("#Comment")) { // Comment
-																		// on
-																		// propertie
-			String propertie = line.substring(1, line.length()).split(" #Comment ", 2)[0];
-			String comment = line.substring(1, line.length()).split(" #Comment ", 2)[1];
-			
-			return "Kommentar '" + comment + "' zur Eigenschaft '" + propertie + "' hinzugefuegt";
-		}
-		return line;
-	}*/
-
+	/**
+	 * Returns the node id
+	 * @return
+	 */
 	public long getNodeId() {
 		return node.getId();
 	}
@@ -427,6 +419,10 @@ public class ClientThread extends Thread {
 		server.notifyAll(message, this.getNodeId());
 	}
 
+	/**
+	 * Returns the output stream of the socket
+	 * @return
+	 */
 	public PrintStream getOutputStream() {
 		return os;
 	}

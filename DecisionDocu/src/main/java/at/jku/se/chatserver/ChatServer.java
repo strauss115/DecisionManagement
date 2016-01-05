@@ -9,16 +9,29 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Server side chat mechanism. The run method waits for client connections.
+ * One a client is connected, a ClientTread object is generated.
+ * The standard port of the chat is 2222
+ * 
+ * @author martin
+ *
+ */
 public class ChatServer implements Runnable, ServerListener {
 	private static final Logger log = LogManager.getLogger(ChatServer.class);
+	private static final int portNumber = 2222;
+	
 	private ServerSocket serverSocket = null;
 	private Socket clientSocket = null;
-	private static final int portNumber = 2222;
-
+	
 	// This chat server can accept up to maxClientsCount clients' connections.
 	private static final int maxClientsCount = 10;
 	private static final ArrayList<ClientThread> clientthreads = new ArrayList<ClientThread>();
 
+	/**
+	 * Runnable's run method
+	 * Endless loop for listening to client connection attempts.
+	 */
 	@Override
 	public void run() {
 		log.info("starting chatserver on port " + portNumber);
@@ -30,7 +43,7 @@ public class ChatServer implements Runnable, ServerListener {
 
 		while (true) {
 			try {
-				clientSocket = serverSocket.accept();
+				clientSocket = serverSocket.accept(); // wait for client
 				log.debug("New connection requested from '" + clientSocket.getInetAddress() + "'");
 				
 				synchronized (this) {
@@ -43,9 +56,10 @@ public class ChatServer implements Runnable, ServerListener {
 						os.close();
 						clientSocket.close();
 					} else {
+						// Create ClientThread object
 						ClientThread newThread = new ClientThread(this, clientSocket);
 						clientthreads.add(newThread);
-						newThread.start();
+						newThread.start(); // start communication
 						
 						log.debug(clientthreads.size() + " clients are connected now.");	
 					}
@@ -62,6 +76,9 @@ public class ChatServer implements Runnable, ServerListener {
 		}	
 	}
 	
+	/**
+	 * Close the server side communication channel
+	 */
 	public void close() {
 		if (serverSocket != null) {
 			try {
