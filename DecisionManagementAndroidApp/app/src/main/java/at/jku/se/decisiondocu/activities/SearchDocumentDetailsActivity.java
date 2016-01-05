@@ -34,6 +34,8 @@ import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
 import at.jku.se.decisiondocu.beans.RESTNodeFinder;
 import at.jku.se.decisiondocu.beans.adapters.RelationAdapter;
 import at.jku.se.decisiondocu.beans.interfaces.NodeFinder;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
+import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.DBStrings.RelationString;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
@@ -166,6 +168,25 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Click(R.id.document_header)
+    public void openChat(){
+        try {
+            String url = RestHelper.GetBaseURLChat();
+            String ip = url.substring(0, url.indexOf(':'));
+            int port = Integer.valueOf(url.substring(url.indexOf(':') + 1, url.length()));
+
+            new ChatActivity_.IntentBuilder_(this)
+                    .IPAddress(ip)
+                    .Port(port)
+                    .DecisionName(mNode.getName())
+                    .dec_node_id(mNode.getId())
+                    .usr_token(SaveSharedPreference.getUserToken(this))
+                    .start();
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

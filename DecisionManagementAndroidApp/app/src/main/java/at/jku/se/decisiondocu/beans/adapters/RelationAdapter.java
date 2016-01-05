@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import at.jku.se.decisiondocu.restclient.client.DBStrings.RelationString;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.RelationshipInterface;
 import at.jku.se.decisiondocu.views.SearchDetailListItemView;
@@ -46,8 +47,10 @@ public class RelationAdapter extends BaseAdapter {
             items = new ArrayList<>();
             Map<String, List<RelationshipInterface>> rels = node.getRelationships();
             for (String key : rels.keySet()) {
-                for (RelationshipInterface rel : rels.get(key)) {
-                    items.add(new Pair<String, NodeInterface>(key, rel.getRelatedNode()));
+                if(key!= RelationString.HAS_MESSAGE){
+                    for (RelationshipInterface rel : rels.get(key)) {
+                        items.add(new Pair<String, NodeInterface>(key, rel.getRelatedNode()));
+                    }
                 }
             }
 

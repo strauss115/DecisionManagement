@@ -2,17 +2,16 @@ package at.jku.se.decisiondocu.asynctask;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
-import java.sql.Timestamp;
 
 import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
+import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 import at.jku.se.decisiondocu.restclient.client.model.Project;
 import at.jku.se.decisiondocu.restclient.client.model.RelationString;
 
@@ -88,12 +87,15 @@ public class RestNetworkTasks {
 
         private final Project project;
         private final String name;
+        private final Bitmap bitmap;
+        protected long decisionid=-1;
 
         protected CreateDecisionTask(View progressBar, View viewToHide, Context context,
-                                     Project project, String name) {
+                                     Project project, String name, Bitmap bitmap) {
             super(progressBar, viewToHide, context);
             this.project = project;
             this.name = name;
+            this.bitmap = bitmap;
         }
 
         @Override
@@ -104,10 +106,26 @@ public class RestNetworkTasks {
             Decision dec = new Decision();
             dec.setName(name);
             project.addRelation(RelationString.HASDECISION, dec, true);
-            String decision = RestClient.createDecision(project);
+            NodeInterface decision = RestClient.createDecision(project);
 
             if (decision == null) {
                 return 0;
+            }
+            System.out.println(decision);
+            try {
+                decisionid = decision.getRelationships().get(RelationString.HASDECISION).get(0).getRelatedNode().getId();
+                if (decisionid < 0) {
+                    return 0;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+             if (bitmap != null) {
+                try {
+                     RestClient.saveDocument(bitmap, decisionid);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             return 1;
         }

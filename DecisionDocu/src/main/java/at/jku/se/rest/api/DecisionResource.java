@@ -165,35 +165,4 @@ public class DecisionResource {
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 	}
-	
-	@GET
-	@Path("/likes/{id}/{bool}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Creates or deletes like relationships from user to decision")
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
-	public Response likesDecision(
-			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
-			@ApiParam(value = "ID of the Decision to fetch", required = true) @PathParam("id") long id,
-			@ApiParam(value = "Likes: 1, Unlike:0", required = true) @PathParam("bool") int bool) {
-		log.debug("Set Like on decision'" + id + "'");
-		try {
-			if(!SessionManager.verifySession(token)){
-				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
-			}
-			User user = SessionManager.getUser(token);
-			Decision dec = DBService.getNodeByID(Decision.class, id, 0);
-			long rel = DBService.addRelationship(user.getId(), RelationString.LIKES, dec.getId());
-			if(bool!=1){
-				return RestResponse.getSuccessResponse(DBService.deleteNode(rel));
-			}
-			return RestResponse.getSuccessResponse(rel);
-		} catch (Exception e) {
-			log.debug("Error occured!", e);
-			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
-		}
-	}
 }

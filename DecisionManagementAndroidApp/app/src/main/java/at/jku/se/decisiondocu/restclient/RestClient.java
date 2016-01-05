@@ -129,9 +129,9 @@ public class RestClient {
         return dec;
     }
 
-    public static String createDecision(Project project) {
+    public static NodeInterface createDecision(Project project) {
         NodeApi api = new NodeApi();
-        String node = null;
+        NodeInterface node = null;
         try {
             node = api.createSimpleNode(accessToken, project);
         } catch (Exception e) {
