@@ -1,11 +1,15 @@
 package at.jku.se.decisiondocu.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -14,6 +18,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -25,7 +30,9 @@ import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.beans.adapters.ChatAdapter;
 import at.jku.se.decisiondocu.chat.ChatClient;
 import at.jku.se.decisiondocu.chat.ChatInterface;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
 import at.jku.se.decisiondocu.restclient.RestClient;
+import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 import static android.os.SystemClock.sleep;
@@ -38,6 +45,8 @@ import static android.os.SystemClock.sleep;
  */
 @EActivity(R.layout.activity_chat)
 public class ChatActivity extends AppCompatActivity implements ChatInterface {
+
+    private static final int RESULT_TAKE_IMAGE = 0;
 
     protected ProgressDialog mDialog;
     private ChatClient mChatClient;
@@ -65,9 +74,6 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
     @ViewById(R.id.autoCompleteTextView1)
     AutoCompleteTextView editText;
 
-    @ViewById(R.id.send_button)
-    Button send;
-
     @Bean
     ChatAdapter mAdapter;
 
@@ -80,6 +86,33 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         if (isMsgValid(message)) {
             sendMessage(message);
             editText.setText("");
+        }
+    }
+
+    @Click(R.id.chat_take_picture)
+    void PictureBtnClick() {
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, RESULT_TAKE_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @OnActivityResult(RESULT_TAKE_IMAGE)
+    void PictureBtnResult(int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            if (imageBitmap != null) {
+                try {
+                    if (RestClient.saveDocument(imageBitmap, dec_node_id)) {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -115,7 +148,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         dismissDialog();
 
         // connect to the server
-        new connectTask(this).execute("");
+        new connectTask().execute("");
 
         // start msg consists of user token and node id
         String startMsg = usr_token + "@" + dec_node_id;
@@ -164,12 +197,6 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
      */
     public class connectTask extends AsyncTask<String, String, ChatClient> {
 
-        private ChatInterface chatInterface;
-
-        public connectTask(ChatInterface chatInterface) {
-            this.chatInterface = chatInterface;
-        }
-
         @Override
         protected ChatClient doInBackground(String... message) {
 
@@ -207,6 +234,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
                 e.printStackTrace();
             }
         }
+        sleep(2000);
     }
 
     @Override
@@ -214,5 +242,21 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         if (editText != null) {
             editText.append(" @" + id);
         }
+
+        /*finish();
+
+        sleep(1000);
+
+        String url = RestHelper.GetBaseURLChat();
+        String ip = url.substring(0, url.indexOf(':'));
+        int port = Integer.valueOf(url.substring(url.indexOf(':') + 1, url.length()));
+
+        new ChatActivity_.IntentBuilder_(this)
+                .IPAddress(ip)
+                .Port(port)
+                .DecisionName(nodeInterface.getName())
+                .dec_node_id(id)
+                .usr_token(SaveSharedPreference.getUserToken(this))
+                .start();*/
     }
 }

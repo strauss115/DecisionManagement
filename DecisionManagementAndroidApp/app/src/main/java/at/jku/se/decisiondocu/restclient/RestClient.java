@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import at.jku.se.decisiondocu.restclient.client.api.DecisionApi;
 import at.jku.se.decisiondocu.restclient.client.api.NodeApi;
 import at.jku.se.decisiondocu.restclient.client.api.ProjectApi;
 import at.jku.se.decisiondocu.restclient.client.api.RelationshipApi;
+import at.jku.se.decisiondocu.restclient.client.api.UploadApi;
 import at.jku.se.decisiondocu.restclient.client.api.UserApi;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
@@ -201,6 +203,72 @@ public class RestClient {
 
     }
 
+    public static boolean saveDocument(Bitmap image, long id) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            return uploadDocument(byteArrayOutputStream.toByteArray(), id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static boolean uploadDocument(byte[] fileContent, long id) {
+
+        // local variables
+        WebTarget webTarget = null;
+        Invocation.Builder invocationBuilder = null;
+        Response response = null;
+        FormDataMultiPart formDataMultiPart = null;
+        int responseCode;
+        String responseMessageFromServer = null;
+        String responseString = null;
+
+        try {
+            // invoke service after setting necessary parameters
+            webTarget = RestHelper.getWebTargetWithMultiFeature();
+            webTarget = webTarget.path("upload").path("document").path(id + "");
+            Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
+
+            // set file upload values
+            formDataMultiPart = new FormDataMultiPart();
+            StreamDataBodyPart bodyPart = new StreamDataBodyPart("uploadFile", new ByteArrayInputStream(fileContent), id + ".jpg", MediaType.APPLICATION_OCTET_STREAM_TYPE);
+            formDataMultiPart.bodyPart(bodyPart);
+
+            invocationBuilder = webTarget.request();
+            invocationBuilder.header("token", accessToken);
+            response = invocationBuilder.post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA));
+
+            // get response code
+            responseCode = response.getStatus();
+            System.out.println("Response code: " + responseCode);
+
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed with HTTP error code : " + responseCode);
+            }
+
+            // get response message
+            responseMessageFromServer = response.getStatusInfo().getReasonPhrase();
+            System.out.println("ResponseMessageFromServer: " + responseMessageFromServer);
+
+
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            // release resources, if any
+            //streamDataBodyPart.cleanup();
+            formDataMultiPart.cleanup();
+            try {
+                formDataMultiPart.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            response.close();
+        }
+        return true;
+    }
+
     private static String uploadProfilePicture(byte[] fileContent, int id) throws Exception {
         // local variables
         WebTarget webTarget = null;
@@ -218,14 +286,13 @@ public class RestClient {
             Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
 
             // set file upload values
-            //streamDataBodyPart = new StreamDataBodyPart("uploadFile", inputStream, "01.jpeg", MediaType.APPLICATION_OCTET_STREAM_TYPE);
             formDataMultiPart = new FormDataMultiPart();
             StreamDataBodyPart bodyPart = new StreamDataBodyPart("uploadFile", new ByteArrayInputStream(fileContent), id + ".jpg", MediaType.APPLICATION_OCTET_STREAM_TYPE);
-            //formDataMultiPart.field("uploadFile", fileContent, MediaType.APPLICATION_OCTET_STREAM_TYPE);
-
             formDataMultiPart.bodyPart(bodyPart);
 
-            response = webTarget.request().post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA));
+            invocationBuilder = webTarget.request();
+            invocationBuilder.header("token", 1);
+            response = invocationBuilder.post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA));
 
             // get response code
             responseCode = response.getStatus();

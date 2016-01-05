@@ -106,6 +106,6 @@ public class ChatClient {
     }
 
     public interface OnMessageReceived {
-        public void messageReceived(String message);
+        void messageReceived(String message);
     }
 }

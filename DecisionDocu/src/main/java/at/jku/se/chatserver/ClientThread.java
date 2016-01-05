@@ -134,6 +134,7 @@ public class ClientThread extends Thread {
 			
 			log.debug("---------------------------------------------");
 			log.debug("--------- start the conversation ------------");
+			if (node != null) log.debug("---------     about node " + node.getId() + "     ------------");
 			log.debug("---------------------------------------------");
 			while (true) {
 				String line = is.readLine();
