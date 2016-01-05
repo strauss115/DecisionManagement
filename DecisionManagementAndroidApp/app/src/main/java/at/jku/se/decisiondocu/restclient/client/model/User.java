@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class User extends Node {
+public class User extends Node implements Comparable<User> {
 
 	// private List<Team> teams; Teams are stored in Relationships
 	// private String picture; Picture might be a Seperate Node
@@ -103,4 +103,8 @@ public class User extends Node {
 		this.addRelation("hasTeam", team, true);
 	}
 
+	@Override
+	public int compareTo(User another) {
+		return this.getLastname().compareTo(another.getLastname());
+	}
 }

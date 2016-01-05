@@ -23,7 +23,11 @@ import java.util.List;
 
 import at.jku.se.decisiondocu.beans.RESTDecisionFinder;
 import at.jku.se.decisiondocu.beans.interfaces.DecisionFinder;
+import at.jku.se.decisiondocu.restclient.client.model.CustomDate;
 import at.jku.se.decisiondocu.restclient.client.model.Decision;
+import at.jku.se.decisiondocu.restclient.client.model.RelationString;
+import at.jku.se.decisiondocu.restclient.client.model.RelationshipInterface;
+import at.jku.se.decisiondocu.restclient.client.model.User;
 import at.jku.se.decisiondocu.views.ListItemView;
 import at.jku.se.decisiondocu.views.ListItemView_;
 
@@ -142,10 +146,52 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         }
     };
 
-    public static Comparator<Decision> sComparatorReverseName = new Comparator<Decision>() {
+    public static Comparator<Decision> sComparatorDate = new Comparator<Decision>() {
         @Override
         public int compare(Decision lhs, Decision rhs) {
-            return rhs.getName().compareTo(lhs.getName());
+            CustomDate d1 = lhs.getCreationDate();
+            CustomDate d2 = rhs.getCreationDate();
+            if (d1 == null || d2 == null) {
+                return -1;
+            }
+            return d1.compareTo(d2);
+        }
+    };
+
+    private static User getAuthor(Decision d) {
+        List<RelationshipInterface> creators = d.getRelationships().get(RelationString.CREATOR);
+        if (creators != null && creators.size() > 0) {
+            try {
+                User u = (User)creators.get(0).getRelatedNode();
+                return u;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static Comparator<Decision> sComparatorAuthor = new Comparator<Decision>() {
+        @Override
+        public int compare(Decision lhs, Decision rhs) {
+            User u1 = getAuthor(lhs);
+            User u2 = getAuthor(rhs);
+            if (u1 == null || u2 == null) {
+                return -1;
+            }
+            int res = u1.compareTo(u2);
+            if (res == 0) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+            return res;
+        }
+    };
+
+    public static Comparator<Decision> sComparatorFavourite = new Comparator<Decision>() {
+        @Override
+        public int compare(Decision lhs, Decision rhs) {
+            // TODO: Logik richtig setzen
+            return lhs.getName().compareTo(rhs.getName());
         }
     };
 
