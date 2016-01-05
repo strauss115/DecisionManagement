@@ -81,7 +81,6 @@ public class CreateDecisionDialog extends DialogFragment {
                 protected void onPostExecute(Integer success) {
                     super.onPostExecute(success);
                     if (success > 0) {
-                        System.out.println(decisionid);
                         new SearchNodeDetailsActivity_.IntentBuilder_(getActivity())
                                 .decisionId(this.decisionid)
                                 .start();

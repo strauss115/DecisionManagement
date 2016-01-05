@@ -111,7 +111,6 @@ public class RestNetworkTasks {
             if (decision == null) {
                 return 0;
             }
-            System.out.println(decision);
             try {
                 decisionid = decision.getRelationships().get(RelationString.HASDECISION).get(0).getRelatedNode().getId();
                 if (decisionid < 0) {
