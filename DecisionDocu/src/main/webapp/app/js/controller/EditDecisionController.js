@@ -115,10 +115,14 @@ app.controller('EditDecisionController', [
 			$scope.addDecisionAttributeInPanelClick = function(){
 				//alert($scope.decisionAttributeValueFromPanel);
 				//alert("add" + $("#headlineAddAttributePanel").text().trim().split(" ")[1]);
+				var att = $("#headlineAddAttributePanel").text().trim().split(" ")[1];
+				if($("#headlineAddAttributePanel").text().trim().split(" ").length > 2){
+					att = $("#headlineAddAttributePanel").text().trim().split(" ")[1] + $("#headlineAddAttributePanel").text().trim().split(" ")[2];
+				}
 				AddAttributeToDecision.save({
 					value : $scope.decisionAttributeValueFromPanel,
 					id : $scope.selectedDecisionId,
-					attribute : "add" + $("#headlineAddAttributePanel").text().trim().split(" ")[1]
+					attribute : "add" + att
 				}, function(data) {
 					alert(data);
 					//$scope.updateGraph();

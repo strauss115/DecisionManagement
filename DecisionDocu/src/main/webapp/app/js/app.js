@@ -173,44 +173,46 @@ app.directive('goDiagramMindMap', function () {
 			 * Callback function for node-button-click
 			 */
             var objGoJsModel;
+            var chosenAttribute = "";
+            var newAttributeCount = 0;
             function addNodeAndLink(e, obj) {
             	objGoJsModel = obj;
             	var adorn = obj.part;
                 var oldnode = adorn.adornedPart;
                 var olddata = oldnode.data;
                 var panelHeaderText;
+                chosenAttribute = olddata.key.slice(0, 3);
                 // set header of modal panel
-                switch(olddata.key){
-	                case 0: panelHeaderText = "Edit Decision";
-	                		break;
-	                case 1: panelHeaderText = "Add Influence Factor";
+                switch(olddata.key.slice(0, 3)){
+	                case "inf": panelHeaderText = "Influence Factor";
             				break;
-	                case 2: panelHeaderText = "Add Rationale";
+	                case "rat": panelHeaderText = "Rationale";
             				break;
-	                case 3: panelHeaderText = "Add Alternative";
+	                case "alt": panelHeaderText = "Alternative";
 	                    	break;
-	                case 4: panelHeaderText = "Add Consequence";
+	                case "con": panelHeaderText = "Consequence";
                 			break;
-	                case 5: panelHeaderText = "Add Quality Attribute";
+	                case "qua": panelHeaderText = "Quality Attribute";
         					break;
                 }
-                jQuery("#headlineAddAttributePanel").text(panelHeaderText);
                 //jQuery("#addAttributeInputText").val(olddata.text);
                 alert(olddata.key);
-                if(olddata.key > 10){
-                	jQuery("#headlineAddAttributePanel").text("Edit Attribute");
+                if(olddata.key.length == 3){
+                	jQuery("#fileAdministrationDiv").css("display", "none"); 
+                	jQuery("#addAttributeInputText").val("");
+                    jQuery("#headlineAddAttributePanel").text("Add " + panelHeaderText);
+                }
+                
+                if(olddata.key.length > 3 && olddata.key != "node"){
+                	jQuery("#headlineAddAttributePanel").text("Edit " + panelHeaderText);
                 	jQuery("#addAttributeInputText").val(olddata.text);
                 	jQuery("#fileAdministrationDiv").css("display", "inline"); 
                 	//jQuery("#saveAttributeButton").val("Save");
                 }
-                else{
-                	jQuery("#fileAdministrationDiv").css("display", "none"); 
-                	jQuery("#addAttributeInputText").val("");
-                	//jQuery("#saveAttributeButton").val("Add");
-                }
             	jQuery("#addAttributePanel").modal();
             }
             jQuery("#saveAttributeButton" ).click(function() {
+            	  newAttributeCount++;
                   var adorn = objGoJsModel.part;
                   var diagram = adorn.diagram;
                   diagram.startTransaction("Add Node");
@@ -219,7 +221,7 @@ app.directive('goDiagramMindMap', function () {
                   // alert(olddata.key);
                   // copy the brush and direction to the new node data
                   // "New " + olddata.text
-                  var newdata = {text: jQuery("#addAttributeInputText").val(), brush: olddata.brush, dir: olddata.dir, parent: olddata.key,editable: true, showAdd: false};
+                  var newdata = {text: jQuery("#addAttributeInputText").val(), key: chosenAttribute + "Added" + newAttributeCount, brush: olddata.brush, dir: olddata.dir, parent: olddata.key,editable: false, showAdd: true};
 
                   diagram.model.addNodeData(newdata);
                   layoutTree(oldnode);
