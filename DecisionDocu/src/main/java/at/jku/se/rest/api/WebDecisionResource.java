@@ -67,7 +67,6 @@ public class WebDecisionResource {
 				result.setDescription(decision.getDescription());
 				result.setCreationDate(decision.getCreationDate().getDate());
 				result.setAuthor(decision.getAuthorId());
-				result.setInfluenceFactors(decision.getInfluenceFactors());
 				result.setRationales(decision.getRationales());
 				result.setAlternatives(decision.getAlternatives());
 				result.setQualityAttributes(decision.getQualityAttributes());

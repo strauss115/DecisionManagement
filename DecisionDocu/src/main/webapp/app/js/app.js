@@ -204,8 +204,10 @@ app.directive('goDiagramMindMap', function () {
         					break;
                 }
                 // jQuery("#addAttributeInputText").val(olddata.text);
-                alert(olddata.key);
-                // if the general node is chosen - nodes can be added
+                 
+                var scope = angular.element(document.getElementById("content")).scope(); 
+                scope.loadNode(olddata.key.substr(3));
+                
                 if(olddata.key.length == 3){
                 	jQuery("#fileAdministrationDiv").css("display", "none"); 
                 	jQuery("#addAttributeInputText").val("");
@@ -221,7 +223,7 @@ app.directive('goDiagramMindMap', function () {
                 	addNode = false;
                 	// jQuery("#saveAttributeButton").val("Save");
                 }
-            	jQuery("#addAttributePanel").modal();
+            	
             }
             // save method - for the panel that opens when a button in de graph
 			// is clicked

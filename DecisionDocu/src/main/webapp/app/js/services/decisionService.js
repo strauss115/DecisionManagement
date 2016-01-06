@@ -98,3 +98,44 @@ decisionServices
 										}
 									});
 						} ]);
+
+
+decisionServices
+.factory(
+		'GetNode',
+		[
+				'$resource',
+				'$cookies',
+				function($resource, $cookies) {
+					return $resource(
+							serverAddress
+									+ '/DecisionDocu/api/node/:id',
+							{
+								id : '@id'
+							}, {
+								get : {
+									method : 'GET',
+									isArray: false,
+									headers : {
+										'token' : $cookies['Token']
+									}
+								}
+							});
+				} ]);
+
+userServices.factory('GetFile', [
+                             		'$resource',
+                             		'$cookies',
+                             		function($resource, $cookies) {
+                             			return $resource(serverAddress + '/DecisionDocu/api/upload/document/:id', {
+                             				id : '@id'
+                             			}, {
+                             				get : {
+                             					method: "GET",
+                             					isArray: false,
+                             					headers : {
+                             						'token' : $cookies['Token']
+                             					}
+                             				}
+                             			});
+                             		} ]);

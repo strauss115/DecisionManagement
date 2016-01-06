@@ -1,11 +1,15 @@
 app.controller('EditDecisionController', [
 		'$scope',
 		'$cookies',
+		'$window',
 		'LoadEditGraph',
 		'DecisionsByTeam',
 		'AddAttributeToDecision',
-		function($scope, $cookies, LoadEditGraph, DecisionsByTeam,
-				AddAttributeToDecision) {
+		'GetNode',
+		'GetFile',
+		'fileUpload1',
+		function($scope, $cookies, $window, LoadEditGraph, DecisionsByTeam,
+				AddAttributeToDecision, GetNode, GetFile, fileUpload1) {
 			// init attributes
 			$scope.attributes = [ {
 				value : 'addAlternative',
@@ -34,6 +38,8 @@ app.controller('EditDecisionController', [
 			$scope.selectedDecisionId = "";
 			$scope.selectedAttribute = "";
 			$scope.selectedAttribute = "";
+			
+			$scope.downloadFiles = new Array();
 			// load all graphs from team to show in selection
 			DecisionsByTeam.get({}, function(data) {
 				var obj = angular.fromJson(data);
@@ -117,6 +123,29 @@ app.controller('EditDecisionController', [
             	jQuery("#fullScreenPanel").modal();
 			}
 			
+			$scope.loadNode = function(id){
+				$scope.downloadFiles = new Array();
+				$scope.NodeId = id;
+				GetNode.get({"id" : id}, function(data) {
+						var arr = data.relationships.hasDocuments;
+						for (var i = 0 ; i<arr.length; i++){
+							var fileId = arr[i].relatedNode.id;
+							GetFile.get({"id" : fileId}, function(data) {
+								
+								$scope.downloadFiles.push({
+								      "name" : data.name,
+								      "url" : "data:"+data.type+";base64,"+data.data
+								     });
+							}, function(error) {});	
+						}
+						jQuery("#addAttributePanel").modal();
+					}, function(error) {});
+			}
+			
+			$scope.open = function(url){
+				$window.open(url);
+			}
+			
 			// add attribute to decision - after panel-save-click
 			$scope.addDecisionAttributeInPanelClick = function(){
 				//alert($scope.decisionAttributeValueFromPanel);
@@ -140,4 +169,16 @@ app.controller('EditDecisionController', [
 					alert("EDIT - TO-DO - call edit service");
 				}
 			}
+			
+			
+			$scope.uploadFile = function(id) {
+				var file = $scope.myFile1;
+				if (file !== undefined) {
+					var uploadUrl = serverAddress
+							+ "/DecisionDocu/api/upload/document/"
+							+ $scope.NodeId;
+					fileUpload1.uploadFileToUrl(file, uploadUrl, $scope);
+					
+				}
+			};
 		} ]);

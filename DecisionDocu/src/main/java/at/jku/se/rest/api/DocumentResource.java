@@ -141,7 +141,7 @@ public class DocumentResource {
             }
             
             log.debug("filename: '" + fileName + "', type: '" + mimeType + "'");
-            String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
+            String json = "{\"name\":\""+ fileName + "\", \"type\": \"" + mimeType + "\", \"data\": \"";
             
             String s = new String(java.util.Base64.getEncoder().encode(buffer2));
      		
