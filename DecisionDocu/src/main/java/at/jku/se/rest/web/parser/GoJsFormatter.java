@@ -63,7 +63,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"alt\",\"parent\":\"node\",\"text\":\"Alternatives\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " -100\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": \"alt" + a.getId() + "\",\"parent\":\"alt\",\"text\":\"" + a.getName() + "\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"alt" + a.getId() + "\",\"parent\":\"alt\",\"text\":\"" + a.getName() + "\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor - 200) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
@@ -71,7 +71,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"con\",\"parent\":\"node\",\"text\":\"Consequences\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 0\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": \"con" + a.getId() + "\",\"parent\":\"con\",\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"con" + a.getId() + "\",\"parent\":\"con\",\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor - 200) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
@@ -79,7 +79,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"qua\",\"parent\":\"node\",\"text\":\"Quality Attributes\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 100\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(QualityAttribute qa : decision.getQualityAttributes()){
-				decisionAsJsonString += ",{\"key\": \"qua" + qa.getId() + "\",\"parent\":\"qua\",\"text\":\"" + qa.getName() + "\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"qua" + qa.getId() + "\",\"parent\":\"qua\",\"text\":\"" + qa.getName() + "\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor - 200) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}

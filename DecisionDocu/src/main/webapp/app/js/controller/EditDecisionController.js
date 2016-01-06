@@ -33,6 +33,7 @@ app.controller('EditDecisionController', [
 			$scope.model.selectedNodeData = null;
 			$scope.selectedDecisionId = "";
 			$scope.selectedAttribute = "";
+			$scope.selectedAttribute = "";
 			// load all graphs from team to show in selection
 			DecisionsByTeam.get({}, function(data) {
 				var obj = angular.fromJson(data);
@@ -111,6 +112,11 @@ app.controller('EditDecisionController', [
 				}, function(error) {
 				});
 			}
+			// full screen mode
+			$scope.openFullScreenPanel = function(){
+            	jQuery("#fullScreenPanel").modal();
+			}
+			
 			// add attribute to decision - after panel-save-click
 			$scope.addDecisionAttributeInPanelClick = function(){
 				//alert($scope.decisionAttributeValueFromPanel);
