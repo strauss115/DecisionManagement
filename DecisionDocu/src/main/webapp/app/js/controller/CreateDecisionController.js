@@ -60,14 +60,20 @@ app.controller('CreateDecisionController', [
 			if($("#headlineAddAttributePanel").text().trim().split(" ").length > 2){
 				att = $("#headlineAddAttributePanel").text().trim().split(" ")[1] + $("#headlineAddAttributePanel").text().trim().split(" ")[2];
 			}
-			AddAttributeToDecision.save({
-				value : $scope.decisionAttributeValueFromPanel,
-				id : $scope.selectedDecisionId,
-				attribute : "add" + att
-			}, function(data) {
-				alert(data);
-				//$scope.updateGraph();
-			}, function(error) {
-			});
+			if($("#headlineAddAttributePanel").text().trim().split(" ")[0] == "Add"){
+				AddAttributeToDecision.save({
+					value : $scope.decisionAttributeValueFromPanel,
+					id : $scope.selectedDecisionId,
+					attribute : "add" + att
+				}, function(data) {
+					alert(data);
+					//$scope.updateGraph();
+				}, function(error) {
+				});
+			}
+
+			if($("#headlineAddAttributePanel").text().trim().split(" ")[0] == "Edit"){
+				alert("EDIT - TO-DO - call edit service");
+			}
 		}
 	}]);

@@ -169,13 +169,21 @@ app.directive('goDiagramMindMap', function () {
                     return (from ? go.Spot.Right : go.Spot.Left);
                 }
             }
+            // because of the GoJS-Plugin, various variables have to bes saved
+			// when a node is chosen
+            // save goJsModel from callback-method - to add a node
+            var objGoJsModel;
+            // save chosen attribute (consequence, rationale,..)
+            var chosenAttribute = "";
+            // count for new attributes - for key definition
+            var newAttributeCount = 0;
+            // variable which saves if a node has to be added
+            var addNode = false; 
             /*
 			 * Callback function for node-button-click
 			 */
-            var objGoJsModel;
-            var chosenAttribute = "";
-            var newAttributeCount = 0;
             function addNodeAndLink(e, obj) {
+            	// get goJsModel from callback method parameter and save it
             	objGoJsModel = obj;
             	var adorn = obj.part;
                 var oldnode = adorn.adornedPart;
@@ -195,23 +203,30 @@ app.directive('goDiagramMindMap', function () {
 	                case "qua": panelHeaderText = "Quality Attribute";
         					break;
                 }
-                //jQuery("#addAttributeInputText").val(olddata.text);
+                // jQuery("#addAttributeInputText").val(olddata.text);
                 alert(olddata.key);
+                // if the general node is chosen - nodes can be added
                 if(olddata.key.length == 3){
                 	jQuery("#fileAdministrationDiv").css("display", "none"); 
                 	jQuery("#addAttributeInputText").val("");
                     jQuery("#headlineAddAttributePanel").text("Add " + panelHeaderText);
+                    addNode = true;
                 }
-                
-                if(olddata.key.length > 3 && olddata.key != "node"){
+                // if a attribute value is chosen - nodes can be changed and
+				// files can be added
+                if(olddata.key.length > 3){
                 	jQuery("#headlineAddAttributePanel").text("Edit " + panelHeaderText);
                 	jQuery("#addAttributeInputText").val(olddata.text);
                 	jQuery("#fileAdministrationDiv").css("display", "inline"); 
-                	//jQuery("#saveAttributeButton").val("Save");
+                	addNode = false;
+                	// jQuery("#saveAttributeButton").val("Save");
                 }
             	jQuery("#addAttributePanel").modal();
             }
+            // save method - for the panel that opens when a button in de graph
+			// is clicked
             jQuery("#saveAttributeButton" ).click(function() {
+            	  // increase attribute count
             	  newAttributeCount++;
                   var adorn = objGoJsModel.part;
                   var diagram = adorn.diagram;
@@ -221,13 +236,24 @@ app.directive('goDiagramMindMap', function () {
                   // alert(olddata.key);
                   // copy the brush and direction to the new node data
                   // "New " + olddata.text
-                  var newdata = {text: jQuery("#addAttributeInputText").val(), key: chosenAttribute + "Added" + newAttributeCount, brush: olddata.brush, dir: olddata.dir, parent: olddata.key,editable: false, showAdd: true};
-
-                  diagram.model.addNodeData(newdata);
-                  layoutTree(oldnode);
-                  diagram.commitTransaction("Add Node");
+                  if(addNode){
+                      var newdata = {text: jQuery("#addAttributeInputText").val(), key: chosenAttribute + "Added" + newAttributeCount, brush: olddata.brush, dir: olddata.dir, parent: olddata.key,editable: false, showAdd: true};
+                      diagram.model.addNodeData(newdata);   
+                      layoutTree(oldnode);
+                      diagram.commitTransaction("Add Node");             	  
+                  }
+                  else{
+                	  var newdata = {text: jQuery("#addAttributeInputText").val(), key: olddata.key, brush: olddata.brush, dir: olddata.dir, parent: olddata.parent,loc: olddata.loc,editable: false, showAdd: true};
+                      diagram.model.removeNodeData(olddata);
+                      diagram.model.addNodeData(newdata);   
+                      diagram.commitTransaction("Add Node");   
+                	  alert("EDIT NODE APP.JS");
+                  }
                   jQuery("#addAttributeInputText").val("");
-            	});
+            });
+            /*
+             * Layout method - calculate node positions
+             */
             function layoutTree(node) {
                 if (node.data.key === 0) {  // adding to the root?
                     layoutAll(); // lay out everything
