@@ -35,7 +35,8 @@ public class User extends Node {
 	public User(String email, String firstname, String lastname, String password, boolean isAdmin) {
 		super(firstname);
 		if (email != null && firstname != null && lastname != null) {
-			this.addDirectProperty(PropertyString.FIRSTNAME, firstname);
+			this.setName(firstname);
+			// this.addDirectProperty(PropertyString.FIRSTNAME, firstname);
 			this.addDirectProperty(PropertyString.LASTNAME, lastname);
 			this.addDirectProperty(PropertyString.EMAIL, email);
 			this.addDirectProperty(PropertyString.PASSWORD, password);
@@ -72,12 +73,12 @@ public class User extends Node {
 
 	@JsonIgnore
 	public String getFirstName() {
-		return super.getAllDirectProperties().get(PropertyString.FIRSTNAME);
+		return super.getName();
 	}
 
 	@JsonIgnore
 	public void setFirstName(String firstName) {
-		super.addDirectProperty(PropertyString.FIRSTNAME, firstName);
+		super.setName(firstName);
 		DBService.updateNode(this, 0);
 	}
 
