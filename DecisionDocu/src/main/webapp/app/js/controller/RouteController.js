@@ -9,7 +9,8 @@ app.config(['$routeProvider', function ($routeProvider) {
                 // Pages
                 .when("/createDecision", {templateUrl: "pages/createDecision.html", controller: "CreateDecisionController"})
                 .when("/editDecision", {templateUrl: "pages/editDecision.html", controller: "EditDecisionController"})
-                .when("/completeDecision", {templateUrl: "pages/completeDecision.html", controller: "PageCtrl"})
+                .when("/editDecision/:id", {templateUrl: "pages/editDecision.html", controller: "EditDecisionController"})
+                .when("/completeDecision", {templateUrl: "pages/completeDecision.html", controller: "CompleteDecisionController"})
                 .when("/relateDecision", {templateUrl: "pages/relateDecision.html", controller: "RelateDecisionController"})
                 .when("/timeline", {templateUrl: "pages/timeline.html", controller: "PageCtrl"})
                 .when("/showDependency", {templateUrl: "pages/showDependency.html", controller: "ShowDependencyController"})
