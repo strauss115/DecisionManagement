@@ -46,7 +46,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"inf\",\"parent\":\"node\",\"text\":\"Influence Factors\", \"brush\": \"skyblue\", \"dir\": \"right\", \"loc\": \"" + distanceRight + " -22\",\"editable\": false, \"showAdd\": true}";
 			int key = 1;
 			for(InfluenceFactor i : decision.getInfluenceFactors()){
-				decisionAsJsonString += ",{\"key\": \"inf" + key + "\",\"parent\":\"inf\",\"text\":\"" + i.getName() + "\", \"brush\": \"skyblue\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"inf" + i.getId() + "\",\"parent\":\"inf\",\"text\":\"" + i.getName() + "\", \"brush\": \"skyblue\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				rightElementsCount--;
 				key++;				
 			}
@@ -55,7 +55,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"rat\",\"parent\":\"node\",\"text\":\"Rationales\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + distanceRight + " 43\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(Rationale r : decision.getRationales()){
-				decisionAsJsonString += ",{\"key\": \"rat" + key + "\",\"parent\":\"rat\",\"text\":\"" + r.getName() + "\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"rat" + r.getId() + "\",\"parent\":\"rat\",\"text\":\"" + r.getName() + "\", \"brush\": \"darkseagreen\", \"dir\": \"right\", \"loc\": \"" + (distanceRight + 250) + " " + (rightElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				rightElementsCount--;
 				key++;				
 			}
@@ -63,7 +63,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"alt\",\"parent\":\"node\",\"text\":\"Alternatives\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " -100\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": \"alt" + key + "\",\"parent\":\"alt\",\"text\":\"" + a.getName() + "\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"alt" + a.getId() + "\",\"parent\":\"alt\",\"text\":\"" + a.getName() + "\", \"brush\": \"palevioletred\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
@@ -71,7 +71,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"con\",\"parent\":\"node\",\"text\":\"Consequences\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 0\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": \"con" + key + "\",\"parent\":\"con\",\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"con" + a.getId() + "\",\"parent\":\"con\",\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
@@ -79,7 +79,7 @@ public class GoJsFormatter {
 			decisionAsJsonString += ",{\"key\": \"qua\",\"parent\":\"node\",\"text\":\"Quality Attributes\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 100\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
 			for(QualityAttribute qa : decision.getQualityAttributes()){
-				decisionAsJsonString += ",{\"key\": \"qua" + key + "\",\"parent\":\"qua\",\"text\":\"" + qa.getName() + "\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
+				decisionAsJsonString += ",{\"key\": \"qua" + qa.getId() + "\",\"parent\":\"qua\",\"text\":\"" + qa.getName() + "\", \"brush\": \"grey\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
