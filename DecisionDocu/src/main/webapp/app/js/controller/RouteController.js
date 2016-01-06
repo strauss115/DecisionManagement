@@ -33,4 +33,11 @@ app.controller('RouteController', ['$rootScope', '$cookies', function ($rootScop
         	}
         	return false;
         };
+        
+        $rootScope.showUserMenu = function(){
+        	if ($cookies['Token']){
+        		return true;
+        	}
+        	return false;
+        };
 }]);

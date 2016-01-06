@@ -1,12 +1,12 @@
 package at.jku.se.rest.api;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -16,10 +16,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -31,6 +29,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.dm.shared.RelationString;
+import at.jku.se.model.Alternative;
+import at.jku.se.model.Consequence;
 import at.jku.se.model.Decision;
 import at.jku.se.model.Document;
 import at.jku.se.model.NodeInterface;
@@ -69,7 +69,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/profilePicture/{id}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get node's profile picture", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
@@ -84,24 +84,26 @@ public class DocumentResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			
-			return Response.ok(new StreamingOutput(){
-			    @Override
-			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
-			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
-			            try {
-			                //ByteArrayInputStream reader = (ByteArrayInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream();     
-			                //byte[] input = new byte[2048];  
-			                //java.net.URL uri = Thread.currentThread().getContextClassLoader().getResource("");
-			                File file = new File(LOCATION_PROFILE_PICTURE+id);
-			                FileInputStream fizip = new FileInputStream(file);
-			                byte[] buffer2 = IOUtils.toByteArray(fizip);
-			                bus.write(buffer2);
-			            } catch (Exception e) {
-			            // TODO Auto-generated catch block
-			            e.printStackTrace();
-			            }
-			        }
-			    }).build();
+			File file = new File(LOCATION_PROFILE_PICTURE+id);
+            FileInputStream fizip = new FileInputStream(file);
+            byte[] buffer2 = IOUtils.toByteArray(fizip);
+            
+            String fileName = DBService.getNodeByID(Document.class, id, 0).getName();
+            String mimeType = URLConnection.guessContentTypeFromName(fileName);
+            
+            if (mimeType == null) {
+            	fileName = "test.jpg";
+            	mimeType = URLConnection.guessContentTypeFromName(fileName);
+            }
+            log.debug("filename: '" + fileName + "', type: '" + mimeType + "'");
+
+            String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
+            
+            String s = new String(java.util.Base64.getEncoder().encode(buffer2));
+     		
+            return Response.ok(json + s + "\"}").build();
+			
+			
 
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
@@ -111,7 +113,7 @@ public class DocumentResource {
 	
 	@GET
 	@Path("/document/{id}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get node's document", response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
@@ -126,7 +128,26 @@ public class DocumentResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			
-			return Response.ok(new StreamingOutput(){
+			File file = new File(LOCATION_DOCUMENT+id);
+            FileInputStream fizip = new FileInputStream(file);
+            byte[] buffer2 = IOUtils.toByteArray(fizip);
+            
+            String fileName = DBService.getNodeByID(Document.class, id, 0).getName();
+            String mimeType = URLConnection.guessContentTypeFromName(fileName);
+            
+            if (mimeType == null) {
+            	fileName = "test.jpg";
+            	mimeType = URLConnection.guessContentTypeFromName(fileName);
+            }
+            
+            log.debug("filename: '" + fileName + "', type: '" + mimeType + "'");
+            String json = "{\"type\": \"" + mimeType + "\", \"data\": \"";
+            
+            String s = new String(java.util.Base64.getEncoder().encode(buffer2));
+     		
+            return Response.ok(json + s + "\"}").build();
+			
+			/*return Response.ok(new StreamingOutput(){
 			    @Override
 			        public void write(OutputStream arg0) throws IOException, WebApplicationException {
 			            BufferedOutputStream bus = new BufferedOutputStream(arg0);
@@ -143,7 +164,7 @@ public class DocumentResource {
 			            e.printStackTrace();
 			            }
 			        }
-			    }).build();
+			    }).build();*/
 
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
@@ -291,10 +312,13 @@ public class DocumentResource {
 		}
 	}
 	
+
+	
 	public static void main (String[]args){
 		
-		//Add ProfilPicture to Projects
 		User admin = DBService.getUserByEmail("admin@example.com");
+		
+		//Add Document pdf to Alternatives
 		
 		Document document1 = new Document ("Effizientes Erfassen von Architekturentscheidungen.pdf");
 		document1 = DBService.updateNode(document1, admin.getId());
@@ -309,16 +333,39 @@ public class DocumentResource {
 			e.printStackTrace();
 		}
 		
-		List<Decision> decs = DBService.getAllDecisions(admin);
-		for(Decision dec:decs){
-			DBService.addRelationship(dec.getId(), RelationString.HAS_DOCUMENT, document1.getId());
+		List <Alternative> alts = DBService.getAllNodesOfType(Alternative.class, 0);
+		for(Alternative alt:alts){
+			DBService.addRelationship(alt.getId(), RelationString.HAS_DOCUMENT, document1.getId());
 		}
 		
-		/*Document document = new Document("Profile Picture");
+		//Add Document jpg to Consequences
+		
+		Document document2 = new Document ("Document.jpg");
+		document2 = DBService.updateNode(document2, admin.getId());
+		
+		File destFile2 = new File(LOCATION_DOCUMENT+document2.getId());
+		File srcFile2 = new File(SERVER_UPLOAD_LOCATION_FOLDER+"document.jpg");
+		
+		try {
+			FileUtils.copyFile(srcFile2, destFile2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List <Consequence> cons = DBService.getAllNodesOfType(Consequence.class, 0);
+		for(Consequence con:cons){
+			DBService.addRelationship(con.getId(), RelationString.HAS_DOCUMENT, document2.getId());
+		}
+		
+		
+		//Add ProfilePicture to Projects and Users
+		
+		Document document = new Document("Profile Picture.jpg");
 		document = DBService.updateNode(document, admin.getId());
 		
 		File destFile = new File(LOCATION_PROFILE_PICTURE+document.getId());
-		File srcFile = new File(SERVER_UPLOAD_LOCATION_FOLDER+"profil");
+		File srcFile = new File(SERVER_UPLOAD_LOCATION_FOLDER+"profil.jpg");
 		
 		try {
 			FileUtils.copyFile(srcFile, destFile);
@@ -330,7 +377,14 @@ public class DocumentResource {
 		List<Project> projects = DBService.getAllProjects();
 		for(Project project:projects){
 			DBService.addRelationship(project.getId(), RelationString.HAS_PICTURE, document.getId());
-		}*/
+		}
+		
+		List<User> users = DBService.getAllUser();
+		for(User user:users){
+			DBService.addRelationship(user.getId(), RelationString.HAS_PICTURE, document.getId());
+		}
+		
+		
 		
 		/*try{
 		Client client = ClientBuilder.newClient(new ClientConfig());
@@ -343,6 +397,8 @@ public class DocumentResource {
 		}catch (Exception e){
 			e.printStackTrace();
 		}*/
+		
+		
 	}
 	
 

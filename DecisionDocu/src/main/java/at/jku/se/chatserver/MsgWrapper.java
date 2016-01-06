@@ -16,6 +16,11 @@ import at.jku.se.model.NodeInterface;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 
+/**
+ * Message object wrapper. Used for exchanging messages between server and client.
+ * @author martin
+ *
+ */
 public class MsgWrapper {
 	
 	private static final Logger log = LogManager.getLogger(MsgWrapper.class);
@@ -26,6 +31,10 @@ public class MsgWrapper {
 	private String mMessage;
 	private NodeInterface mNode;
 	
+	/**
+	 * Creates a dummy MsgWrapper object
+	 * @return
+	 */
 	public static MsgWrapper dummy() {
 		MsgWrapper msg = new MsgWrapper();
 		msg.setCreator("server");
@@ -34,8 +43,16 @@ public class MsgWrapper {
 		return msg;
 	}
 	
+	/**
+	 * Default constructor
+	 */
 	public MsgWrapper() {}
 	
+	/**
+	 * Constructor to read fields from Message object
+	 * @param msg Message object
+	 * @throws Exception 
+	 */
 	public MsgWrapper(Message msg) throws Exception {
 		
 		if (msg == null) {
@@ -68,6 +85,12 @@ public class MsgWrapper {
 		}
 	}
 	
+	/**
+	 * Constructor that takes a NodeInterface
+	 * @param msg Message object
+	 * @param createdNode NodeInterface object that the message created
+	 * @throws Exception
+	 */
 	public MsgWrapper(Message msg, NodeInterface createdNode) throws Exception{
 		this(msg);
 		mNode = createdNode;

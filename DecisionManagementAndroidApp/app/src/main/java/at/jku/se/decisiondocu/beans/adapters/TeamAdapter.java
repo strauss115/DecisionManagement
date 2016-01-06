@@ -78,6 +78,11 @@ public class TeamAdapter extends BaseAdapter {
     @RootContext
     Context context;
 
+    public void refresh() {
+        find();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         try {

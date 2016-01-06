@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
+import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.Decision;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.User;

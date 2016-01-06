@@ -1,7 +1,8 @@
 package at.jku.se.chatserver;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.Socket;
@@ -22,9 +23,15 @@ import at.jku.se.model.Property;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 
+/**
+ * This class represents a server-client chat communication.
+ * Each conversation about a certain node needs an object of this class to communicate.
+ * @author martin
+ *
+ */
 public class ClientThread extends Thread {
-	private DataInputStream is = null;
-	PrintStream os = null;
+	private BufferedReader is = null;
+	private PrintStream os = null;
 	private ServerListener server = null;
 	private Socket clientSocket = null;
 	private String name;
@@ -37,39 +44,39 @@ public class ClientThread extends Thread {
 	
 	private Map<String, String> nodeToRelation;
 	
-
+	/**
+	 * Constructor
+	 * @param server Server object that can handle ServerListener method invokes
+	 * @param clientSocket Socket connection
+	 */
 	public ClientThread(ServerListener server, Socket clientSocket) {
 		this.server = server;
 		this.clientSocket = clientSocket;
 		
 		try {
-		admin = DBService.getUserByEmail("admin@example.com");
+		admin = DBService.getUserByEmail("chatadmin@example.com");
 		} catch (Exception e) {
 			log.error(e);
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * Run method. Gets called when the thread is started.
+	 */
 	public void run() {
 
 		try {
 			// create streams
-			is = new DataInputStream(clientSocket.getInputStream());
+			is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			os = new PrintStream(clientSocket.getOutputStream());
 
-			MsgWrapper msg = new MsgWrapper();
-			msg.setCreator("server");
-			msg.setTimestamp(new CustomDate(System.currentTimeMillis()));
-
 			while (true) {
-				msg.setMessage("Retrieving Login Data...");
-				os.println(msg.toString());
+				sendError("Retrieving Login Data...");
 				name = is.readLine().trim();
 				if (name.indexOf('?') == -1) {
 					break;
 				} else {
-					msg.setMessage("The name should not contain '?' character.");
-					os.println(msg.toString());
+					sendError("The name should not contain '?' character.");
 				}
 
 				try {
@@ -98,25 +105,33 @@ public class ClientThread extends Thread {
 			
 			nodeToRelation = NodeToRelationMap.NodeToRelationMap.get(node.getClass().getSimpleName());
 			
-			// System.out.println(node);
-
-			msg.setMessage("Welcome " + user.getName() + " to '" + node.getName()
+			sendError("Welcome " + user.getName() + " to '" + node.getName()
 					+ "' chat room.\nTo leave enter /quit in a new line.");
-
-			os.println(msg.toString());
 
 			// Chatverlauf an diesen Client senden
 			Map<String, List<RelationshipInterface>> rs = node.getRelationships();
-			if (rs.get("message") != null) {
+			if (rs.containsKey(RelationString.HAS_MESSAGE)) {
 				for (RelationshipInterface m : rs.get(RelationString.HAS_MESSAGE)) {
-
+					try{
 					if (m.getRelatedNode() instanceof Message) {
-
-						msg = new MsgWrapper((Message) m.getRelatedNode());
+						Message message =(Message) m.getRelatedNode();
+						MsgWrapper msg = new MsgWrapper(message);
+						try{
+							if(message.getRelationships()!=null&&message.getRelationships().containsKey(RelationString.CREATE_DNODE)){
+								NodeInterface nodeinterface = message.getRelationships().get(RelationString.CREATE_DNODE).get(0).getRelatedNode();
+								msg.setNode(nodeinterface);
+							}
+						}catch (Exception e){
+							sendError("Could not attache created Node");
+						}
+						
 						if (msg != null) {
-							log.debug("Attaching data: " + msg.toString());
+							//log.debug("Attaching data: " + msg.toString());
 							os.println(msg.toString());
 						}
+					}
+					}catch (Exception e){
+						sendError("Could not load Message");
 					}
 				}
 			}
@@ -124,16 +139,16 @@ public class ClientThread extends Thread {
 			synchronized (this) {
 				String message = "The user " + user.getName() + " entered the chat.";
 
-				Message m = this.saveMessage(message, true);
 				try {
-					this.sendToOtherClients(new MsgWrapper(m).toString());
+					this.sendToOtherClients(getMsgWrapper(message).toString());
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					log.error(e1);
 				}
 			}
 			
 			log.debug("---------------------------------------------");
 			log.debug("--------- start the conversation ------------");
+			if (node != null) log.debug("---------     about node " + node.getId() + "     ------------");
 			log.debug("---------------------------------------------");
 			while (true) {
 				String line = is.readLine();
@@ -154,9 +169,8 @@ public class ClientThread extends Thread {
 			}
 			synchronized (this) {
 				String message = "The user " + user.getName() + " is leaving the chat room.";
-				Message m = this.saveMessage(message, true);
 				try {
-					this.sendToOtherClients(new MsgWrapper(m).toString());
+					this.sendToOtherClients(getMsgWrapper(message).toString());
 				} catch (Exception e1) {
 					log.error(e1);
 				}
@@ -169,9 +183,8 @@ public class ClientThread extends Thread {
 			log.error(e);
 			String message = "The user " + (user == null ? "null" : user.getName()) + "("
 					+ clientSocket.getInetAddress() + ") is leaving the chat room.";
-			Message m = this.saveMessage(message, true);
 			try {
-				this.sendToOtherClients(new MsgWrapper(m).toString());
+				this.sendToOtherClients(getMsgWrapper(message).toString());
 			} catch (Exception e1) {
 				log.error(e1);
 			}
@@ -349,9 +362,10 @@ public class ClientThread extends Thread {
 		synchronized (this) {
 			try {
 				Message m = this.saveMessage(message, false);
+				DBService.addRelationship(m.getId(), RelationString.CREATE_DNODE, createdNode.getId());
 				this.sendToOtherClients((new MsgWrapper(m,createdNode).toString()));
 			} catch (Exception e1) {
-				os.println("Error sending the message");
+				sendError("Error sending the message");
 			}
 			log.debug("Message received: '" + message + "' from user '" + user.getEmail() + "'");
 		}
@@ -363,43 +377,29 @@ public class ClientThread extends Thread {
 				Message m = this.saveMessage(message, false);
 				this.sendToOtherClients((new MsgWrapper(m).toString()));
 			} catch (Exception e1) {
-				os.println("Error sending the message");
+				sendError("Error sending the message");
 			}
 			log.debug("Message received: '" + message + "' from user '" + user.getEmail() + "'");
 		}
 	}
 	
 	private void sendError (String message){
+		os.println(getMsgWrapper(message).toString());
+	}
+	
+	private MsgWrapper getMsgWrapper(String message){
 		MsgWrapper msg = new MsgWrapper();
-		msg.setCreator("server");
+		msg.setCreatorEmail("chatadmin@example.com");
+		msg.setCreator("chat admin");
 		msg.setTimestamp(new CustomDate(System.currentTimeMillis()));
 		msg.setMessage(message);
-		os.println(msg.toString());
+		return msg;
 	}
 
-	/*private String checkLine(String line, String user) {
-		if (line.startsWith("/quit"))
-			return line;
-		if (line.startsWith("?"))
-			return line;
-		if (line.startsWith("#") && !line.contains("@")) {// Propertie with
-																// value
-			return "Property '"
-					+ line.substring(1, line.length()).split(" ", 2)[0]
-					+ "' mit dem Wert '"
-					+ line.substring(1, line.length()).split(" ", 2)[1]
-					+ "' zur entscheidung hinzugefuegt";
-		} else if (line.startsWith("@") && line.contains("#Comment")) { // Comment
-																		// on
-																		// propertie
-			String propertie = line.substring(1, line.length()).split(" #Comment ", 2)[0];
-			String comment = line.substring(1, line.length()).split(" #Comment ", 2)[1];
-			
-			return "Kommentar '" + comment + "' zur Eigenschaft '" + propertie + "' hinzugefuegt";
-		}
-		return line;
-	}*/
-
+	/**
+	 * Returns the node id
+	 * @return
+	 */
 	public long getNodeId() {
 		return node.getId();
 	}
@@ -418,4 +418,13 @@ public class ClientThread extends Thread {
 	private void sendToOtherClients(String message) {
 		server.notifyAll(message, this.getNodeId());
 	}
+
+	/**
+	 * Returns the output stream of the socket
+	 * @return
+	 */
+	public PrintStream getOutputStream() {
+		return os;
+	}
+		
 }

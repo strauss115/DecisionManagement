@@ -24,7 +24,9 @@ public class RelationString {
 	
 	// User -- relations
 	public final static String HAS_PROJECT = "hasproject";
+	public final static String LIKES = "likes";
 	
 	// Message -- relations
 	public final static String HAS_MESSAGE = "message";
+	public final static String CREATE_DNODE = "createdNode";
 }

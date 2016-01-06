@@ -26,13 +26,16 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
+import java.net.URLConnection;
 import java.util.HashMap;
 
 import at.jku.se.decisiondocu.R;
 import at.jku.se.decisiondocu.asynctask.RestNetworkTasks;
-import at.jku.se.decisiondocu.beans.interfaces.NodeFinder;
 import at.jku.se.decisiondocu.beans.RESTNodeFinder;
 import at.jku.se.decisiondocu.beans.adapters.RelationAdapter;
+import at.jku.se.decisiondocu.beans.interfaces.NodeFinder;
+import at.jku.se.decisiondocu.login.SaveSharedPreference;
+import at.jku.se.decisiondocu.restclient.RestHelper;
 import at.jku.se.decisiondocu.restclient.client.DBStrings.RelationString;
 import at.jku.se.decisiondocu.restclient.client.model.Document;
 import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
@@ -46,7 +49,7 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
 
     private ProgressDialog mDialog;
     private NodeInterface mNode;
-    private HashMap<LinearLayout,Integer> mLinearLayoutHashMap;
+    private HashMap<LinearLayout, Integer> mLinearLayoutHashMap;
 
     @ViewById(R.id.search_document_detail_title)
     TextView mTitle;
@@ -120,9 +123,9 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
     }
 
     @Click(R.id.document_image)
-    protected void clickedImage(){
+    protected void clickedImage() {
         try {
-            if(!error) {
+            if (!error) {
                 if (relation.equals(RelationString.HAS_PICTURE) && imageView.getDrawable() != null) {
                     ImageView image = new ImageView(this);
                     image.setImageDrawable(imageView.getDrawable());
@@ -138,27 +141,51 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
                                     })
                                     .setView(image);
                     builder.create().show();
-                }else if (relation.equals(RelationString.HAS_DOCUMENT)&&documentFile!=null&&documentFile.exists()){
+                } else if (relation.equals(RelationString.HAS_DOCUMENT) && documentFile != null && documentFile.exists()) {
                     Uri path = Uri.fromFile(documentFile);
-                    Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
 
-                    String[] strings =documentFile.getName().split("\\.");
-                    String fileextension="";
-                    if(strings.length>1) {
+                    String mimeType = URLConnection.guessContentTypeFromName(documentFile.getName());
+
+                    String[] strings = documentFile.getName().split("\\.");
+                    String fileextension = "";
+                    if (mimeType == null && strings.length > 1) {
                         fileextension = strings[strings.length - 1];
-                        pdfIntent.setDataAndType(path, "application/" + fileextension);
+                        intent.setDataAndType(path, "application/" + fileextension);
+                    } else {
+                        fileextension = mimeType;
+                        intent.setDataAndType(path, mimeType);
                     }
-                    Log.d("File","Opening File: "+documentFile.getName()+" extension: "+fileextension);
-                    pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Log.d("File", "Opening File: " + documentFile.getName() + " extension: " + fileextension);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     try {
-                        startActivity(pdfIntent);
-                    }catch (Exception e){
+                        startActivity(intent);
+                    } catch (Exception e) {
                         Toast.makeText(this,
-                                "No Application Available to View PDF",
+                                "No Application Available to View Document",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Click(R.id.document_header)
+    public void openChat(){
+        try {
+            String url = RestHelper.GetBaseURLChat();
+            String ip = url.substring(0, url.indexOf(':'));
+            int port = Integer.valueOf(url.substring(url.indexOf(':') + 1, url.length()));
+
+            new ChatActivity_.IntentBuilder_(this)
+                    .IPAddress(ip)
+                    .Port(port)
+                    .DecisionName(mNode.getName())
+                    .dec_node_id(mNode.getId())
+                    .usr_token(SaveSharedPreference.getUserToken(this))
+                    .start();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -167,12 +194,12 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
     @ItemClick(R.id.search_detail_list_view)
     protected void itemClicked(Pair<String, NodeInterface> item) {
         //Log.i("ListView", "Item " + item + " clicked!");
-        if(item.second instanceof Document) {
+        if (item.second instanceof Document) {
             new SearchDocumentDetailsActivity_.IntentBuilder_(this)
                     .relation(item.first)
                     .decisionId(item.second.getId())
                     .start();
-        }else {
+        } else {
             new SearchNodeDetailsActivity_.IntentBuilder_(this)
                     .decisionId(item.second.getId())
                     .start();
@@ -192,11 +219,11 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
             mNodeType.setText(mNode.getClass().getSimpleName());
 
             mRelationships.setAdapter(mAdapter);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(relation.equals(RelationString.HAS_PICTURE)) {
+        if (relation.equals(RelationString.HAS_PICTURE)) {
             try {
                 new RestNetworkTasks.DownloadProfilPicture(null, null, null, decisionId, imageView) {
                     @Override
@@ -210,7 +237,7 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
                                 e.printStackTrace();
                                 error = true;
                             }
-                        }else{
+                        } else {
                             error = true;
                         }
                     }
@@ -219,10 +246,9 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
                 e.printStackTrace();
                 error = true;
             }
-        }
-        else if(relation.equals(RelationString.HAS_DOCUMENT)){
+        } else if (relation.equals(RelationString.HAS_DOCUMENT)) {
             try {
-                new RestNetworkTasks.DownloadDocument(null, null, null, (Document)mNode) {
+                new RestNetworkTasks.DownloadDocument(null, null, null, (Document) mNode) {
                     @Override
                     protected void onPostExecute(Integer success) {
                         super.onPostExecute(success);
@@ -235,7 +261,7 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
                                 e.printStackTrace();
                                 error = true;
                             }
-                        }else{
+                        } else {
                             error = true;
                         }
                     }
@@ -246,8 +272,6 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
 
 }

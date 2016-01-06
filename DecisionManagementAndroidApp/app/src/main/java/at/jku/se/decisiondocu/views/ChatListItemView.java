@@ -66,6 +66,9 @@ public class ChatListItemView extends LinearLayout {
             layout.setBackgroundResource(R.drawable.speech_bubble_green);
             lp.gravity = Gravity.RIGHT;
 
+        } else if (item.getCreatorEmail() != null && item.getCreatorEmail().equals("chatadmin@example.com")) {
+            layout.setBackgroundResource(R.drawable.speech_bubble_blue);
+            lp.gravity = Gravity.LEFT;
         } else {
             layout.setBackgroundResource(R.drawable.speech_bubble_orange);
             lp.gravity = Gravity.LEFT;

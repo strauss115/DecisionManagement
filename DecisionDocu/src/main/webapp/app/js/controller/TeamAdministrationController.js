@@ -4,7 +4,8 @@ app.controller('TeamAdministrationController', [ '$scope', '$cookies',
 			$scope.teams = [];
 			$scope.openTeams = [];
 
-
+			$cookies.TeamId = null;
+			
 			$scope.getTeams = function() {
 				UserPerMail.get({
 					mail : $cookies['Mail']

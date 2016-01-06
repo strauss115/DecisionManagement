@@ -106,12 +106,13 @@
 	<div class="col-lg-12">
 		<div>
 			<go-diagram-mind-map go-model="model"
-				style="border: solid 1px black; border-radius: 25px; width:100%; height:400px"></go-diagram-mind-map>
+				style="border: solid 1px black; border-radius: 25px; width:100%; height:500px;"></go-diagram-mind-map>
 			<!-- <button id="SaveButton" class="btn btn-default" onclick="save()">Save</button>
 			<button class="btn btn-default" onclick="load()">Load</button>
 			<button class="btn btn-default" onclick="layoutAll()">Layout</button> -->
 		</div>
 	</div>
+	<button type="button" class="btn btn-default" ng-click="openFullScreenPanel()">Full Screen Mode</button>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="addAttributePanel" role="dialog">
@@ -124,15 +125,47 @@
                 <h4 style="" id="headlineAddAttributePanel"><span class="glyphicon glyphicon-lock"></span>Add Attribute</h4>
             </div>
             <div class="modal-body">
-                <form role="form">
-                    <div class="form-group">
-                        <label for="attributeName">Name</label>
-                        <input id="addAttributeInputText" ng-model="decisionAttributeValueFromPanel" type="text" class="form-control" id="attributeName" placeholder="Attribute name"  ng-required ng-model="addAttributePanelInputDialog">
-                    	<button id="saveAttributeButton" type="button" class="btn btn-default" data-dismiss="modal" ng-click="addDecisionAttributeInPanelClick()">Save</button>
-                    </div>
-                </form>
+            	<div>
+					<h3>Attribute</h3>
+	                <form role="form">
+	                    <div class="form-group">
+	                        <label for="attributeName">Name</label>
+	                        <input id="addAttributeInputText" ng-model="decisionAttributeValueFromPanel" type="text" class="form-control" id="attributeName" placeholder="Attribute name"  ng-required ng-model="addAttributePanelInputDialog">
+	                    	<button id="saveAttributeButton" type="button" class="btn btn-default" data-dismiss="modal" ng-click="addDecisionAttributeInPanelClick()">Save</button>
+	                    </div>
+	                </form>
+                </div>
+                <div id="fileAdministrationDiv">
+					<h3>Files</h3>
+					 <div class="form-group">
+					  <label for="filesList">Existing files:</label>
+					  <select class="form-control" id="filesList" multiple >
+					    	<option value="#google.at"><a href="google.at" href="_blank">File 1</a></option>
+					    	<option value="#google.at">File 2</option>
+							<option value="#google.at">File 3</option>
+							<option value="#google.at">File 4</option>
+						</select>
+					</div>
+	                <form role="form">
+	                    <div class="form-group">
+	                        <label for="uploadName">Path</label>
+	                        <input id="uploadName" type="text" class="form-control" placeholder="File">
+	                    	<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="addDecisionAttributeInPanelClick()">Add File</button>
+	                    </div>
+	                </form>
+                </div>
             </div>
         </div>
     </div>
-
+</div>
+<div class="modal fade" id="fullScreenPanel" role="dialog">
+    <div class="modal-dialog" style="height:90%;width:100%;">
+        <!-- Modal content-->
+        <div class="modal-content" style="height:100%;width:100%;">
+	        <div class="modal-body" style="height:100%;width:100%;">
+				<go-diagram-mind-map go-model="model"
+					style="border: solid 1px black; border-radius: 25px; width:100%; height:100%"></go-diagram-mind-map>
+        	</div>
+        </div>
+    </div>
 </div>

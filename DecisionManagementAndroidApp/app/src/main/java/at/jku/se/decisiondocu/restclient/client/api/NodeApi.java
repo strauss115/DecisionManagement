@@ -47,7 +47,7 @@ public class NodeApi {
      * @param body  JSON Object to insert in the database
      * @return String
      */
-    public String createSimpleNode(String token, NodeInterface body) throws ApiException {
+    public NodeInterface createSimpleNode(String token, NodeInterface body) throws ApiException {
         Object postBody = body;
 
         // verify the required parameter 'token' is set
@@ -95,7 +95,11 @@ public class NodeApi {
         try {
             String response = apiInvoker.invokeAPI(basePath, path, "POST", queryParams, postBody, headerParams, formParams, contentType);
             if (response != null) {
-                return "";
+                try {
+                    return mapper.readValue(response, NodeInterface.class);
+                } catch (IOException e) {
+                    return null;
+                }
             } else {
                 return null;
             }

@@ -5,7 +5,9 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class CustomDate {
+import org.glassfish.jersey.internal.inject.Custom;
+
+public class CustomDate implements Comparable<CustomDate> {
 	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd-HH:mm:ss.SSS")
 	private Date date;
@@ -47,4 +49,8 @@ public class CustomDate {
 		return formate.format(getDate());
 	}
 
+	@Override
+	public int compareTo(CustomDate another) {
+		return this.getDate().compareTo(another.getDate());
+	}
 }

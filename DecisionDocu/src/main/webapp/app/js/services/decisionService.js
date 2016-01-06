@@ -53,17 +53,48 @@ decisionServices.factory('DecisionsByTeam', [
 				}
 			});
 		} ]);
-decisionServices.factory('AddAttributeToDecision', [
-		'$resource',
-		'$cookies',
-		function($resource, $cookies) {
-			return $resource(serverAddress 
-					+ '/DecisionDocu/api/web/decision/:decisionId/:attribute?value=:value',{decisionId:'@id',attribute : '@attribute',value : '@value'}, {
-						save : {
-							method : 'POST',
-							headers : {
-								'token' : $cookies['Token']
-							}
-						}
-					});
-		} ]);
+decisionServices
+		.factory(
+				'AddAttributeToDecision',
+				[
+						'$resource',
+						'$cookies',
+						function($resource, $cookies) {
+							return $resource(
+									serverAddress
+											+ '/DecisionDocu/api/web/decision/:decisionId/:attribute?value=:value',
+									{
+										decisionId : '@id',
+										attribute : '@attribute',
+										value : '@value'
+									}, {
+										save : {
+											method : 'POST',
+											headers : {
+												'token' : $cookies['Token']
+											}
+										}
+									});
+						} ]);
+decisionServices
+		.factory(
+				'CreateDecision',
+				[
+						'$resource',
+						'$cookies',
+						function($resource, $cookies) {
+							return $resource(
+									serverAddress
+											+ '/DecisionDocu/api/web/decision/create?name=:name&userEmail=' + $cookies['Mail'] + '&teamId='
+											+ $cookies['TeamId'],
+									{
+										name : '@decisionName'
+									}, {
+										save : {
+											method : 'POST',
+											headers : {
+												'token' : $cookies['Token']
+											}
+										}
+									});
+						} ]);

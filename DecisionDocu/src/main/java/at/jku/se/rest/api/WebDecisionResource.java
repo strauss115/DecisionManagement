@@ -208,7 +208,7 @@ public class WebDecisionResource {
 				// --
 				team.addDecision(d);
 				// --
-				return RestResponse.getSuccessResponse();
+				return RestResponse.getSuccessResponse(d);
 			} else {
 				log.error("Unable to create decision, user or team not found");
 				return RestResponse.getErrorResponse();
@@ -260,19 +260,6 @@ public class WebDecisionResource {
 
 		WebDecision decision = convertDecision(DBService.getDecisionById(id));
 		if (decision != null) {
-			decision.addAlternative(new Alternative("Alternative 1 very very very long text text very very"));
-			decision.addAlternative(new Alternative("A2"));
-			decision.addAlternative(new Alternative("Alternative 2 middle length"));
-			decision.addInfluenceFactor(
-					new InfluenceFactor("Influence Factor 1 very very very long text text very very"));
-			decision.addInfluenceFactor(new InfluenceFactor("IF 2"));
-			decision.addInfluenceFactor(new InfluenceFactor("IF 3 middle"));
-			decision.addConsequence(new Consequence("Consequence 1 very very very long text text very very"));
-			decision.addConsequence(new Consequence("C 2"));
-			decision.addConsequence(new Consequence("C 3 long text text very very"));
-			decision.addRationale(new Rationale("R 1 very very very very very very long text"));
-			decision.addRationale(new Rationale("R 2"));
-			decision.addRationale(new Rationale("R 3 "));
 			String result = GoJsFormatter.convertDecisionToGoJsJson(decision);
 			System.out.println(result);
 			return Response.status(HttpCode.HTTP_200_OK.getCode()).entity(result).build();

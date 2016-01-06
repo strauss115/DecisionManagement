@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.jku.se.database.DBService;
@@ -12,6 +15,8 @@ import at.jku.se.dm.shared.PropertyString;
 import at.jku.se.dm.shared.RelationString;
 
 public class Project extends Node {
+
+	private static final Logger log = LogManager.getLogger(Project.class);
 	
 	// ------------------------------------------------------------------------
 
@@ -38,7 +43,12 @@ public class Project extends Node {
 	
 	@JsonIgnore
 	public String getPassword() {
-		return getDirectProperty(PropertyString.PASSWORD);
+		try {
+			return super.getDirectProperties().get(PropertyString.PASSWORD);
+		} catch (Exception e) {
+			log.error("Unable to get password", e);
+			return "";
+		}
 	}
 
 	@JsonIgnore

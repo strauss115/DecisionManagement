@@ -28,19 +28,41 @@
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView1"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:hint="___________________________">
+            android:layout_weight="1"
+            android:layout_height="40dp">
 
             <requestFocus />
         </AutoCompleteTextView>
 
 
-        <Button
-            android:id="@+id/send_button"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="send" />
+            android:layout_height="wrap_content">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:id="@+id/chat_show_node"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_info_details"
+                android:text=""/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:id="@+id/chat_take_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_camera"
+                android:text=""/>
+
+            <Button
+                android:id="@+id/send_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="send" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

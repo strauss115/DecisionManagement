@@ -12,19 +12,32 @@
         android:layout_height="wrap_content"
         android:id="@+id/CreatDecLayout">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/create_decision"
-        android:textColor="@color/textFieldColor"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:id="@+id/search_detail_title"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <View style="@style/ListDivider" />
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:id="@+id/add_take_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_camera"
+                android:text=""/>
+
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/create_decision"
+            android:textColor="@color/textFieldColor"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:id="@+id/search_detail_title"
+            android:layout_gravity="center" />
+        </LinearLayout>
+
+        <View style="@style/ListDivider" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,7 +82,13 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_marginBottom="5dp" />
 
-    <LinearLayout
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/addDec_image_view"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

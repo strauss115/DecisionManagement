@@ -33,6 +33,7 @@ app.controller('EditDecisionController', [
 			$scope.model.selectedNodeData = null;
 			$scope.selectedDecisionId = "";
 			$scope.selectedAttribute = "";
+			$scope.selectedAttribute = "";
 			// load all graphs from team to show in selection
 			DecisionsByTeam.get({}, function(data) {
 				var obj = angular.fromJson(data);
@@ -111,18 +112,32 @@ app.controller('EditDecisionController', [
 				}, function(error) {
 				});
 			}
+			// full screen mode
+			$scope.openFullScreenPanel = function(){
+            	jQuery("#fullScreenPanel").modal();
+			}
+			
 			// add attribute to decision - after panel-save-click
 			$scope.addDecisionAttributeInPanelClick = function(){
 				//alert($scope.decisionAttributeValueFromPanel);
 				//alert("add" + $("#headlineAddAttributePanel").text().trim().split(" ")[1]);
-				AddAttributeToDecision.save({
-					value : $scope.decisionAttributeValueFromPanel,
-					id : $scope.selectedDecisionId,
-					attribute : "add" + $("#headlineAddAttributePanel").text().trim().split(" ")[1]
-				}, function(data) {
-					alert(data);
-					//$scope.updateGraph();
-				}, function(error) {
-				});
+				var att = $("#headlineAddAttributePanel").text().trim().split(" ")[1];
+				if($("#headlineAddAttributePanel").text().trim().split(" ").length > 2){
+					att = $("#headlineAddAttributePanel").text().trim().split(" ")[1] + $("#headlineAddAttributePanel").text().trim().split(" ")[2];
+				}
+				if($("#headlineAddAttributePanel").text().trim().split(" ")[0] == "Add"){
+					AddAttributeToDecision.save({
+						value : $scope.decisionAttributeValueFromPanel,
+						id : $scope.selectedDecisionId,
+						attribute : "add" + att
+					}, function(data) {
+						alert(data);
+						//$scope.updateGraph();
+					}, function(error) {
+					});
+				}
+				if($("#headlineAddAttributePanel").text().trim().split(" ")[0] == "Edit"){
+					alert("EDIT - TO-DO - call edit service");
+				}
 			}
 		} ]);

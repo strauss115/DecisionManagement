@@ -3,15 +3,18 @@ package at.jku.se.decisiondocu.restclient;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -46,8 +49,9 @@ public class RestClient {
     public static String accessToken = null; //"g0up9ej1egkmrtveig59ke0adf";
 
     public static List<String> USERS = new ArrayList<String>();
-    static{
-        if(USERS.size()==0) {
+
+    static {
+        if (USERS.size() == 0) {
             USERS.add("foo@example.com:hello");
             USERS.add("bar@example.com:world");
         }
@@ -57,7 +61,7 @@ public class RestClient {
     // USER PART
     // -----------------------------------------------------------------------------------------
 
-    public static String getToken(String email, String password){
+    public static String getToken(String email, String password) {
         UserApi api = new UserApi();
         try {
             TokenResponse response = api.login(email, password);
@@ -69,12 +73,17 @@ public class RestClient {
         return null;
     }
 
-    public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap profil){
+    public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap bitmap) {
         UserApi api = new UserApi();
         try {
             User user = api.register(firstname, lastname, password, email);
             Log.d("user", "created! (" + user.toString() + ")");
             USERS.add(email + ":" + password);
+
+            if (bitmap != null) {
+                saveProfilePicture(bitmap, user.getId());
+            }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,9 +129,9 @@ public class RestClient {
         return dec;
     }
 
-    public static String createDecision(Project project) {
+    public static NodeInterface createDecision(Project project) {
         NodeApi api = new NodeApi();
-        String node = null;
+        NodeInterface node = null;
         try {
             node = api.createSimpleNode(accessToken, project);
         } catch (Exception e) {
@@ -130,7 +139,7 @@ public class RestClient {
         }
         return node;
     }
-    
+
     // -----------------------------------------------------------------------------------------
     // PROJECT PART
     // -----------------------------------------------------------------------------------------
@@ -187,7 +196,7 @@ public class RestClient {
     // DOCUMENT PART
     // -----------------------------------------------------------------------------------------
 
-    private static void safeProfilePicture(Bitmap image, int id){
+    private static void saveProfilePicture(Bitmap image, long id) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -198,7 +207,19 @@ public class RestClient {
 
     }
 
-    private static String uploadProfilePicture(byte[] fileContent, int id)throws Exception {
+    public static boolean saveDocument(Bitmap image, long id) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            return uploadDocument(byteArrayOutputStream.toByteArray(), id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static boolean uploadDocument(byte[] fileContent, long id) {
+
         // local variables
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
@@ -208,21 +229,74 @@ public class RestClient {
         String responseMessageFromServer = null;
         String responseString = null;
 
-        try{
+        try {
             // invoke service after setting necessary parameters
             webTarget = RestHelper.getWebTargetWithMultiFeature();
-            webTarget= webTarget.path("upload").path("profilePicture");
+            webTarget = webTarget.path("upload").path("document").path(id + "");
             Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
 
             // set file upload values
-            //streamDataBodyPart = new StreamDataBodyPart("uploadFile", inputStream, "01.jpeg", MediaType.APPLICATION_OCTET_STREAM_TYPE);
             formDataMultiPart = new FormDataMultiPart();
-            StreamDataBodyPart bodyPart =new StreamDataBodyPart("uploadFile",new ByteArrayInputStream(fileContent),id+".jpg",MediaType.APPLICATION_OCTET_STREAM_TYPE);
-            //formDataMultiPart.field("uploadFile", fileContent, MediaType.APPLICATION_OCTET_STREAM_TYPE);
-
+            StreamDataBodyPart bodyPart = new StreamDataBodyPart("uploadFile", new ByteArrayInputStream(fileContent), id + ".jpg", MediaType.APPLICATION_OCTET_STREAM_TYPE);
             formDataMultiPart.bodyPart(bodyPart);
 
-            response = webTarget.request().post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA));
+            invocationBuilder = webTarget.request();
+            invocationBuilder.header("token", accessToken);
+            response = invocationBuilder.post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA));
+
+            // get response code
+            responseCode = response.getStatus();
+            System.out.println("Response code: " + responseCode);
+
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed with HTTP error code : " + responseCode);
+            }
+
+            // get response message
+            responseMessageFromServer = response.getStatusInfo().getReasonPhrase();
+            System.out.println("ResponseMessageFromServer: " + responseMessageFromServer);
+
+
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            // release resources, if any
+            //streamDataBodyPart.cleanup();
+            formDataMultiPart.cleanup();
+            try {
+                formDataMultiPart.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            response.close();
+        }
+        return true;
+    }
+
+    private static String uploadProfilePicture(byte[] fileContent, long id) throws Exception {
+        // local variables
+        WebTarget webTarget = null;
+        Invocation.Builder invocationBuilder = null;
+        Response response = null;
+        FormDataMultiPart formDataMultiPart = null;
+        int responseCode;
+        String responseMessageFromServer = null;
+        String responseString = null;
+
+        try {
+            // invoke service after setting necessary parameters
+            webTarget = RestHelper.getWebTargetWithMultiFeature();
+            webTarget = webTarget.path("upload").path("profilePicture").path(id + "");
+            Log.i("URI", webTarget.getUri().getHost() + webTarget.getUri().getPath());
+
+            // set file upload values
+            formDataMultiPart = new FormDataMultiPart();
+            StreamDataBodyPart bodyPart = new StreamDataBodyPart("uploadFile", new ByteArrayInputStream(fileContent), id + ".jpg", MediaType.APPLICATION_OCTET_STREAM_TYPE);
+            formDataMultiPart.bodyPart(bodyPart);
+
+            invocationBuilder = webTarget.request();
+            invocationBuilder.header("token", 1);
+            response = invocationBuilder.post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA));
 
             // get response code
             responseCode = response.getStatus();
@@ -238,11 +312,9 @@ public class RestClient {
 
             // get response string
             responseString = response.readEntity(String.class);
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             throw ex;
-        }
-        finally{
+        } finally {
             // release resources, if any
             //streamDataBodyPart.cleanup();
             formDataMultiPart.cleanup();
@@ -252,17 +324,17 @@ public class RestClient {
         return responseString;
     }
 
-    public static Bitmap downloadProfilPicture (long id){
+    public static Bitmap downloadProfilPicture(long id) {
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
         Response response = null;
         InputStream inputStream = null;
         int responseCode;
 
-        try{
+        try {
 
-            webTarget = RestHelper.getWebTargetWithChunckedFeature();
-            webTarget= webTarget.path("upload").path("profilePicture").path(id + "");
+            webTarget = RestHelper.getWebTargetWithMultiFeature();
+            webTarget = webTarget.path("upload").path("profilePicture").path(id + "");
 
             // invoke service
             invocationBuilder = webTarget.request();
@@ -271,36 +343,35 @@ public class RestClient {
 
             // get response code
             responseCode = response.getStatus();
-            System.out.println("Download Document Response code: " + responseCode);
 
             if (response.getStatus() != 200) {
                 throw new RuntimeException("Failed with HTTP error code : " + responseCode);
             }
 
-            // read response string
-            inputStream = response.readEntity(InputStream.class);
-            return BitmapFactory.decodeStream(inputStream);
-        }
-        catch(Exception ex) {
+            String responseString = response.readEntity(String.class);
+            JSONObject json = new JSONObject(responseString);
+            Log.d("json", json.toString());
+
+            byte[] imageAsBytes = Base64.decode(json.getString("data").getBytes(), Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally{
+        } finally {
             response.close();
         }
         return null;
     }
 
-    public static File downloadDocument(Document doc){
+    public static File downloadDocument(Document doc) {
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
         Response response = null;
-        InputStream inputStream = null;
         int responseCode;
 
-        try{
+        try {
 
-            webTarget = RestHelper.getWebTargetWithChunckedFeature();
-            webTarget= webTarget.path("upload").path("document").path(doc.getId() + "");
+            webTarget = RestHelper.getWebTargetWithMultiFeature();
+            webTarget = webTarget.path("upload").path("document").path(doc.getId() + "");
 
             // invoke service
             invocationBuilder = webTarget.request();
@@ -309,46 +380,28 @@ public class RestClient {
 
             // get response code
             responseCode = response.getStatus();
-            System.out.println("Download Document Response code: " + responseCode);
 
             if (response.getStatus() != 200) {
                 throw new RuntimeException("Failed with HTTP error code : " + responseCode);
             }
 
-            // read response string
-            inputStream = response.readEntity(InputStream.class);
+            String responseString = response.readEntity(String.class);
+            JSONObject json = new JSONObject(responseString);
+            Log.d("json", json.toString());
 
-            System.out.println(inputStream.toString());
+            byte[] bytes = Base64.decode(json.getString("data").getBytes(), Base64.DEFAULT);
 
             File file = new File((Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
                     + "/" + doc.getName()));
 
-            int count;
-            OutputStream output = new FileOutputStream(file);
-
-            byte data[] = new byte[1024];
-
-            long total = 0;
-
-            while ((count = inputStream.read(data)) != -1) {
-                total += count;
-
-                // writing data to file
-                output.write(data, 0, count);
-            }
-
-            // flushing output
+            OutputStream output = new FileOutputStream(file, false);
+            output.write(bytes);
             output.flush();
-
-            // closing streams
             output.close();
-            //inputStream.close();
             return file;
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally{
+        } finally {
             response.close();
         }
         return null;
@@ -360,6 +413,7 @@ public class RestClient {
 
     /**
      * Liefert alle möglichen Relationship Strings des Backends
+     *
      * @return
      */
     public static Map<String, String> getRelationshipStrings() {
