@@ -12,7 +12,7 @@ public class WebUser extends ResponseData {
 	 */
 	private String eMail;
 	private String firstName, lastName;
-	private String urlProfilePicture;
+	private String profilePicture;
 	private boolean isAdmin;
 	private List<String> teams;
 
@@ -56,12 +56,12 @@ public class WebUser extends ResponseData {
 		this.lastName = lastName;
 	}
 
-	public String getUrlProfilePicture() {
-		return urlProfilePicture;
+	public String getProfilePicture() {
+		return profilePicture;
 	}
 
-	public void setUrlProfilePicture(String urlProfilePicture) {
-		this.urlProfilePicture = urlProfilePicture;
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 
 	public boolean isAdmin() {

@@ -31,51 +31,46 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="">E-Mail:</label>
 					<div class="col-lg-3">
-						<input type="text" class="form-control" value="" ng-model="email">
+						<input disabled type="text" class="form-control" value=""
+							ng-model="email">
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="panel-body">
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="">Picture</label>
 					<div class="col-lg-3">
-					<img height="50" ng-src="{{profilePicture}}" ng-show="profilePicture != null" />
-							
+						<img height="150" ng-src="{{profilePicture}}"
+							ng-show="profilePicture != ''" />
+
 					</div>
 				</div>
 			</div>
-			
+
+
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-lg-2 control-label" for="">Picture</label>
+					<label class="col-lg-2 control-label" for=""></label>
 					<div class="col-lg-3">
-							<input type="file" file-model="myFile" />
-							<button ng-click="uploadFile()">upload me</button>
+						<div class="input-group">
+							<input id="uploadFileName" disabled type="text"
+								class="form-control ng-pristine ng-valid ng-touched"> <span
+								class="input-group-btn"> <a class="btn btn-primary"
+								onclick="$('#profilePicture').click();">Browse</a>
+							</span>
+						</div>
+
+
+						<input id="profilePicture" type="file" file-model="myFile"
+							data-filename-placement="inside" style="visibility: hidden;"
+							onchange="$('#uploadFileName').val($(this).val());" />
 					</div>
 				</div>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-lg-2 control-label" for="">Teams:</label>
-					<div class="col-lg-3">
-						<select class="form-control" size="3">
-							<option ng-repeat="t in teams">{{ t }}</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="panel-body">
-				<div class="form-group">
-					<button type="button" class="col-lg-2 btn btn-lg btn-default">Save</button>
-					<div class="panel-body">
-				<div class="form-group">
-					<label class="col-lg-2 control-label" for="">Picture</label>
-					<div class="col-lg-3"><a ng-click="downloadFile()"><span class="fa fa-file-pdf-o"></span></a>
-							
-					</div>
-				</div>
-			</div>
+					<button type="button" class="col-lg-2 btn btn-lg btn-default" ng-click="save()">Save</button>
 				</div>
 			</div>
 			<!-- /.panel-body -->

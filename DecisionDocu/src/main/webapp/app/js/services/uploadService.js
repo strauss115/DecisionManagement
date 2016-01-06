@@ -1,5 +1,5 @@
 app.service('fileUpload', ['$http', '$cookies', function ($http, $cookies) {
-    this.uploadFileToUrl = function(file, uploadUrl){
+    this.uploadFileToUrl = function(file, uploadUrl, $scope){
         var fd = new FormData();
         fd.append('uploadFile', file);
         $http.post(uploadUrl, fd, {
@@ -8,10 +8,10 @@ app.service('fileUpload', ['$http', '$cookies', function ($http, $cookies) {
             	'token': $cookies['Token']}
         })
         .success(function(){
-        	alert("success");
+        	$scope.loadUser();
         })
         .error(function(){
-        	alert("error");
+
         });
     }
 }]);

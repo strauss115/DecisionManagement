@@ -3,16 +3,6 @@
  */
 var userServices = angular.module('userServices', [ 'ngResource' ]);
 
-userServices.factory('Users', [ '$resource', function($resource) {
-	return $resource(serverAddress + '/DecisionManagement/rest/user/', {}, {
-		query : {
-			method : 'GET',
-			params : {},
-			isArray : true
-		}
-	});
-} ]);
-
 userServices.factory('UserPerMail', [
 		'$resource',
 		'$cookies',
@@ -22,6 +12,7 @@ userServices.factory('UserPerMail', [
 						mail : '@id'
 					}, {
 						get : {
+							method: "GET",
 							isArray : false,
 							headers : {
 								'token' : $cookies['Token']
@@ -30,11 +21,47 @@ userServices.factory('UserPerMail', [
 					});
 		} ]);
 
+
+userServices.factory('UpdateFirstName', [
+                             		'$resource',
+                             		'$cookies',
+                             		function($resource, $cookies) {
+                             			return $resource(
+                             					serverAddress + '/DecisionDocu/api/web/user/:id/setFirstName?firstName=:firstName', {
+                             						id : '@id',
+                             						firstName: '@firstName'
+           
+                             					}, {
+                             						save : {
+                             							method: "POST",
+                             							headers : {
+                             								'token' : $cookies['Token']
+                             							}
+                             						}
+                             					});
+                             		} ]);
+userServices.factory('UpdateLastName', [
+                                  		'$resource',
+                                  		'$cookies',
+                                  		function($resource, $cookies) {
+                                  			return $resource(
+                                  					serverAddress + '/DecisionDocu/api/web/user/:id/setLastName?lastName=:lastName', {
+                                  						id : '@id',
+                                  						lastName: '@lastName'
+                                  					}, {
+                                  						save : {
+                                  							method: "POST",
+                                  							headers : {
+                                  								'token' : $cookies['Token']
+                                  							}
+                                  						}
+                                  					});
+                                  		} ]);
 userServices.factory('UserPicture', [
 		'$resource',
 		'$cookies',
 		function($resource, $cookies) {
-			return $resource(serverAddress + '/DecisionDocu/api/web/user/getFile/:id', {
+			return $resource(serverAddress + '/DecisionDocu/api/upload/profilePicture/:id', {
 				id : '@id'
 			}, {
 				get : {
