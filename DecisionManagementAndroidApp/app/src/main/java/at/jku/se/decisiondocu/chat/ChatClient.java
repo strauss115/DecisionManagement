@@ -70,8 +70,6 @@ public class ChatClient {
             Socket socket = new Socket(serverAddr, port);
             Log.e("TCP Server IP", ip);
 
-            if (mChatListener != null) mChatListener.connected();
-
             try {
                 String serverMessage = null;
 

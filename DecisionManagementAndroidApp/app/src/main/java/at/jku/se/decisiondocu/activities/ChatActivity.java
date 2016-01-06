@@ -200,10 +200,10 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
      */
     public class connectTask extends AsyncTask<String, String, ChatClient> {
 
-        private ChatActivity activity;
+        private ChatInterface chatInterface;
 
-        public connectTask(ChatActivity activity) {
-            this.activity = activity;
+        public connectTask(ChatInterface chatInterface) {
+            this.chatInterface = chatInterface;
         }
 
         @Override
@@ -217,7 +217,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
                     publishProgress(message);
                 }
             }); // create ChatClient
-            mChatClient.setConnectionListener(activity);
+            mChatClient.setConnectionListener(chatInterface);
             mChatClient.run(IPAddress, Port);
 
             return null;
@@ -226,7 +226,12 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            mAdapter.appendData(values[0]);
+            if (values[0].contains("Retrieving Login Data...")) {
+                chatInterface.connected();
+            }
+            else {
+                mAdapter.appendData(values[0]);
+            }
         }
     }
 
@@ -249,7 +254,7 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     @Override
     public void connected() {
-        sleep(350);
+        sleep(1000);
         sendStartMsg();
     }
 
