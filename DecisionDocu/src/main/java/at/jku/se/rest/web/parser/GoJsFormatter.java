@@ -70,8 +70,8 @@ public class GoJsFormatter {
 			// add consequences
 			decisionAsJsonString += ",{\"key\": \"con\",\"parent\":\"node\",\"text\":\"Consequences\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + distanceLeft * (-1) + " 0\",\"editable\": false, \"showAdd\": true}";
 			key = 1;
-			for(Alternative a : decision.getAlternatives()){
-				decisionAsJsonString += ",{\"key\": \"con" + a.getId() + "\",\"parent\":\"con\",\"text\":\"" + a.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor - 200) + "\",\"editable\": false, \"showAdd\": true}";
+			for(Consequence c : decision.getConsequences()){
+				decisionAsJsonString += ",{\"key\": \"con" + c.getId() + "\",\"parent\":\"con\",\"text\":\"" + c.getName() + "\", \"brush\": \"coral\", \"dir\": \"left\", \"loc\": \"" + ((distanceLeft * -1) - 250) + " " + (leftElementsCount * -1 * distanceFactor - 200) + "\",\"editable\": false, \"showAdd\": true}";
 				leftElementsCount--;
 				key++;				
 			}
