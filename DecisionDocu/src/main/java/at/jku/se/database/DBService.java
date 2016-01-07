@@ -118,6 +118,16 @@ public class DBService {
 		return getNodeByID(Decision.class, decisionId, 2);
 	}
 	
+	public static List<String> getAllQualityAttributeNames() {
+		HashSet<String> result = new HashSet<String>();
+		List<NodeInterface> qualityAttributes = getNodesFromQuery("MATCH (n:QualityAttribute) RETURN null as RelNodeId, null as RelId, null as Reltype, id(n)as NodeId, labels(n)as NodeLable, n as Node");
+		
+		for (NodeInterface node : qualityAttributes) {
+			result.add(node.getName());
+		}
+		return new LinkedList<String>(result);
+	}
+	
 	public static User getUserByEmail(String email){
 		try{
 		return getAllNodes(User.class,0,"{email: \""+email+"\"}",null).get(0);

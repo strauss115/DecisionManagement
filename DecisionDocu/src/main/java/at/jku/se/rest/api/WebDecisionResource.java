@@ -265,6 +265,7 @@ public class WebDecisionResource {
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
+
 	@GET
 	@Path("/getTeamGraphsForConnectionAsJsonByTeamId")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -273,11 +274,11 @@ public class WebDecisionResource {
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "Team id", required = true) @QueryParam("teamId") long teamId) {
 		log.debug("GET decisions by team id '" + teamId + "'");
-		
+
 		if (!SessionManager.verifySession(token)) {
 			return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 		}
-		
+
 		Project team = DBService.getNodeByID(Project.class, teamId, 2);
 
 		if (team != null) {
@@ -355,12 +356,12 @@ public class WebDecisionResource {
 
 			User u = SessionManager.getUser(token);
 			Decision d = DBService.getDecisionById(id);
-			
+
 			if (d == null) {
 				log.error("Unable to add value, decision '" + id + "' not found");
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			
+
 			InfluenceFactor node = new InfluenceFactor(value);
 			node = DBService.updateNode(node, u.getId());
 
@@ -396,12 +397,12 @@ public class WebDecisionResource {
 
 			User u = SessionManager.getUser(token);
 			Decision d = DBService.getDecisionById(id);
-			
+
 			if (d == null) {
 				log.error("Unable to add value, decision '" + id + "' not found");
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			
+
 			Rationale node = new Rationale(value);
 			node = DBService.updateNode(node, u.getId());
 
@@ -438,12 +439,12 @@ public class WebDecisionResource {
 
 			User u = SessionManager.getUser(token);
 			Decision d = DBService.getDecisionById(id);
-			
+
 			if (d == null) {
 				log.error("Unable to add value, decision '" + id + "' not found");
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			
+
 			Alternative node = new Alternative(value);
 			node = DBService.updateNode(node, u.getId());
 
@@ -480,12 +481,12 @@ public class WebDecisionResource {
 
 			User u = SessionManager.getUser(token);
 			Decision d = DBService.getDecisionById(id);
-			
+
 			if (d == null) {
 				log.error("Unable to add value, decision '" + id + "' not found");
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			
+
 			Consequence node = new Consequence(value);
 			node = DBService.updateNode(node, u.getId());
 
@@ -498,6 +499,28 @@ public class WebDecisionResource {
 			}
 		} catch (Exception e) {
 			log.error("Unable to add attribute to decision: " + e);
+			return RestResponse.getErrorResponse();
+		}
+	}
+
+	@GET
+	@Path("/allQualityAttributes")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a list of all quality attributes")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Unable to get quality attributes due to server error"),
+			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 200, message = "Ok") })
+	public Response getAllQualityAttributes(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
+		log.debug("GET allQualityAttributes");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			return RestResponse.getSuccessResponse(DBService.getAllQualityAttributeNames());
+			
+		} catch (Exception e) {
+			log.error("Unable get all quality attributes", e);
 			return RestResponse.getErrorResponse();
 		}
 	}
@@ -522,12 +545,12 @@ public class WebDecisionResource {
 
 			User u = SessionManager.getUser(token);
 			Decision d = DBService.getDecisionById(id);
-			
+
 			if (d == null) {
 				log.error("Unable to add value, decision '" + id + "' not found");
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			
+
 			QualityAttribute node = new QualityAttribute(value);
 			node = DBService.updateNode(node, u.getId());
 
@@ -577,7 +600,7 @@ public class WebDecisionResource {
 			return RestResponse.getErrorResponse();
 		}
 	}
-	
+
 	@PUT
 	@Path("/{id}/removeRelatedDecision")
 	@Produces(MediaType.APPLICATION_JSON)
