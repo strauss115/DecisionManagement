@@ -7,7 +7,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -54,8 +53,9 @@ public class WebTeamResource {
 				WebTeam result = new WebTeam();
 				// --
 				result.setId(String.valueOf(team.getId()));
-				result.setAdmin(String.valueOf(team.getAdmin().getId()));
 				result.setName(team.getName());
+				if (team.getAdmin() != null)
+					result.setAdmin(String.valueOf(team.getAdmin().getId()));
 
 				List<String> teamUserIds = new LinkedList<String>();
 				User[] users = DBService.getAllUser().toArray(new User[0]);
@@ -159,7 +159,7 @@ public class WebTeamResource {
 			if (admin != null) {
 				log.debug("Trying to create team");
 				Project team = new Project(name, admin, password);
-				DBService.updateNode(team, author.getId());
+				DBService.updateNodeWihtRelationships(team, author.getId());
 				// --
 				return RestResponse.getSuccessResponse();
 			} else {
