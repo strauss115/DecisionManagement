@@ -1,9 +1,13 @@
 /**
- * service for the authentification
+ * Services for the CreateDecisionController, EditDecisionController and
+ * CompleteDecisionController
  */
 var decisionServices = angular.module('decisionServices', [ 'ngResource',
 		'ngCookies' ]);
 
+/**
+ * LoadEditGraph - Service generates the JSON-model for the decision go.js graph.
+ */
 decisionServices.factory('LoadEditGraph', [
 		'$resource',
 		'$cookies',
@@ -20,6 +24,10 @@ decisionServices.factory('LoadEditGraph', [
 					});
 		} ]);
 
+/**
+ * LoadConnectionsGraph - Service generates the JSON-model for the connection
+ * go.js graph.
+ */
 decisionServices
 		.factory(
 				'LoadConnectionsGraph',
@@ -38,6 +46,9 @@ decisionServices
 										}
 									});
 						} ]);
+/**
+ * DecisionsByTeam - Service for getting all decision of a team
+ */
 decisionServices.factory('DecisionsByTeam', [
 		'$resource',
 		'$cookies',
@@ -53,6 +64,10 @@ decisionServices.factory('DecisionsByTeam', [
 				}
 			});
 		} ]);
+
+/**
+ * AddAttributeToDecision - Service for adding an attribute to a decison
+ */
 decisionServices
 		.factory(
 				'AddAttributeToDecision',
@@ -76,6 +91,10 @@ decisionServices
 										}
 									});
 						} ]);
+
+/**
+ * CreateDecision Service - for creating a new decision
+ */
 decisionServices
 		.factory(
 				'CreateDecision',
@@ -85,9 +104,9 @@ decisionServices
 						function($resource, $cookies) {
 							return $resource(
 									serverAddress
-											+ '/DecisionDocu/api/web/decision/create?name=:name&userEmail=' + $cookies['Mail'] + '&teamId='
-											+ $cookies['TeamId'],
-									{
+											+ '/DecisionDocu/api/web/decision/create?name=:name&userEmail='
+											+ $cookies['Mail'] + '&teamId='
+											+ $cookies['TeamId'], {
 										name : '@decisionName'
 									}, {
 										save : {
@@ -99,43 +118,41 @@ decisionServices
 									});
 						} ]);
 
+/**
+ * GetNode - Service to get data of a node element in the decision graph
+ */
+decisionServices.factory('GetNode', [ '$resource', '$cookies',
+		function($resource, $cookies) {
+			return $resource(serverAddress + '/DecisionDocu/api/node/:id', {
+				id : '@id'
+			}, {
+				get : {
+					method : 'GET',
+					isArray : false,
+					headers : {
+						'token' : $cookies['Token']
+					}
+				}
+			});
+		} ]);
 
-decisionServices
-.factory(
-		'GetNode',
-		[
-				'$resource',
-				'$cookies',
-				function($resource, $cookies) {
-					return $resource(
-							serverAddress
-									+ '/DecisionDocu/api/node/:id',
-							{
-								id : '@id'
-							}, {
-								get : {
-									method : 'GET',
-									isArray: false,
-									headers : {
-										'token' : $cookies['Token']
-									}
-								}
-							});
-				} ]);
-
+/**
+ * GetFile - Service for getting a file in base64 format
+ */
 userServices.factory('GetFile', [
-                             		'$resource',
-                             		'$cookies',
-                             		function($resource, $cookies) {
-                             			return $resource(serverAddress + '/DecisionDocu/api/upload/document/:id', {
-                             				id : '@id'
-                             			}, {
-                             				get : {
-                             					method: "GET",
-                             					isArray: false,
-                             					headers : {
-                             						'token' : $cookies['Token']
-                             					}
-                             				}
-                             			});
-                             		} ]);
+		'$resource',
+		'$cookies',
+		function($resource, $cookies) {
+			return $resource(serverAddress
+					+ '/DecisionDocu/api/upload/document/:id', {
+				id : '@id'
+			}, {
+				get : {
+					method : "GET",
+					isArray : false,
+					headers : {
+						'token' : $cookies['Token']
+					}
+				}
+			});
+		} ]);
