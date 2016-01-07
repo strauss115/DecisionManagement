@@ -1,3 +1,6 @@
+/**
+ * Controller for the 'editDecision.html' - load decisions and add attributes
+ */
 app.controller('EditDecisionController',
 		[
 				'$scope',
@@ -67,42 +70,23 @@ app.controller('EditDecisionController',
 					} else {
 						$scope.selectedDecision = "";
 					}
-						// load all graphs from team to show in selection
-						DecisionsByTeam.get({}, function(data) {
-							var obj = angular.fromJson(data);
-							var firstElementId = "";
-							for (var i = 0; i < obj.length; i++) {
-								if (i == 0) {
-									firstElementId = obj[i].id;
-									$scope.selectedDecisionId = obj[i].id;
-								}
-								$scope.decisions.push({
-									"id" : obj[i].id,
-									"name" : obj[i].name,
-									"alternatives" : obj[i].alternatives
-								});
-								// alert("alternatives count in decision: " +
-								// obj[i].alternatives.length);
-								// alert("id of first alternative: " +
-								// obj[i].alternatives[0].id);
+					// load all graphs from team to show in selection
+					DecisionsByTeam.get({}, function(data) {
+						var obj = angular.fromJson(data);
+						var firstElementId = "";
+						for (var i = 0; i < obj.length; i++) {
+							if (i == 0) {
+								firstElementId = obj[i].id;
+								$scope.selectedDecisionId = obj[i].id;
 							}
-							/*
-							if (firstElementId != "") {
-								// load the first graph
-								LoadEditGraph.get({
-									id : firstElementId
-								}, function(data) {
-									// alert(data);
-									$scope.model = new go.Model.fromJson({
-										"class" : "go.TreeModel",
-										"nodeDataArray" : data
-									}), $scope.model.selectedNodeData = null;
-								}, function(error) {
-								});
-							}*/
-						}, function(error) {
-						});
-					
+							$scope.decisions.push({
+								"id" : obj[i].id,
+								"name" : obj[i].name,
+								"alternatives" : obj[i].alternatives
+							});
+						}
+					}, function(error) {
+					});
 
 					// function to update selected graph - draw selected graph
 					$scope.updateGraph = function() {
@@ -123,10 +107,6 @@ app.controller('EditDecisionController',
 					$scope.changeAttributeCategories = function() {
 						alert("Attribute choose changed"
 								+ $scope.selectedAttribute);
-						/*
-						 * $scope.decisions.push({ "id" : obj[i].id, "name" :
-						 * obj[i].name, "alternatives" : obj[i].alternatives });
-						 */
 						$scope.attributeValues.push({
 							value : "test",
 							label : "test"
@@ -140,8 +120,6 @@ app.controller('EditDecisionController',
 					}
 					// function to add attributes to decision
 					$scope.addDecisionAttribute = function() {
-						// alert($scope.selectedDecisionId);
-						// alert($scope.selectedAttribute);
 						alert($scope.attributeValue);
 						AddAttributeToDecision.save({
 							value : $scope.attributeValue,
@@ -157,7 +135,7 @@ app.controller('EditDecisionController',
 					$scope.openFullScreenPanel = function() {
 						jQuery("#fullScreenPanel").modal();
 					}
-
+					// load files of node
 					$scope.loadNode = function(id) {
 						$scope.downloadFiles = new Array();
 						$scope.NodeId = id;
@@ -189,10 +167,6 @@ app.controller('EditDecisionController',
 
 					// add attribute to decision - after panel-save-click
 					$scope.addDecisionAttributeInPanelClick = function() {
-						// alert($scope.decisionAttributeValueFromPanel);
-						// alert("add" +
-						// $("#headlineAddAttributePanel").text().trim().split("
-						// ")[1]);
 						var att = $("#headlineAddAttributePanel").text().trim()
 								.split(" ")[1];
 						if ($("#headlineAddAttributePanel").text().trim()
@@ -210,7 +184,6 @@ app.controller('EditDecisionController',
 								attribute : "add" + att
 							}, function(data) {
 								alert(data);
-								// $scope.updateGraph();
 							}, function(error) {
 							});
 						}
@@ -219,7 +192,7 @@ app.controller('EditDecisionController',
 							alert("EDIT - TO-DO - call edit service");
 						}
 					}
-
+					// upload file
 					$scope.uploadFile = function(id) {
 						var file = $scope.myFile1;
 						if (file !== undefined) {
@@ -231,12 +204,12 @@ app.controller('EditDecisionController',
 
 						}
 					};
-					
+
 					//Hide if no decision is selected
-					$scope.isHidden = function(){
-						if ($scope.selectedDecision==""){
+					$scope.isHidden = function() {
+						if ($scope.selectedDecision == "") {
 							return true;
-						}else{
+						} else {
 							return false;
 						}
 					}

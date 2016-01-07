@@ -1,3 +1,6 @@
+/**
+ * Controller for the 'completeDecision.html' - load incompleted decisions
+ */
 app.controller('CompleteDecisionController', [
 		'$scope',
 		'$cookies',

@@ -1,3 +1,6 @@
+/**
+ * Controller for the 'userProfile.html' - load user data + change user data (personal information and user pic)
+ */
 app.controller('UserProfileController', [
 		'$scope',
 		'$cookies',
@@ -14,7 +17,7 @@ app.controller('UserProfileController', [
 			$scope.lastname = "";
 			$scope.profilPictureId = "";
 			$scope.teams = new Array();
-
+			// load user which is logged in
 			$scope.loadUser = function() {
 				UserPerMail.get({
 					mail : $cookies['Mail']
@@ -30,7 +33,7 @@ app.controller('UserProfileController', [
 				});
 			}
 			$scope.loadUser();
-
+			// method for file upload
 			$scope.uploadFile = function() {
 				var file = $scope.myFile;
 				if (file !== undefined) {
@@ -41,7 +44,7 @@ app.controller('UserProfileController', [
 					
 				}
 			};
-
+			// method to load user picture
 			$scope.getUserPicture = function() {
 				UserPicture.get({
 					id : $scope.profilPictureId
@@ -54,7 +57,7 @@ app.controller('UserProfileController', [
 
 						});
 			}
-
+			// method to save user information (changed)
 			$scope.save = function() {
 				UpdateFirstName.save({
 					id : $scope.id,
@@ -70,7 +73,7 @@ app.controller('UserProfileController', [
 				});	
 				$scope.uploadFile();
 			}
-
+			// method to get profile picture
 			$scope.downloadFile = function() {
 				window.open($scope.profilePicture);
 			}

@@ -1,9 +1,12 @@
+/**
+ * Controller for the 'relateDecision.html' - load decisions and show connections via GoJs-graph
+ */
 app.controller('RelateDecisionController', [
 		'$scope',
 		'$cookies',
 		'LoadConnectionsGraph',
 		'DecisionsByTeam',
-		function($scope, $cookies, LoadConnectionsGraph,DecisionsByTeam) {
+		function($scope, $cookies, LoadConnectionsGraph, DecisionsByTeam) {
 			$scope.model = new go.GraphLinksModel([], []);
 			$scope.model.selectedNodeData = null;
 			// init decision array

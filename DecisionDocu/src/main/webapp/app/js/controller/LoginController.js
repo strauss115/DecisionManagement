@@ -1,3 +1,6 @@
+/**
+ * Controller for the login feature - set cookies and authenticate user 
+ */
 app.controller('LoginController', [ '$scope', '$rootScope', '$cookies',
 		'$location', 'Login', 'Register',
 		function($scope, $rootScope, $cookies, $location, Login, Register) {
@@ -10,7 +13,7 @@ app.controller('LoginController', [ '$scope', '$rootScope', '$cookies',
 			$scope.password2 = "";
 			$scope.firstname = "";
 			$scope.lastname = "";
-
+			// login method - authenticate against backend
 			$scope.login = function() {
 
 				Login.get({
@@ -27,11 +30,11 @@ app.controller('LoginController', [ '$scope', '$rootScope', '$cookies',
 					$rootScope.login = false;
 				});
 			};
-
+			// method to open register modal
 			$scope.openRegisterModal = function() {
 				$("#registerModal").modal();
 			};
-
+			// method to register user
 			$scope.register = function() {
 				$("#emailError").hide();
 				$("#passwordError").hide();

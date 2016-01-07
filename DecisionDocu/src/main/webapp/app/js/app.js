@@ -1,8 +1,13 @@
+/**
+ * general js-file - for definition of the the GoJs-Template and Go-Js-Nodes
+ */
 var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices', 'decisionServices', 'angularFileUpload']);
 var serverAddress = "http://localhost:8080";
 
 
-
+/**
+ * control login token
+ */
 app.run(function ($rootScope, $cookies, $location) {
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
         if (!$cookies['Token'] && $location.path() != "/login" ) {
@@ -11,7 +16,9 @@ app.run(function ($rootScope, $cookies, $location) {
         }
     });
 });
-
+/**
+ * create GoJs template
+ */
 app.directive('goDiagramMindMap', function () {
     return {
         restrict: 'E',
@@ -256,8 +263,8 @@ app.directive('goDiagramMindMap', function () {
                   jQuery("#addAttributeInputText").val("");
             });
             /*
-             * Layout method - calculate node positions
-             */
+			 * Layout method - calculate node positions
+			 */
             function layoutTree(node) {
                 if (node.data.key === 0) {  // adding to the root?
                     layoutAll(); // lay out everything
