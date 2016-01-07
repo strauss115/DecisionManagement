@@ -202,17 +202,18 @@ app.directive('goDiagramMindMap', function () {
                 			break;
 	                case "qua": panelHeaderText = "Quality Attribute";
         					break;
-                }
-                // jQuery("#addAttributeInputText").val(olddata.text);
-                 
-                var scope = angular.element(document.getElementById("content")).scope(); 
-                scope.loadNode(olddata.key.substr(3));
+                }             
+               
                 
                 if(olddata.key.length == 3){
                 	jQuery("#fileAdministrationDiv").css("display", "none"); 
                 	jQuery("#addAttributeInputText").val("");
                     jQuery("#headlineAddAttributePanel").text("Add " + panelHeaderText);
+                    jQuery("#addAttributePanel").modal();
                     addNode = true;
+                }else{
+                	 var scope = angular.element(document.getElementById("content")).scope(); 
+                     scope.loadNode(olddata.key.substr(3));
                 }
                 // if a attribute value is chosen - nodes can be changed and
 				// files can be added
