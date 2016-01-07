@@ -179,7 +179,6 @@ app.controller('EditDecisionController',
 								}, function(error) {
 								});
 							}
-							jQuery("#addAttributePanel").modal();
 						}, function(error) {
 						});
 					}

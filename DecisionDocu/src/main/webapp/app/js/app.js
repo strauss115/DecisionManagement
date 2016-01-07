@@ -172,7 +172,7 @@ app.directive('goDiagramMindMap', function () {
             // because of the GoJS-Plugin, various variables have to bes saved
 			// when a node is chosen
             // save goJsModel from callback-method - to add a node
-            var objGoJsModel;
+            var objGoJsModel=null;
             // save chosen attribute (consequence, rationale,..)
             var chosenAttribute = "";
             // count for new attributes - for key definition
@@ -209,12 +209,13 @@ app.directive('goDiagramMindMap', function () {
                 	jQuery("#fileAdministrationDiv").css("display", "none"); 
                 	jQuery("#addAttributeInputText").val("");
                     jQuery("#headlineAddAttributePanel").text("Add " + panelHeaderText);
-                    jQuery("#addAttributePanel").modal();
+                    
                     addNode = true;
                 }else{
                 	 var scope = angular.element(document.getElementById("content")).scope(); 
                      scope.loadNode(olddata.key.substr(3));
                 }
+                jQuery("#addAttributePanel").modal();
                 // if a attribute value is chosen - nodes can be changed and
 				// files can be added
                 if(olddata.key.length > 3){
