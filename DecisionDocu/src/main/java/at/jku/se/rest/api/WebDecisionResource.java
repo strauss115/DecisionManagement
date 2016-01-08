@@ -318,6 +318,41 @@ public class WebDecisionResource {
 	}
 	// ------------------------------------------------------------------------
 
+	@GET
+	@Path("/{id}/messages")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Gets all messages for decision")
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Unable to get messages due to server error"),
+			@ApiResponse(code = 401, message = "Unauthorized to read messages for decision"),
+			@ApiResponse(code = 204, message = "Decision id not found"), @ApiResponse(code = 200, message = "Ok") })
+	public Response getMessages(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Decision id", required = true) @PathParam("id") long id) {
+		log.debug("GET all messages for decision '" + id + "'");
+
+		try {
+			if (!SessionManager.verifySession(token)) {
+				log.warn("Unauthorized access");
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Decision d = DBService.getNodeByID(Decision.class, id, 2);
+			if (d == null) {
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			// --
+			
+			// TODO create WebMessage object with attributes message, date and author
+			// TODO convert Message to WebMessage
+			
+			return RestResponse.getSuccessResponse(d.getMessages());
+		} catch (Exception e) {
+			log.error("Unable to get messages for decision", e);
+			return RestResponse.getErrorResponse();
+		}
+	}
+
+	// ------------------------------------------------------------------------
+
 	@PUT
 	@Path("/{id}/removeAttribute")
 	@ApiOperation(value = "Removes attributes which are existence dependent to a decision", notes = "influence factor, rationale, alternatives, consequence, quality attributes, document")
@@ -347,10 +382,10 @@ public class WebDecisionResource {
 					|| nodeType.equals(NodeString.ALTERNATIVE) || nodeType.equals(NodeString.CONSEQUENCE)
 					|| nodeType.equals(NodeString.QUALITYATTRIBUTE) || nodeType.equals(NodeString.DOCUMENT)) {
 				DBService.deleteNode(otherNodeId);
-				
+
 				updateLastActivity(d, "Removed an attribute");
 				DBService.updateNode(d, 0);
-				
+
 				return RestResponse.getSuccessResponse();
 			} else {
 				log.warn("Denying to delete unallowed node '" + otherNodeId + "'");

@@ -224,5 +224,12 @@ public class Decision extends Node {
 	public boolean deleteDocument(Document document) {
 		return deleteRelationByRelatedNode(RelationString.HAS_DOCUMENT, document);
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Message> getMessages() {
+		return getNodesByRelationship(RelationString.HAS_MESSAGE, Message.class);
+	}
 
 }
