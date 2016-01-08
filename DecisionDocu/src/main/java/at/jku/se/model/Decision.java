@@ -48,6 +48,22 @@ public class Decision extends Node {
 		super.addDirectProperty(PropertyString.DESCRIPTION, description);
 		DBService.updateNode(this, 0);
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public String getLastActivity() {
+		String value = getDirectProperty(PropertyString.LAST_ACTIVITY);
+		if (value.equals(""))
+			return "No last activity";
+		return value;
+	}
+	
+	@JsonIgnore
+	public void setLastActivity(String lastActivity) {
+		super.addDirectProperty(PropertyString.LAST_ACTIVITY, lastActivity);
+		DBService.updateNode(this, 0);
+	}
 
 	// ------------------------------------------------------------------------
 
@@ -66,7 +82,7 @@ public class Decision extends Node {
 	}
 
 	// ------------------------------------------------------------------------
-
+	
 	@JsonIgnore
 	public List<InfluenceFactor> getInfluenceFactors() {
 		return getNodesByRelationship(RelationString.HAS_INFLUENCE_FACTOR, InfluenceFactor.class);

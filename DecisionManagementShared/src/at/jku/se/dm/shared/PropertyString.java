@@ -10,6 +10,9 @@ public class PropertyString {
 	public static final String EMAIL = "email";
 	public static final String IS_ADMIN = "isAdmin";
 	
+	// Decision
+	public static final String LAST_ACTIVITY = "lastActivity";
+	
 	// Project
 	public static final String DESCRIPTION = "description";
 

@@ -292,14 +292,15 @@ public class WebTeamResource {
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 	}
-	
+
 	@POST
 	@Path("{id}/setPassword")
 	@ApiOperation(value = "Changes password of team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Password successfully changed"),
 			@ApiResponse(code = 204, message = "User or team not found"),
 			@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Server Error") })
-	public Response changePassword(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+	public Response changePassword(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "ID of the team", required = true) @PathParam("id") long teamId,
 			@ApiParam(value = "New password", required = true) @QueryParam("name") String value) {
 		log.debug("POST setPassword '" + value + "' for team '" + teamId + "'");
@@ -330,7 +331,7 @@ public class WebTeamResource {
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 	}
-	
+
 	@POST
 	@Path("{id}/setAdmin")
 	@ApiOperation(value = "Changes admin of team")
@@ -374,6 +375,7 @@ public class WebTeamResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Deletes a team")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Team deleted successfully"),
+			@ApiResponse(code = 204, message = "Team not found"),
 			@ApiResponse(code = 500, message = "Unable to delete team") })
 	public Response delete(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "Team id") @PathParam("id") long teamId) {
@@ -384,9 +386,14 @@ public class WebTeamResource {
 			}
 
 			Project team = DBService.getNodeByID(Project.class, teamId, 1);
+			if (team == null) {
+				log.error("Team '" + teamId + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+			
 			User curUser = SessionManager.getUser(token);
 
-			if (team != null && (curUser.isAdmin() || team.getAdmin().getId() == curUser.getId())) {
+			if (curUser.isAdmin() || team.getAdmin().getId() == curUser.getId()) {
 				DBService.deleteNode(team.getId());
 				log.debug("Deleted team successfully");
 				return RestResponse.getSuccessResponse();

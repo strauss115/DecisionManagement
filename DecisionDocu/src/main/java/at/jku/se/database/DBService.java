@@ -39,7 +39,6 @@ import at.jku.se.model.Rationale;
 import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
-import at.jku.se.rest.api.ChatResource;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class DBService {

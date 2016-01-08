@@ -1,5 +1,8 @@
 package at.jku.se.rest.api;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,6 +48,7 @@ import io.swagger.annotations.ApiResponses;
 public class WebDecisionResource {
 
 	private static final Logger log = LogManager.getLogger(WebDecisionResource.class);
+	private static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
 	// ------------------------------------------------------------------------
 
@@ -73,6 +77,7 @@ public class WebDecisionResource {
 				result.setRelatedDecisions(Node.getListOfIds(decision.getRelatedDecisions()));
 				result.setDocuments(Node.getListOfIds(decision.getDocuments()));
 				result.setResponsibles(Node.getListOfIds(decision.getResponsibles()));
+				result.setLastActivity(decision.getLastActivity());
 				// --
 				return result;
 			} else {
@@ -97,6 +102,20 @@ public class WebDecisionResource {
 		}
 		// --
 		return webDecisions;
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Static helper method to update activity string
+	 * 
+	 * @param d
+	 *            Decision to set last activity
+	 * @param activity
+	 *            Activity as string
+	 */
+	private static void updateLastActivity(Decision d, String activity) {
+		d.setLastActivity(dateFormat.format(new Date()) + ": " + activity);
 	}
 
 	// ------------------------------------------------------------------------
@@ -203,6 +222,9 @@ public class WebDecisionResource {
 			if (author != null && team != null) {
 				log.debug("Trying to create decision");
 				Decision d = new Decision(name);
+
+				updateLastActivity(d, "Created decision");
+
 				DBService.updateNode(d, author.getId());
 				// --
 				team.addDecision(d);
@@ -237,6 +259,8 @@ public class WebDecisionResource {
 
 			Decision d = DBService.getDecisionById(id);
 			d.setDescription(description);
+			updateLastActivity(d, "Updated description '" + description + "'");
+			d.setLastActivity("Set description '" + description + "'");
 			return RestResponse.getSuccessResponse();
 		} catch (Exception e) {
 			log.error("Unable to set description: " + e);
@@ -323,6 +347,10 @@ public class WebDecisionResource {
 					|| nodeType.equals(NodeString.ALTERNATIVE) || nodeType.equals(NodeString.CONSEQUENCE)
 					|| nodeType.equals(NodeString.QUALITYATTRIBUTE) || nodeType.equals(NodeString.DOCUMENT)) {
 				DBService.deleteNode(otherNodeId);
+				
+				updateLastActivity(d, "Removed an attribute");
+				DBService.updateNode(d, 0);
+				
 				return RestResponse.getSuccessResponse();
 			} else {
 				log.warn("Denying to delete unallowed node '" + otherNodeId + "'");
@@ -366,6 +394,7 @@ public class WebDecisionResource {
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				updateLastActivity(d, "Updated influence factors");
 				d.addInfluenceFactor(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
@@ -407,6 +436,7 @@ public class WebDecisionResource {
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				updateLastActivity(d, "Updated rationals");
 				d.addRationale(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
@@ -449,6 +479,7 @@ public class WebDecisionResource {
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				updateLastActivity(d, "Updated alternatives");
 				d.addAlterantive(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
@@ -491,6 +522,7 @@ public class WebDecisionResource {
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				updateLastActivity(d, "Updated consequences");
 				d.addConsequence(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
@@ -518,7 +550,7 @@ public class WebDecisionResource {
 			}
 
 			return RestResponse.getSuccessResponse(DBService.getAllQualityAttributeNames());
-			
+
 		} catch (Exception e) {
 			log.error("Unable get all quality attributes", e);
 			return RestResponse.getErrorResponse();
@@ -555,6 +587,7 @@ public class WebDecisionResource {
 			node = DBService.updateNode(node, u.getId());
 
 			if (node != null) {
+				updateLastActivity(d, "Updated quality attributes");
 				d.addQualityAttribute(node);
 				return RestResponse.getSuccessResponse(node);
 			} else {
@@ -589,6 +622,7 @@ public class WebDecisionResource {
 			Decision relatedDecision = DBService.getNodeByID(Decision.class, relatedId, 1);
 			// --
 			if (d != null && relatedDecision != null) {
+				updateLastActivity(d, "Updated related decisions");
 				d.addRelatedDecision(relatedDecision);
 				return RestResponse.getSuccessResponse();
 			} else {
@@ -623,6 +657,8 @@ public class WebDecisionResource {
 			Decision relatedDecision = DBService.getNodeByID(Decision.class, relatedId, 1);
 			// --
 			if (d.deleteRelatedDecision(relatedDecision)) {
+				updateLastActivity(d, "Updated related decisions");
+				DBService.updateNode(d, 0);
 				return RestResponse.getSuccessResponse();
 			} else {
 				log.error("Unable to delete related decision");
@@ -656,6 +692,7 @@ public class WebDecisionResource {
 			User relatedUser = DBService.getNodeByID(User.class, relatedId, 1);
 			// --
 			if (d != null && relatedUser != null) {
+				updateLastActivity(d, "Updated responsibles");
 				d.addResponsible(relatedUser);
 				return RestResponse.getSuccessResponse();
 			} else {
@@ -690,6 +727,8 @@ public class WebDecisionResource {
 			User relatedUser = DBService.getNodeByID(User.class, relatedId, 1);
 			// --
 			if (d.deleteResponsible(relatedUser)) {
+				updateLastActivity(d, "Updated responsibles");
+				DBService.updateNode(d, 0);
 				return RestResponse.getSuccessResponse();
 			} else {
 				log.error("Unable to delete responsible");

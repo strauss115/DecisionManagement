@@ -27,6 +27,7 @@ public class WebDecision extends ResponseData {
 	private List<String> relatedDecisions;
 	private List<String> responsibles;
 	private List<String> documents;
+	private String lastActivity;
 	private DecisionGraph decisionGraph;
 	
 	// ------------------------------------------------------------------------
@@ -34,6 +35,7 @@ public class WebDecision extends ResponseData {
 	public WebDecision() {
 		this.name = "";
 		this.author = "";
+		this.lastActivity = "";
 		this.creationDate = new Date();
 		
 		this.influenceFactors = new LinkedList<InfluenceFactor>();
@@ -86,6 +88,9 @@ public class WebDecision extends ResponseData {
 	}
 	public String getAuthor() {
 		return author;
+	}
+	public String getLastActivity() {
+		return lastActivity;
 	}
 	public void setAuthor(String author) {
 		this.author = author;
@@ -149,6 +154,9 @@ public class WebDecision extends ResponseData {
 	}
 	public void setConsequences(List<Consequence> consequences) {
 		this.consequences = consequences;
+	}
+	public void setLastActivity(String lastActivity) {
+		this.lastActivity = lastActivity;
 	}
 	
 	// ------------------------------------------------------------------------
