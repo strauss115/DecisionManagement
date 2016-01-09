@@ -5,6 +5,9 @@ import java.util.List;
 
 import at.jku.se.rest.response.ResponseData;
 
+/**
+ * Data container class to represent a user for web application
+ */
 public class WebUser extends ResponseData {
 
 	/**

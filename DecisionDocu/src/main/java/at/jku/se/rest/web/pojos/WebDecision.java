@@ -11,6 +11,9 @@ import at.jku.se.model.QualityAttribute;
 import at.jku.se.model.Rationale;
 import at.jku.se.rest.response.ResponseData;
 
+/**
+ * Data container class to represent a decision for web application
+ */
 public class WebDecision extends ResponseData {
 
 	// ------------------------------------------------------------------------

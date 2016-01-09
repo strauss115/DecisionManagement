@@ -6,7 +6,8 @@ var decisionServices = angular.module('decisionServices', [ 'ngResource',
 		'ngCookies' ]);
 
 /**
- * LoadEditGraph - Service generates the JSON-model for the decision go.js graph.
+ * LoadEditGraph - Service generates the JSON-model for the decision go.js
+ * graph.
  */
 decisionServices.factory('LoadEditGraph', [
 		'$resource',
@@ -150,6 +151,27 @@ userServices.factory('GetFile', [
 				get : {
 					method : "GET",
 					isArray : false,
+					headers : {
+						'token' : $cookies['Token']
+					}
+				}
+			});
+		} ]);
+
+/**
+ * GetMessages - Service for getting all messages related to a decision
+ */
+decisionServices.factory('GetMessages', [
+		'$resource',
+		'$cookies',
+		function($resource, $cookies) {
+			return $resource(serverAddress
+					+ '/DecisionDocu/api/web/decision/:id/messages', {
+				id : '@id'
+			}, {
+				get : {
+					method : 'GET',
+					isArray : true,
 					headers : {
 						'token' : $cookies['Token']
 					}

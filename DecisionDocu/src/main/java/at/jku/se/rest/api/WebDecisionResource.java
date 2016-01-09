@@ -27,6 +27,7 @@ import at.jku.se.model.Alternative;
 import at.jku.se.model.Consequence;
 import at.jku.se.model.Decision;
 import at.jku.se.model.InfluenceFactor;
+import at.jku.se.model.Message;
 import at.jku.se.model.Node;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.Project;
@@ -35,6 +36,7 @@ import at.jku.se.model.Rationale;
 import at.jku.se.model.User;
 import at.jku.se.rest.web.parser.GoJsFormatter;
 import at.jku.se.rest.web.pojos.WebDecision;
+import at.jku.se.rest.web.pojos.WebMessage;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
 import io.swagger.annotations.Api;
@@ -335,16 +337,17 @@ public class WebDecisionResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 
-			Decision d = DBService.getNodeByID(Decision.class, id, 2);
+			Decision d = DBService.getNodeByID(Decision.class, id, 3);
 			if (d == null) {
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
 			// --
-			
-			// TODO create WebMessage object with attributes message, date and author
-			// TODO convert Message to WebMessage
-			
-			return RestResponse.getSuccessResponse(d.getMessages());
+			List<WebMessage> result = new LinkedList<WebMessage>();
+			for (Message m : d.getMessages()) {
+				result.add(WebMessage.getWebMessage(m));
+			}
+			// --
+			return RestResponse.getSuccessResponse(result);
 		} catch (Exception e) {
 			log.error("Unable to get messages for decision", e);
 			return RestResponse.getErrorResponse();

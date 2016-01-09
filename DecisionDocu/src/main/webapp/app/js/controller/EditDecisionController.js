@@ -13,9 +13,10 @@ app.controller('EditDecisionController',
 				'GetNode',
 				'GetFile',
 				'fileUpload1',
+				'GetMessages',
 				function($scope, $cookies, $routeParams, $window,
 						LoadEditGraph, DecisionsByTeam, AddAttributeToDecision,
-						GetNode, GetFile, fileUpload1) {
+						GetNode, GetFile, fileUpload1, GetMessages) {
 
 					// init attributes
 					$scope.attributes = [ {
@@ -39,6 +40,8 @@ app.controller('EditDecisionController',
 
 					// init decision array
 					$scope.decisions = [];
+					// init messages array
+					$scope.messages = [];
 					// init go-js-model
 					$scope.model = new go.GraphLinksModel([], []);
 					$scope.model.selectedNodeData = null;
@@ -57,6 +60,8 @@ app.controller('EditDecisionController',
 							}), $scope.model.selectedNodeData = null;
 						}, function(error) {
 						});
+						
+						
 					}
 
 					$scope.selectedAttribute = "";
@@ -95,13 +100,34 @@ app.controller('EditDecisionController',
 						LoadEditGraph.get({
 							id : $scope.selectedDecision
 						}, function(data) {
-							// alert(data);
+							//alert(data);
 							$scope.model = new go.Model.fromJson({
 								"class" : "go.TreeModel",
 								"nodeDataArray" : data
 							}), $scope.model.selectedNodeData = null;
 						}, function(error) {
 						});
+						
+						// Messages data
+						GetMessages.get({
+							id : $scope.selectedDecision
+						}, function(data) {
+							//alert("Get messages data:" + data);
+							var obj = angular.fromJson(data);
+							for (var i = 0; i < obj.length; i++) {
+								
+								$scope.messages.push({
+									"id" : obj[i].id,
+									"content" : obj[i].content,
+									"date" : obj[i].dateString,
+									"author" : obj[i].authorMail
+								});
+								
+							}
+						}, function(error) {
+							// TODO error handling
+						});	
+
 					}
 					// load attributes from chosen category
 					$scope.changeAttributeCategories = function() {
@@ -213,4 +239,5 @@ app.controller('EditDecisionController',
 							return false;
 						}
 					}
+					
 				} ]);
