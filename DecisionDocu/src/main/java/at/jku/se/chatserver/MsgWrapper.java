@@ -96,46 +96,90 @@ public class MsgWrapper {
 		mNode = createdNode;
 	}
 	
+	/**
+	 * Returns the timestamp of the message
+	 * @return mTimestamp
+	 */
 	public CustomDate getTimestamp() {
 		return mTimestamp;
 	}
 
+	/**
+	 * Sets the timestamp of the message
+	 * @param mTimestamp
+	 */
 	public void setTimestamp(CustomDate mTimestamp) {
 		this.mTimestamp = mTimestamp;
 	}
 
+	/**
+	 * Returns the creator of the message
+	 * @return mCreator
+	 */
 	public String getCreator() {
 		return mCreator;
 	}
 
+	/**
+	 * Sets the creator of a message
+	 * @param mCreator
+	 */
 	public void setCreator(String mCreator) {
 		this.mCreator = mCreator;
 	}
 	
+	/**
+	 * Returns the email of the creator
+	 * @return mCreatorEmail
+	 */
 	public String getCreatorEmail() {
 		return mCreatorEmail;
 	}
 
+	/**
+	 * Sets the email of the creator
+	 * @param mCreatorEmail
+	 */
 	public void setCreatorEmail(String mCreatorEmail) {
 		this.mCreatorEmail = mCreatorEmail;
 	}
 
+	/**
+	 * Returns the message
+	 * @return mMessage
+	 */
 	public String getMessage() {
 		return mMessage;
 	}
 
+	/**
+	 * Sets the message
+	 * @param mMessage
+	 */
 	public void setMessage(String mMessage) {
 		this.mMessage = mMessage;
 	}
 
+	/**
+	 * Returns the message node
+	 * @return mNode
+	 */
 	public NodeInterface getNode() {
 		return mNode;
 	}
 
+	/**
+	 * Sets the message node
+	 * @param mNode
+	 */
 	public void setNode(NodeInterface mNode) {
 		this.mNode = mNode;
 	}
 
+	/**
+	 * Returns the message object as a String
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		final ObjectMapper mapper = new ObjectMapper();

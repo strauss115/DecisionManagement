@@ -25,7 +25,7 @@ import at.jku.se.model.User;
 
 /**
  * This class represents a server-client chat communication.
- * Each conversation about a certain node needs an object of this class to communicate.
+ * Each client of an conversation about a certain node needs an object of this class to communicate.
  * @author martin
  *
  */
@@ -397,8 +397,8 @@ public class ClientThread extends Thread {
 	}
 
 	/**
-	 * Returns the node id
-	 * @return
+	 * Returns the id of the node the conversation is about 
+	 * @return long
 	 */
 	public long getNodeId() {
 		return node.getId();
@@ -421,7 +421,7 @@ public class ClientThread extends Thread {
 
 	/**
 	 * Returns the output stream of the socket
-	 * @return
+	 * @return PrintStream
 	 */
 	public PrintStream getOutputStream() {
 		return os;

@@ -22,12 +22,12 @@ public class RestHelper {
 
     // -------------------------------------------------------------------------------------
 
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
 
     public static final int PORT_TOMCAT = 8080;
     public static final int PORT_CHAT   = 2222;
 
-    public static String HOST_OFFLINE = "192.168.0.104";
+    public static String HOST_OFFLINE = "192.168.0.102";
     public static final String HOST_ONLINE = "ubuntu.mayerb.net";
     public static final String REST_BASEDIR = "/DecisionDocu/api/";
 

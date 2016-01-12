@@ -22,6 +22,10 @@ public class StartupListener implements ServletContextListener {
 	private static final Logger log = LogManager.getLogger(StartupListener.class);
 	private ChatServer mServer;
 	
+	/**
+	 * Close the server socket and stops the chat server
+	 * @param e
+	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent e) {
 		log.debug("Context destroyed!");
@@ -31,6 +35,10 @@ public class StartupListener implements ServletContextListener {
 		}
 	}
 
+	/**
+	 * Starts the chat server
+	 * @param e
+	 */
 	@Override
 	public void contextInitialized(ServletContextEvent e) {
 		log.debug("Context initialized!");
