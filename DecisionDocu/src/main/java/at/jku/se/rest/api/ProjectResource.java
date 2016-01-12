@@ -31,6 +31,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for Project
+ * @author August
+ *
+ */
 @Api(tags = {"project"})
 @Path("/project")
 public class ProjectResource {
@@ -38,6 +43,11 @@ public class ProjectResource {
 	private static final Logger log = LogManager.getLogger(ProjectResource.class);
 	private static ObjectMapper mapper = new ObjectMapper();
 	
+	/**
+	 * With this API method you can retreave all available project nodes from the database
+	 * @param token
+	 * @return Returns all available projects
+	 */
 	@GET
 	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -61,6 +71,11 @@ public class ProjectResource {
 		}
 	}
 	
+	/**
+	 * With this API method you can retreave all project memberships for a user
+	 * @param token
+	 * @return Returns all project memberships for a user
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Returns all project memberships for a user", notes = "With this API method you can retreave all project memberships for a user", response = Project.class, responseContainer = "List")
@@ -84,6 +99,12 @@ public class ProjectResource {
 		}
 	}
 	
+	/**
+	 * With this API method you can retreave a single project
+	 * @param token
+	 * @param id
+	 * @return Returns a single project
+	 */
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -108,6 +129,13 @@ public class ProjectResource {
 		}
 	}
 	
+	/**
+	 * With this API method you can add a single user to a project group
+	 * @param token
+	 * @param projectId
+	 * @param projectPassword
+	 * @return Adds a user to a project group
+	 */
 	@PUT
 	@Path("/addUser")
 	@ApiOperation(value = "Adds a user to a project group", notes = "With this API method you can add a single user to a project group", response = Project.class)
@@ -137,6 +165,12 @@ public class ProjectResource {
 		}
 	}
 	
+	/**
+	 * With this API method you can create a new project
+	 * @param token
+	 * @param json
+	 * @return Creates a new project
+	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Creates a new project", notes = "With this API method you can create a new project", response = Project.class)
@@ -162,6 +196,12 @@ public class ProjectResource {
 		}
 	}
 		
+	/**
+	 * With this API method you can delete a project
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)

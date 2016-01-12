@@ -9,10 +9,18 @@ public abstract class ResponseData {
 	
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Returns Id as String
+	 * @return {@link String}
+	 */
 	public String getId() {
 		return id;
 	}
 	
+	/**
+	 * Sets Id
+	 * @param id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}

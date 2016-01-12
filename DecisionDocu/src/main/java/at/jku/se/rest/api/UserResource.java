@@ -37,6 +37,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for User
+ * @author August
+ *
+ */
 @Api(tags = {"user"})
 @Path("/user")
 public class UserResource {
@@ -44,6 +49,11 @@ public class UserResource {
 	private static final Logger log = LogManager.getLogger(UserResource.class);
 	private static ObjectMapper mapper = new ObjectMapper();
 		
+	/**
+	 * Returns a list of all available users
+	 * @param token
+	 * @return a list of all available users
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Returns a list of all available users", notes = "Returns a list of all available users", response = User.class, responseContainer = "List")
@@ -66,6 +76,12 @@ public class UserResource {
 		}
 	}
 
+	/**
+	 * Returns a certain user
+	 * @param token
+	 * @param eMail
+	 * @return A certain user
+	 */
 	@GET
 	@Path("/{eMail}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,6 +106,12 @@ public class UserResource {
 		}
 	}
 
+	/**
+	 * Login a certain user
+	 * @param eMail
+	 * @param password
+	 * @return This API method creates an access key (token) for the user
+	 */
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -126,6 +148,14 @@ public class UserResource {
 		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 	}
 
+	/**
+	 * This API method creates a new user on the server
+	 * @param firstName
+	 * @param lastName
+	 * @param password
+	 * @param eMail
+	 * @return
+	 */
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -177,6 +207,12 @@ public class UserResource {
         return Response.created(uri).entity(json).build();
 	}
 
+	/**
+	 * This API method edits an existing user
+	 * @param token
+	 * @param json
+	 * @return
+	 */
 	@PUT
 	@ApiOperation(value = "Edit a user", notes = "This API method edits an existing user", response = User.class)
 	@ApiResponses(value = {
@@ -203,6 +239,12 @@ public class UserResource {
 		}
 	}
 
+	/**
+	 * This API method deletes an existing user
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@DELETE
 	@Path("/{id}")
 	@ApiOperation(value = "Delete a user", notes = "This API method deletes an existing user", response = User.class)
@@ -234,6 +276,13 @@ public class UserResource {
 		}
 	}
 
+	/**
+	 * This API method can change a users permission from user to admin or vice versa
+	 * @param token
+	 * @param id
+	 * @param isAdmin
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/permission")
 	@ApiOperation(value = "Change the user's permission", notes = "This API method can change a users permission from user to admin or vice versa", response = User.class)

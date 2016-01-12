@@ -20,6 +20,11 @@ import at.jku.se.auth.SessionManager;
 import at.jku.se.rest.response.HttpCode;
 import at.jku.se.rest.response.RestResponse;
 
+/**
+ * API Class for AuthContainer implements ContainerRequestFilter
+ * @author August
+ *
+ */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthContainerRequestFilter implements ContainerRequestFilter {
@@ -36,6 +41,9 @@ public class AuthContainerRequestFilter implements ContainerRequestFilter {
 	@Context
 	private HttpServletRequest httpRequest;
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		UriInfo uriInfo = requestContext.getUriInfo();

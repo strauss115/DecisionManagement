@@ -30,6 +30,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for decision
+ * @author August
+ *
+ */
 @Api(tags = { "decision" })
 @Path("/decision")
 public class DecisionResource {
@@ -37,6 +42,12 @@ public class DecisionResource {
 	private static ObjectMapper mapper = new ObjectMapper();
 	// MasterToken: g0up9ej1egkmrtveig59ke0adf
 
+	
+	/**
+	 * Get all decision for the user given by the token
+	 * @param token
+	 * @return A list of all available decisions
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Returns a list of all available decisions", notes = "Returns a list of all available decisions", response = Decision.class, responseContainer = "List")
@@ -61,6 +72,12 @@ public class DecisionResource {
 		}
 	}
 
+	/**
+	 * Get the decision identified by the given id
+	 * @param token The unique token of the user
+	 * @param id
+	 * @return A single decision
+	 */
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -86,6 +103,12 @@ public class DecisionResource {
 		}
 	}
 	
+	/**
+	 * Returns a list of decisions that belong to a certain project
+	 * @param token The unique token of the user
+	 * @param id The Id of the project
+	 * @return A list of decisions that belong to a certain project
+	 */
 	@GET
 	@Path("/byProject/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -111,6 +134,12 @@ public class DecisionResource {
 		}
 	}
 	
+	/**
+	 * Insert or update a certain decision
+	 * @param token
+	 * @param json
+	 * @return
+	 */
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -138,6 +167,12 @@ public class DecisionResource {
 		}
 	}
 	
+	/**
+	 * Delete a certain decision
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@DELETE
 	@Path("/{id}")
 	@ApiOperation(value = "Delete a certain decision")

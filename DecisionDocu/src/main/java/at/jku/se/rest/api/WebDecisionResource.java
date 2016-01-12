@@ -45,6 +45,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for WebDecision
+ * @author August
+ *
+ */
 @Path("/web/decision")
 @Api(value = "webDecision")
 public class WebDecisionResource {
@@ -62,6 +67,8 @@ public class WebDecisionResource {
 
 	/**
 	 * Converts a generic decision to web API decision format
+	 * @param decision
+	 * @return API decision format
 	 */
 	public static WebDecision convertDecision(Decision decision) {
 		try {
@@ -95,6 +102,8 @@ public class WebDecisionResource {
 
 	/**
 	 * Converts a list of generic decision to web API decision format
+	 * @param decisions A List of Desicion
+	 * @return List of WebDecision
 	 */
 	public static List<WebDecision> convertDecision(List<Decision> decisions) {
 		List<WebDecision> webDecisions = new LinkedList<WebDecision>();
@@ -123,6 +132,11 @@ public class WebDecisionResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gets all decisions
+	 * @param token
+	 * @return Only returns decisions that user has access to
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets all decisions", notes = "Only returns decisions that user has access to", response = WebDecision.class, responseContainer = "List")
@@ -142,6 +156,12 @@ public class WebDecisionResource {
 		return RestResponse.getSuccessResponse(result);
 	}
 
+	/**
+	 * Gets a decision by id
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -169,6 +189,12 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Gets all decisions for a given id
+	 * @param token
+	 * @param teamId
+	 * @return
+	 */
 	@GET
 	@Path("/byTeam/{teamId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -199,6 +225,14 @@ public class WebDecisionResource {
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
 
+	/**
+	 * Creates a new decison
+	 * @param token
+	 * @param name
+	 * @param userEmail
+	 * @param teamId
+	 * @return
+	 */
 	@POST
 	@Path("/create")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -243,6 +277,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Sets the description for a decision
+	 * @param token
+	 * @param id
+	 * @param description
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/description")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -271,6 +312,12 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Gets a JSON formatted graph for web app decision mind map
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("/getGraphAsJsonById")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -293,6 +340,12 @@ public class WebDecisionResource {
 		return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 	}
 
+	/**
+	 * Gets a JSON formatted graph for web app decisions relationships
+	 * @param token
+	 * @param teamId
+	 * @return
+	 */
 	@GET
 	@Path("/getTeamGraphsForConnectionAsJsonByTeamId")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -321,6 +374,12 @@ public class WebDecisionResource {
 	}
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gets all messages for decision
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("/{id}/messages")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -357,6 +416,13 @@ public class WebDecisionResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Removes attributes which are existence dependent to a decision
+	 * @param token
+	 * @param id
+	 * @param otherNodeId
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/removeAttribute")
 	@ApiOperation(value = "Removes attributes which are existence dependent to a decision", notes = "influence factor, rationale, alternatives, consequence, quality attributes, document")
@@ -403,6 +469,13 @@ public class WebDecisionResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Adds a new influence factor
+	 * @param token
+	 * @param id
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("/{id}/addInfluenceFactor")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -446,6 +519,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new rationale
+	 * @param token
+	 * @param id
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("/{id}/addRationale")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -488,6 +568,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new alternative
+	 * @param token
+	 * @param id
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("/{id}/addAlternative")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -531,6 +618,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new Consequence
+	 * @param token
+	 * @param id
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("/{id}/addConsequence")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -574,6 +668,11 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Returns a list of all quality attributes
+	 * @param token
+	 * @return
+	 */
 	@GET
 	@Path("/allQualityAttributes")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -596,6 +695,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new QualityAttribute
+	 * @param token
+	 * @param id
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("/{id}/addQualityAttribute")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -639,6 +745,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new related decision
+	 * @param token
+	 * @param id
+	 * @param relatedId
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/addRelatedDecision")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -674,6 +787,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Removes a related decision
+	 * @param token
+	 * @param id
+	 * @param relatedId
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/removeRelatedDecision")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -709,6 +829,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new responsible
+	 * @param token
+	 * @param id
+	 * @param relatedId
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/addResponsible")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -744,6 +871,13 @@ public class WebDecisionResource {
 		}
 	}
 
+	/**
+	 * Adds a new responsible
+	 * @param token
+	 * @param id
+	 * @param relatedId
+	 * @return
+	 */
 	@PUT
 	@Path("/{id}/removeResponsible")
 	@Produces(MediaType.APPLICATION_JSON)

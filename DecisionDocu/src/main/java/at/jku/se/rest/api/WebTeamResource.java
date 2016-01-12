@@ -30,6 +30,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for WebTeam
+ * @author August
+ *
+ */
 @Path("/web/team")
 @Api(value = "webTeam")
 public class WebTeamResource {
@@ -46,6 +51,8 @@ public class WebTeamResource {
 
 	/**
 	 * Converts a generic team/project to web API team format
+	 * @param team
+	 * @return {@link WebTeam}
 	 */
 	public static WebTeam convertTeam(Project team) {
 		try {
@@ -81,6 +88,8 @@ public class WebTeamResource {
 
 	/**
 	 * Converts a list of generic teams/projects to web API team format
+	 * @param teams
+	 * @return
 	 */
 	public static List<WebTeam> convertTeam(List<Project> teams) {
 		List<WebTeam> webTeams = new LinkedList<WebTeam>();
@@ -95,6 +104,11 @@ public class WebTeamResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gets all teams
+	 * @param token
+	 * @return
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets all teams", response = WebTeam.class, responseContainer = "List")
@@ -112,6 +126,12 @@ public class WebTeamResource {
 		return RestResponse.getSuccessResponse(teams);
 	}
 
+	/**
+	 * Gets team by name
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -134,6 +154,14 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Creates a new team
+	 * @param token
+	 * @param name
+	 * @param adminUserEmail
+	 * @param password
+	 * @return
+	 */
 	@POST
 	@Path("/create")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -173,6 +201,14 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Adds a user to a team
+	 * @param token
+	 * @param teamId
+	 * @param userId
+	 * @param password
+	 * @return
+	 */
 	@POST
 	@Path("{id}/addUser")
 	@ApiOperation(value = "Adds a user to a team")
@@ -216,6 +252,13 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Removes a user from a team
+	 * @param token
+	 * @param teamId
+	 * @param userId
+	 * @return
+	 */
 	@POST
 	@Path("{id}/removeUser")
 	@ApiOperation(value = "Removes a user from a team")
@@ -255,6 +298,13 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Changes name of team
+	 * @param token
+	 * @param teamId
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("{id}/setName")
 	@ApiOperation(value = "Changes name of team")
@@ -293,6 +343,13 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Changes password of team
+	 * @param token
+	 * @param teamId
+	 * @param value
+	 * @return
+	 */
 	@POST
 	@Path("{id}/setPassword")
 	@ApiOperation(value = "Changes password of team")
@@ -332,6 +389,13 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Changes admin of team
+	 * @param token
+	 * @param teamId
+	 * @param adminId
+	 * @return
+	 */
 	@POST
 	@Path("{id}/setAdmin")
 	@ApiOperation(value = "Changes admin of team")
@@ -370,6 +434,12 @@ public class WebTeamResource {
 		}
 	}
 
+	/**
+	 * Deletes a team
+	 * @param token
+	 * @param teamId
+	 * @return
+	 */
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)

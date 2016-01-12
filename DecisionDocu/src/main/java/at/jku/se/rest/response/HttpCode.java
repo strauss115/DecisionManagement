@@ -39,6 +39,10 @@ public enum HttpCode {
 	
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Returns code
+	 * @return {@link Integer}
+	 */
 	public int getCode() {
 		return code;
 	}

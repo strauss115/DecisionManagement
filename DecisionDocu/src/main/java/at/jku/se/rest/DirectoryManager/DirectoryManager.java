@@ -4,8 +4,17 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+/**
+ * Class Directory Manager 
+ * @author August
+ *
+ */
 public class DirectoryManager {
 	
+	/**
+	 * Returns directory
+	 * @return {@link File}
+	 */
 	public static File getDirectory(){
 		File file = getDirectoryOnline();
 		if (file!=null&&!file.getParentFile().getName().equals("target")){

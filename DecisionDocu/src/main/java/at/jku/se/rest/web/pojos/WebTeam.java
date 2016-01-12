@@ -19,10 +19,19 @@ public class WebTeam extends ResponseData {
 	
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Default constructor
+	 */
 	public WebTeam() {
 		
 	}
 	
+	/**
+	 * Constructor
+	 * @param id
+	 * @param name
+	 * @param admin
+	 */
 	public WebTeam(String id, String name, String admin) {
 		this.name = name;
 		this.admin = admin;
@@ -30,6 +39,11 @@ public class WebTeam extends ResponseData {
 		users = new LinkedList<String>();
 	}
 	
+	/**
+	 * Constructor
+	 * @param name
+	 * @param admin
+	 */
 	public WebTeam(String name, String admin) {
 		this.name = name;
 		this.admin = admin;

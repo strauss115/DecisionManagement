@@ -33,6 +33,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for Relationship
+ * @author August
+ *
+ */
 @Api(tags = { "relationship" })
 @Path("/relationship")
 public class RelationshipResource {
@@ -70,6 +75,14 @@ public class RelationshipResource {
 		}
 	}
 	
+	/**
+	 * Adds a relationship to an existing decision
+	 * @param token
+	 * @param name
+	 * @param fromNode
+	 * @param toNode
+	 * @return
+	 */
 	@POST
 	@Path("/{name}/{fromNode}/{toNode}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -99,6 +112,14 @@ public class RelationshipResource {
 			}
 	}
 	
+	/**
+	 * Adds a relationship to a new decision
+	 * @param token
+	 * @param name
+	 * @param fromNode
+	 * @param json
+	 * @return
+	 */
 	@POST
 	@Path("/{name}/{fromNode}")
 	@Produces(MediaType.APPLICATION_JSON)

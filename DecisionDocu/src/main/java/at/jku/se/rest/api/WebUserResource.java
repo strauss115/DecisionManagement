@@ -33,6 +33,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for WebUser
+ * @author August
+ *
+ */
 @Path("/web/user")
 @Api(value = "webUser")
 public class WebUserResource {
@@ -42,6 +47,9 @@ public class WebUserResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Default constructor
+	 */
 	public WebUserResource() {
 
 	}
@@ -50,6 +58,8 @@ public class WebUserResource {
 
 	/**
 	 * Converts a generic user to web API user format
+	 * @param user
+	 * @return {@link WebUser}
 	 */
 	public static WebUser convertUser(User user) {
 		try {
@@ -80,6 +90,8 @@ public class WebUserResource {
 
 	/**
 	 * Converts a list of generic user to web API user format
+	 * @param users
+	 * @return
 	 */
 	public static List<WebUser> convertUser(List<User> users) {
 		List<WebUser> webUsers = new LinkedList<WebUser>();
@@ -94,6 +106,11 @@ public class WebUserResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gets all users
+	 * @param token
+	 * @return {@link Response}
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets all users", response = WebUser.class, responseContainer = "List")
@@ -112,6 +129,12 @@ public class WebUserResource {
 		return RestResponse.getSuccessResponse(users);
 	}
 
+	/**
+	 * Gets user by e-mail address
+	 * @param token
+	 * @param eMail
+	 * @return {@link Response}
+	 */
 	@GET
 	@Path("/{mail}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -135,6 +158,12 @@ public class WebUserResource {
 		}
 	}
 
+	/**
+	 * Login a user and get token
+	 * @param eMail
+	 * @param password
+	 * @return {@link Response}
+	 */
 	@GET
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -148,6 +177,14 @@ public class WebUserResource {
 		return api.login(eMail, password);
 	}
 
+	/**
+	 * Registers a new user
+	 * @param firstName
+	 * @param lastName
+	 * @param password
+	 * @param eMail
+	 * @return {@link Response}
+	 */
 	@POST
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -163,6 +200,13 @@ public class WebUserResource {
 		return api.register(firstName, lastName, password, eMail);
 	}
 
+	/**
+	 * Delete a user
+	 * Only an administrator or creator (user itself) is able to execute this operation
+	 * @param token
+	 * @param id
+	 * @return {@link Response}
+	 */
 	@DELETE
 	@Path("/{id}")
 	@ApiOperation(value = "Delete a user", notes = "Only an administrator or creator (user itself) is able to execute this operation")
@@ -176,6 +220,14 @@ public class WebUserResource {
 		return api.delete(token, id);
 	}
 
+	/**
+	 * Change permissions of a user
+	 * Only an administrator can execute this operation
+	 * @param token
+	 * @param id
+	 * @param admin
+	 * @return {@link Response}
+	 */
 	@POST
 	@Path("/{id}/setPermisssion")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -191,6 +243,14 @@ public class WebUserResource {
 		return api.setPermission(token, id, admin);
 	}
 
+	/**
+	 * Changes password of user
+	 * An administrator is able to change the password of another user
+	 * @param token
+	 * @param userId
+	 * @param password
+	 * @return {@link Response}
+	 */
 	@POST
 	@Path("/{id}/setPassword")
 	@ApiOperation(value = "Changes password of user", notes = "An administrator is able to change the password of another user")
@@ -235,6 +295,14 @@ public class WebUserResource {
 		}
 	}
 
+	/**
+	 * Changes email of user
+	 * An administrator is able to change the email of another user
+	 * @param token
+	 * @param userId
+	 * @param email
+	 * @return {@link Response}
+	 */
 	@POST
 	@Path("/{id}/setEmail")
 	@ApiOperation(value = "Changes email of user", notes = "An administrator is able to change the email of another user")
@@ -278,6 +346,14 @@ public class WebUserResource {
 		}
 	}
 
+	/**
+	 * Changes first name of user
+	 * An administrator is able to change the first name of another user
+	 * @param token
+	 * @param userId
+	 * @param firstName
+	 * @return {@link Response}
+	 */
 	@POST
 	@Path("/{id}/setFirstName")
 	@ApiOperation(value = "Changes first name of user", notes = "An administrator is able to change the first name of another user")
@@ -322,6 +398,14 @@ public class WebUserResource {
 		}
 	}
 
+	/**
+	 * Changes last name of user
+	 * An administrator is able to change the last name of another user
+	 * @param token
+	 * @param userId
+	 * @param lastName
+	 * @return {@link Response}
+	 */
 	@POST
 	@Path("/{id}/setLastName")
 	@ApiOperation(value = "Changes last name of user", notes = "An administrator is able to change the last name of another user")
