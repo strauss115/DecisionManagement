@@ -204,7 +204,7 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
                     .decisionId(item.second.getId())
                     .start();
         }
-        finish();
+        //finish();
     }
 
     @UiThread

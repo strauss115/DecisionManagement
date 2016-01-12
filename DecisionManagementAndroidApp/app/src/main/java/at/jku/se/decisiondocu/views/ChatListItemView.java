@@ -86,7 +86,7 @@ public class ChatListItemView extends LinearLayout {
             NodeInterface node = item.getNode();
             this.nodeInterface = node;
 
-            String html = "<a href='" + node.getId() + "'>" + node.getName() + "</a>";
+            String html = "<a href='" + node.getId() + "'>" + node.getId() + " (" + node.getName() + ") created!" + "</a>";
             setTextViewHTML(tv_headline, html);
         }
     }
