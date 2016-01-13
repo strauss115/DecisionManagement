@@ -17,11 +17,17 @@ import at.jku.se.decisiondocu.restclient.client.model.Decision;
 @EBean
 public class RESTDecisionFinder implements DecisionFinder {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Decision> findAll() {
         return RestClient.getAllDecisions();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Decision find(long id) { return RestClient.getDecisionWithId(id); }
 }

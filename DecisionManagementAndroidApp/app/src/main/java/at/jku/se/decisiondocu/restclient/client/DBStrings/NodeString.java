@@ -1,5 +1,8 @@
 package at.jku.se.decisiondocu.restclient.client.DBStrings;
 
+/**
+ * Node Strings for DB
+ */
 public class NodeString {
 	public static final String DECISION = "Decision";
 	public static final String PROJECT = "Project";

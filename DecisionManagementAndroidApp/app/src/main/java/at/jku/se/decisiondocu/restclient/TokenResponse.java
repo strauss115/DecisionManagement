@@ -26,6 +26,9 @@ public class TokenResponse {
         this.expires_in = expires_in;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "TokenResponse{" +

@@ -61,6 +61,12 @@ public class RestClient {
     // USER PART
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Gets the user token
+     * @param email
+     * @param password
+     * @return
+     */
     public static String getToken(String email, String password) {
         UserApi api = new UserApi();
         try {
@@ -73,6 +79,15 @@ public class RestClient {
         return null;
     }
 
+    /**
+     * Register a user
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @param password
+     * @param bitmap
+     * @return
+     */
     public static boolean registerUser(String firstname, String lastname, String email, String password, Bitmap bitmap) {
         UserApi api = new UserApi();
         try {
@@ -91,6 +106,11 @@ public class RestClient {
         return false;
     }
 
+    /**
+     * Returns the user given by its email
+     * @param email
+     * @return
+     */
     public static User getUser(String email) {
         UserApi api = new UserApi();
         try {
@@ -107,6 +127,10 @@ public class RestClient {
     // DECISION PART
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Gets all decision nodes
+     * @return A List of Decision objects
+     */
     public static List<Decision> getAllDecisions() {
         DecisionApi api = new DecisionApi();
         List<Decision> decs = new ArrayList<>();
@@ -118,6 +142,11 @@ public class RestClient {
         return decs;
     }
 
+    /**
+     * Gets a decision by its node id
+     * @param id
+     * @return
+     */
     public static Decision getDecisionWithId(long id) {
         DecisionApi api = new DecisionApi();
         Decision dec = new Decision();
@@ -129,6 +158,11 @@ public class RestClient {
         return dec;
     }
 
+    /**
+     * Creates a decision for a project
+     * @param project
+     * @return
+     */
     public static NodeInterface createDecision(Project project) {
         NodeApi api = new NodeApi();
         NodeInterface node = null;
@@ -144,6 +178,10 @@ public class RestClient {
     // PROJECT PART
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Gets all projects of the user
+     * @return
+     */
     public static List<Project> getMyProjects() {
         ProjectApi api = new ProjectApi();
         List<Project> decs = new ArrayList<>();
@@ -155,6 +193,10 @@ public class RestClient {
         return decs;
     }
 
+    /**
+     * Get all projects
+     * @return
+     */
     public static List<Project> getAllProjects() {
         ProjectApi api = new ProjectApi();
         List<Project> decs = new ArrayList<>();
@@ -166,6 +208,12 @@ public class RestClient {
         return decs;
     }
 
+    /**
+     * Adds a user to a project
+     * @param projectId
+     * @param projectPassword
+     * @return
+     */
     public static boolean addUserToProject(String projectId, String projectPassword) {
         ProjectApi api = new ProjectApi();
         try {
@@ -181,6 +229,11 @@ public class RestClient {
     // NODE PART
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Gets a nody by its id
+     * @param id
+     * @return
+     */
     public static NodeInterface getNodeWithId(long id) {
         NodeApi api = new NodeApi();
         NodeInterface dec = null;
@@ -196,6 +249,11 @@ public class RestClient {
     // DOCUMENT PART
     // -----------------------------------------------------------------------------------------
 
+    /**
+     * Save a profile picture to a node given by its id
+     * @param image
+     * @param id
+     */
     private static void saveProfilePicture(Bitmap image, long id) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -207,6 +265,12 @@ public class RestClient {
 
     }
 
+    /**
+     * Save document
+     * @param image
+     * @param id
+     * @return
+     */
     public static boolean saveDocument(Bitmap image, long id) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -324,6 +388,11 @@ public class RestClient {
         return responseString;
     }
 
+    /**
+     * Gets the profile picture of a node given by its id
+     * @param id
+     * @return
+     */
     public static Bitmap downloadProfilPicture(long id) {
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
@@ -362,6 +431,11 @@ public class RestClient {
         return null;
     }
 
+    /**
+     * Gets the document file
+     * @param doc
+     * @return
+     */
     public static File downloadDocument(Document doc) {
         WebTarget webTarget = null;
         Invocation.Builder invocationBuilder = null;
@@ -412,7 +486,7 @@ public class RestClient {
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Liefert alle möglichen Relationship Strings des Backends
+     * Gets all possible relationship strings of the backend
      *
      * @return
      */

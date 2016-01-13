@@ -47,6 +47,9 @@ public class DummyContent {
             this.content = content;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return content;

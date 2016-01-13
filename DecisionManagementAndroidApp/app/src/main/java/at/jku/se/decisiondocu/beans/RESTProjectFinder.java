@@ -17,11 +17,17 @@ import at.jku.se.decisiondocu.restclient.client.model.Project;
 @EBean
 public class RESTProjectFinder implements TeamFinder {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Project> findAll() {
         return RestClient.getAllProjects();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Project> find() {
         return RestClient.getMyProjects();

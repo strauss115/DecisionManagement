@@ -59,6 +59,10 @@ public class RelationAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * Update items
+     * @param node
+     */
     @UiThread
     public void updateItems(NodeInterface node) {
         if (node != null) {
@@ -68,6 +72,10 @@ public class RelationAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Returns number of items
+     * @return
+     */
     @Override
     public int getCount() {
         try {
@@ -77,16 +85,26 @@ public class RelationAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pair<String, NodeInterface> getItem(int position) {
         return items.get(position);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         SearchDetailListItemView view;

@@ -100,6 +100,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getCount() {
         try {
@@ -109,16 +112,25 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Decision getItem(int position) {
         return mItems.get(position);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ListItemView view;
@@ -133,6 +145,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         return view;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Filter getFilter() {
         return mSearchFilter;

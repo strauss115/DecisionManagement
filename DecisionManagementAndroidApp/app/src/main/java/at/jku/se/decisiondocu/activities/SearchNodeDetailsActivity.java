@@ -35,6 +35,7 @@ import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 
 /**
+ * Search Node Details
  * Created by martin on 23.12.15.
  */
 @EActivity(R.layout.activity_search_node_details)
@@ -71,6 +72,10 @@ public class SearchNodeDetailsActivity extends AppCompatActivity {
     @Bean
     RelationAdapter mAdapter;
 
+    /**
+     * Returns the node
+     * @return
+     */
     public NodeInterface getmNode() {
         return mNode;
     }
@@ -124,6 +129,9 @@ public class SearchNodeDetailsActivity extends AppCompatActivity {
         //finish();
     }
 
+    /**
+     * Opens the chat when node_header is clicked
+     */
     @Click(R.id.node_header)
     public void openChat(){
         try {

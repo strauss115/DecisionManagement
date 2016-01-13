@@ -134,7 +134,9 @@ public class MainActivity extends AppCompatActivity {
         Instance = this;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -142,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -211,12 +216,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getCount() {
             // Show 3 total pages.
             return 3;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {

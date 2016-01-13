@@ -41,15 +41,15 @@ public class RestHelper {
     // -------------------------------------------------------------------------------------
 
     /**
-     *
-     * @return
+     * Returns base url
+     * @return Trimed base url
      */
     public static String GetBaseURL() {
         return GetBaseURL(true);
     }
 
     /**
-     *
+     * Returns base url
      * @param trimEnd
      * @return
      */
@@ -62,7 +62,7 @@ public class RestHelper {
     }
 
     /**
-     *
+     * Returns chat base url
      * @return
      */
     public static String GetBaseURLChat() {
@@ -116,10 +116,13 @@ public class RestHelper {
     }
 
     /**
-     * Diese Klasse wird benötigt, um Jersey mit Android kompatibel zu machen.
+     * This class is needed to make jersy and android compatible
      */
     public static class AndroidFriendlyFeature implements Feature{
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean configure(FeatureContext context) {
             context.register(new AbstractBinder() {

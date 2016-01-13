@@ -92,16 +92,25 @@ public class TeamAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Project getItem(int position) {
         return mItems.get(position);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TeamItemView view;

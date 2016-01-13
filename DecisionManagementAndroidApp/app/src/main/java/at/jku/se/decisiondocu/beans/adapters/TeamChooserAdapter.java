@@ -20,6 +20,9 @@ import at.jku.se.decisiondocu.views.TeamItemView_;
 @EBean
 public class TeamChooserAdapter extends TeamAdapter {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void find() {
         showDialog();
@@ -28,6 +31,9 @@ public class TeamChooserAdapter extends TeamAdapter {
         dismissDialog();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
