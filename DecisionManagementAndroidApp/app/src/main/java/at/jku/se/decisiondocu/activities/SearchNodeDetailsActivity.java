@@ -121,7 +121,7 @@ public class SearchNodeDetailsActivity extends AppCompatActivity {
                     .decisionId(item.second.getId())
                     .start();
         }
-        finish();
+        //finish();
     }
 
     @Click(R.id.node_header)
