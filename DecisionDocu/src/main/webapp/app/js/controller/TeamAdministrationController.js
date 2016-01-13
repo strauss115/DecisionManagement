@@ -24,17 +24,19 @@ app.controller('TeamAdministrationController', [
 					var arr = new Array();
 					arr = data['teams'];
 					$cookies.UserId = data['id'];
-					for (var i = 0; i < arr.length; i++) {
-
-						TeamPerId.get({
-							teamId : arr[i]
-						}, function(data1) {
-							$scope.teams.push({
-								"id" : data1['id'],
-								"name" : data1['name']
+					if(arr != null){
+						for (var i = 0; i < arr.length; i++) {
+	
+							TeamPerId.get({
+								teamId : arr[i]
+							}, function(data1) {
+								$scope.teams.push({
+									"id" : data1['id'],
+									"name" : data1['name']
+								});
+							}, function(error) {
 							});
-						}, function(error) {
-						});
+						}
 					}
 					$scope.getOpenTeams();
 				}, function(error) {
@@ -46,13 +48,14 @@ app.controller('TeamAdministrationController', [
 				Teams.get({}, function(data) {
 					var arr = new Array();
 					arr = data;
-
-					for (var i = 0; i < arr.length; i++) {
-						if (arr[i]['users'].indexOf($cookies.UserId) == -1) {
-							$scope.openTeams.push({
-								"id" : arr[i]['id'],
-								"name" : arr[i]['name']
-							});
+					if(arr != null){
+						for (var i = 0; i < arr.length; i++) {
+							if (arr[i]['users'].indexOf($cookies.UserId) == -1) {
+								$scope.openTeams.push({
+									"id" : arr[i]['id'],
+									"name" : arr[i]['name']
+								});
+							}
 						}
 					}
 				}, function(error) {
