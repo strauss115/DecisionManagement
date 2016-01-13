@@ -76,6 +76,14 @@ public class Decision extends Node {
 	}
 
 	@JsonIgnore
+	public String getAuthorEmail() {
+		User author = getSingleNodeByRelationship(RelationString.HAS_CREATOR, User.class);
+		if (author != null)
+			return author.getEmail();
+		return "";
+	}
+	
+	@JsonIgnore
 	public void setAuthor(User user) {
 		setSingleNodeRelationship(RelationString.HAS_CREATOR, user);
 		DBService.updateNode(this, 0);
