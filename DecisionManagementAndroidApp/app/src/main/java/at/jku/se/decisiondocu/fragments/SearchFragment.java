@@ -87,6 +87,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     @ItemClick(R.id.list_view)
     protected void itemClicked(Decision item) {
         //Log.i("ListView", "Item " + item + " clicked!");
+        if (item == null) return;
         new SearchNodeDetailsActivity_.IntentBuilder_(getActivity())
                 .decisionId(item.getId())
                 .start();
