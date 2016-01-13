@@ -48,12 +48,10 @@ app.controller('EditDecisionController',
 
 					// function to update selected graph - draw selected graph
 					$scope.updateGraph = function() {
-						//alert($scope.selectedDecision);
 						// load chosen graph
 						LoadEditGraph.get({
 							id : $scope.selectedDecision
 						}, function(data) {
-							// alert(data);
 							$scope.model = new go.Model.fromJson({
 								"class" : "go.TreeModel",
 								"nodeDataArray" : data
@@ -82,7 +80,7 @@ app.controller('EditDecisionController',
 						for (var i = 0; i < obj.length; i++) {
 							if (i == 0) {
 								firstElementId = obj[i].id;
-								$scope.selectedDecisionId = obj[i].id;
+								$scope.selectedDecision = obj[i].id;
 							}
 							$scope.decisions.push({
 								"id" : obj[i].id,
@@ -147,7 +145,7 @@ app.controller('EditDecisionController',
 						//alert($scope.attributeValue);
 						AddAttributeToDecision.save({
 							value : $scope.attributeValue,
-							id : $scope.selectedDecisionId,
+							id : $scope.selectedDecision,
 							attribute : $scope.selectedAttribute
 						}, function(data) {
 							//alert(data);
@@ -202,9 +200,10 @@ app.controller('EditDecisionController',
 						}
 						if ($("#headlineAddAttributePanel").text().trim()
 								.split(" ")[0] == "Add") {
+							alert($scope.selectedDecision);
 							AddAttributeToDecision.save({
 								value : $scope.decisionAttributeValueFromPanel,
-								id : $scope.selectedDecisionId,
+								id : $scope.selectedDecision,
 								attribute : "add" + att
 							}, function(data) {
 								//alert(data);
