@@ -87,7 +87,12 @@ public class WebDecisionResource {
 				result.setRelatedDecisions(Node.getListOfIds(decision.getRelatedDecisions()));
 				result.setDocuments(Node.getListOfIds(decision.getDocuments()));
 				result.setResponsibles(Node.getListOfIds(decision.getResponsibles()));
-				result.setLastActivity(decision.getLastActivity());
+				result.setConsequences(decision.getConsquences());
+				result.setInfluenceFactors(decision.getInfluenceFactors());
+				
+				String lastActivity = decision.getLastActivity();
+				if (lastActivity != null && !lastActivity.equals(""))
+					result.setLastActivity(decision.getLastActivity());
 				// --
 				return result;
 			} else {
@@ -177,7 +182,7 @@ public class WebDecisionResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 
-			Decision d = DBService.getNodeByID(Decision.class, id, 1);
+			Decision d = DBService.getNodeByID(Decision.class, id, 3);
 			if (d != null) {
 				return RestResponse.getSuccessResponse(convertDecision(d));
 			} else {

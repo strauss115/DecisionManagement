@@ -2,8 +2,8 @@
  * general js-file - for definition of the the GoJs-Template and Go-Js-Nodes
  */
 var app = angular.module('decisionApp', ['ngRoute', 'ngCookies', 'ngResource', 'userServices', 'loginServices', 'teamServices', 'decisionServices', 'angularFileUpload']);
-var serverAddress = "http://ubuntu.mayerb.net:8080";
-
+//var serverAddress = "http://ubuntu.mayerb.net:8080";
+var serverAddress = "http://localhost:8080";
 
 /**
  * control login token
