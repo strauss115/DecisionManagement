@@ -64,10 +64,20 @@ public class RestResponse {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * 
+	 * @param data
+	 * @return Returns a response for REST service
+	 */
 	public static Response getSuccessResponse(Object data) {
 		return getResponse(HttpCode.HTTP_200_OK, data);
 	}
 
+	/**
+	 * 
+	 * @param data
+	 * @return Returns a response for REST service
+	 */
 	public static Response getSuccessResponse(List<Object> data) {
 		return getResponse(HttpCode.HTTP_200_OK, data);
 	}

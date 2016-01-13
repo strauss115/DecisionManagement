@@ -25,6 +25,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for WebGroup
+ * @author August
+ *
+ */
 @Path("/web/group")
 @Api(value = "webGroup")
 public class WebGroupResource {
@@ -34,12 +39,20 @@ public class WebGroupResource {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Default constructor
+	 */
 	public WebGroupResource() {
 
 	}
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Gets all groups
+	 * @param token
+	 * @return
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets all groups", response = DecisionGroup.class, responseContainer = "List")
@@ -75,6 +88,12 @@ public class WebGroupResource {
 		// }
 	}
 
+	/**
+	 * Create new group using JSON format
+	 * @param token
+	 * @param json
+	 * @return
+	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create new group using JSON format")
@@ -98,6 +117,13 @@ public class WebGroupResource {
 		// }
 	}
 
+	/**
+	 * Creates a new group
+	 * @param token
+	 * @param name
+	 * @param teamName
+	 * @return
+	 */
 	@POST
 	@Path("/create")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -132,6 +158,12 @@ public class WebGroupResource {
 	// return RestResponse.getResponse(HttpCode.HTTP_501_NOT_IMPLEMENTED);
 	// }
 
+	/**
+	 * Deletes a group
+	 * @param token
+	 * @param name
+	 * @return
+	 */
 	@DELETE
 	@Path("/{groupName}")
 	@Produces(MediaType.APPLICATION_JSON)

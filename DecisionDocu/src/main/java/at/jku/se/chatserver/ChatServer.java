@@ -90,6 +90,11 @@ public class ChatServer implements Runnable, ServerListener {
 		}
 	}
 
+	/**
+	 * When a client quits the connection, the thread is removed from the threadlist
+	 * @param socket Server socket
+	 * @param tread Thread which quit the connection
+	 */
 	@Override
 	public void clientLeft(Socket socket, ClientThread thread) {
 		log.debug("Client: " + socket.getInetAddress() + " leaves chat");
@@ -99,6 +104,11 @@ public class ChatServer implements Runnable, ServerListener {
 		}
 	}
 
+	/**
+	 * Sends a massage to all threads of a certain node
+	 * @param msg Message to send to all clients of a node
+	 * @param nodeId Id of the node to send the message
+	 */
 	@Override
 	public void notifyAll(String msg, long nodeId) {
 		synchronized (this) {

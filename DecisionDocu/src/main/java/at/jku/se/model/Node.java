@@ -13,6 +13,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.jku.se.database.DBService;
 
+/**
+ * Abstract class
+ * @author August
+ *
+ */
 public abstract class Node implements NodeInterface {
 
 	private static final Logger log = LogManager.getLogger(Node.class);
@@ -29,6 +34,10 @@ public abstract class Node implements NodeInterface {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Constructor
+	 * @param name Name of the node
+	 */
 	public Node(String name) {
 		super();
 		this.name = name;
@@ -36,19 +45,31 @@ public abstract class Node implements NodeInterface {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Constructor
+	 * @param name Name of the node
+	 * @param relations Relations of the node
+	 */
 	public Node(String name, Map<String, List<RelationshipInterface>> relations) {
 		super();
 		this.name = name;
 		this.relationships = relations;
 	}
 
-	// Necessary for Object mapping
+	/** 
+	 * Default constructor of node 
+	 * Necessary for Object mapping
+	 */
 	public Node() {
 		super();
 	}
 
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Returns the hashcode of the node
+	 * @return The hashcode of the node
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -60,6 +81,10 @@ public abstract class Node implements NodeInterface {
 		return result;
 	}
 
+	/**
+	 * @param obj the node obejct to compare with the node
+	 * @return true if the given node is equal to the node, false if not equal to the given node
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -89,6 +114,11 @@ public abstract class Node implements NodeInterface {
 		return true;
 	}
 
+	/**
+	 * Adds a relationship to the node
+	 * @param type
+	 * @param relation
+	 */
 	@Override
 	public void addRelation(String type, RelationshipInterface relation) {
 		if (relationships == null) {
@@ -103,6 +133,12 @@ public abstract class Node implements NodeInterface {
 		}
 	}
 
+	/**
+	 * Adds a relationship to the node
+	 * @param type
+	 * @param relatedNode
+	 * @param direction
+	 */
 	@Override
 	public void addRelation(String type, NodeInterface relatedNode, boolean direction) {
 		RelationshipInterface rel = new Relationship(relatedNode, direction);
@@ -118,56 +154,105 @@ public abstract class Node implements NodeInterface {
 		}
 	}
 
+	/**
+	 * Returns all relationships of the node
+	 * @return All relationships of the node as Map object
+	 */
 	public Map<String, List<RelationshipInterface>> getRelationships() {
 		if (relationships == null)
 			relationships = new HashMap<String, List<RelationshipInterface>>();
 
 		return relationships;
 	}
-
+	
+	/**
+	 * Sets the relationships of the node
+	 * @param relationships
+	 */
 	public void setRelationships(Map<String, List<RelationshipInterface>> relationships) {
 		this.relationships = relationships;
 	}
 
+	/**
+	 * Returns the Id of the node object
+	 * @return The Id of the node object
+	 */
 	@Override
 	public long getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the Id of the node object
+	 * @param id
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the creation date of the node object
+	 * @return The creation date of the node object
+	 */
 	@Override
 	public CustomDate getCreationDate() {
 		return creationDate;
 	}
 
+	/**
+	 * Sets the creation date of the node object
+	 * @param creationDate
+	 */
 	@Override
 	public void setCreationDate(CustomDate creationDate) {
 		this.creationDate = creationDate;
 	}
 
+	/**
+	 * Returns the name of the node object
+	 * @return The name of the node object
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name of the node object
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Returns the direct properties of the node object
+	 * @return The direct properties of the node object as Map<String, String> object
+	 */
 	public Map<String, String> getDirectProperties() {
 		return directProperties;
 	}
 
+	/**
+	 * Returns all direct properties of the node object
+	 * @return A Map<String, String> of all direct properties of the node object
+	 */
 	public Map<String, String> getAllDirectProperties() {
 		return directProperties;
 	}
 
+	/**
+	 * Sets direct properties
+	 * @param directProperties
+	 */
 	public void setDirectProperties(Map<String, String> directProperties) {
 		this.directProperties = directProperties;
 	}
 
+	/**
+	 * Adds a direct property
+	 * @param key
+	 * @param value
+	 */
 	public void addDirectProperty(String key, String value) {
 		if (directProperties == null) {
 			directProperties = new HashMap<String, String>();
@@ -322,12 +407,20 @@ public abstract class Node implements NodeInterface {
 	}
 
 	// ------------------------------------------------------------------------
-
+	
+	/**
+	 * Returns the type of the node
+	 * @return Returns the type of the node as String
+	 */
 	@Override
 	public String getNodeType() {
 		return this.getClass().getSimpleName();
 	}
 
+	/**
+	 * Returns a String represantation of the node object
+	 * @return A String represantation of the node object
+	 */
 	@Override
 	public String toString() {
 		/*

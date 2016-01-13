@@ -55,6 +55,11 @@ public class ChatListItemView extends LinearLayout {
         this(context);
     }
 
+    /**
+     * Binds the massage to the chat
+     * @param item
+     * @param chatInterface
+     */
     public void bind(MsgWrapper item, ChatInterface chatInterface) {
 
         this.chatInterface = chatInterface;

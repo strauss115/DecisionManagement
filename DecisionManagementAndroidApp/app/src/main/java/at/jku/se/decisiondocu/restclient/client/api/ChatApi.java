@@ -14,10 +14,18 @@ import at.jku.se.decisiondocu.restclient.client.ApiException;
 import at.jku.se.decisiondocu.restclient.client.ApiInvoker;
 import at.jku.se.decisiondocu.restclient.client.Pair;
 
+/**
+ * Rest Api Client for Chat
+ */
 public class ChatApi {
     String basePath = RestHelper.GetBaseURL();
     ApiInvoker apiInvoker = new ApiInvoker();
 
+    /**
+     * Adds Header
+     * @param key
+     * @param value
+     */
     public void addHeader(String key, String value) {
         getInvoker().addDefaultHeader(key, value);
     }

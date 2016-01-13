@@ -21,10 +21,19 @@ public class WebUser extends ResponseData {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Default constructor
+	 */
 	public WebUser() {
 
 	}
 
+	/**
+	 * Constructor
+	 * @param eMail
+	 * @param firstName
+	 * @param lastName
+	 */
 	public WebUser(String eMail, String firstName, String lastName) {
 		this.eMail = eMail;
 		this.firstName = firstName;
@@ -93,6 +102,9 @@ public class WebUser extends ResponseData {
 	
 	// ------------------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return eMail;

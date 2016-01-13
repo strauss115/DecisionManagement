@@ -1,0 +1,13 @@
+
+at.jku.se.auth
+at.jku.se.chatserver
+at.jku.se.database
+at.jku.se.model
+at.jku.se.rest.DirectoryManager
+at.jku.se.rest.api
+at.jku.se.rest.api.auth
+at.jku.se.rest.response
+at.jku.se.rest.web.parser
+at.jku.se.rest.web.pojos
+at.jku.se.testdata
+io.swagger.sample

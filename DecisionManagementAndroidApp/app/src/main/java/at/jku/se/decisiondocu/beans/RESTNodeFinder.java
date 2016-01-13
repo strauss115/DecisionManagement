@@ -15,6 +15,9 @@ import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 @EBean
 public class RESTNodeFinder implements NodeFinder {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public NodeInterface find(long id) { return RestClient.getNodeWithId(id); }
 }

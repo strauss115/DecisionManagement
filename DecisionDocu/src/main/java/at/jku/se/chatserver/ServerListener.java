@@ -3,7 +3,7 @@ package at.jku.se.chatserver;
 import java.net.Socket;
 
 /**
- * 
+ * Interface for the ChatServer
  * @author martin
  *
  */

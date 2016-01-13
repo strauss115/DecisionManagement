@@ -1,5 +1,8 @@
 package at.jku.se.decisiondocu.restclient.client.DBStrings;
 
+/**
+ * Property Strings
+ */
 public class PropertyString {
 
 	public static final String NAME = "name";

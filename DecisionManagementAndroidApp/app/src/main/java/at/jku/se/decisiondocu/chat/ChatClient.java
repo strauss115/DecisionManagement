@@ -42,10 +42,17 @@ public class ChatClient {
         }
     }
 
+    /**
+     * Stops the server client connection
+     */
     public void stopClient() {
         mRun = false;
     }
 
+    /**
+     * Sets the connection listener
+     * @param listener
+     */
     public void setConnectionListener(ChatInterface listener) {
         this.mChatListener = listener;
     }
@@ -110,6 +117,9 @@ public class ChatClient {
 
     }
 
+    /**
+     * Interface for message received
+     */
     public interface OnMessageReceived {
         void messageReceived(String message);
     }

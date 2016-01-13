@@ -16,3 +16,5 @@ DecisionManagementShared/.classpath
 DecisionManagementAndroidApp/app/src/main/java/at/jku/se/decisiondocu/restclient/RestHelper.java
 DecisionManagementShared/.settings/org.eclipse.jdt.core.prefs
 DecisionDocu/.settings/org.eclipse.wst.common.component
+DecisionManagementShared/.settings/org.eclipse.jdt.core.prefs
+DecisionManagementAndroidApp/app/src/main/java/at/jku/se/decisiondocu/restclient/RestHelper.java

@@ -14,6 +14,11 @@ import at.jku.se.model.Property;
 import at.jku.se.model.Project;
 import at.jku.se.model.User;
 
+/**
+ * SampleObjectProvider
+ * @author August
+ *
+ */
 public class SampleObjectProvider {
 	
 	private static ObjectMapper mapper = new ObjectMapper();
@@ -85,10 +90,18 @@ public class SampleObjectProvider {
 		dec2.addRelation("decisionteam", team2, true);
 	}
 	
+	/**
+	 * Return List of Decision
+	 * @return
+	 */
 	public static List<Decision> getAllDecision(){
 		return decisions;
 	}
 	
+	/**
+	 * Main method
+	 * @param args
+	 */
 	public static void main (String[]args){
 		
 		try {

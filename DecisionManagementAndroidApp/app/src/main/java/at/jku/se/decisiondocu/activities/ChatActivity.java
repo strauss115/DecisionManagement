@@ -124,6 +124,9 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         }
     }
 
+    /**
+     * Loads the chat
+     */
     @Background
     public void load() {
         showDialog();
@@ -202,6 +205,10 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
         private ChatInterface chatInterface;
 
+        /**
+         * Connects the task
+         * @param chatInterface
+         */
         public connectTask(ChatInterface chatInterface) {
             this.chatInterface = chatInterface;
         }
@@ -252,6 +259,9 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void connected() {
         sleep(1000);
@@ -265,6 +275,11 @@ public class ChatActivity extends AppCompatActivity implements ChatInterface {
         sendMessage(startMsg);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param id
+     * @param nodeInterface
+     */
     @Override
     public void linkClicked(long id, NodeInterface nodeInterface) {
         if (editText != null) {

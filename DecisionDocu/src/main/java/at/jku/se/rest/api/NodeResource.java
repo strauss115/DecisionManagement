@@ -29,6 +29,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class of Node
+ * @author August
+ *
+ */
 @Api(tags = { "node" })
 @Path("/node")
 public class NodeResource {
@@ -36,6 +41,12 @@ public class NodeResource {
 	private static final Logger log = LogManager.getLogger(NodeResource.class);
 	private static ObjectMapper mapper = new ObjectMapper();
 	
+	/**
+	 * With this API method you can create a new node in the database
+	 * @param token
+	 * @param json
+	 * @return
+	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Creates a new node", notes = "With this API method you can create a new node in the database", response = NodeInterface.class)
@@ -62,6 +73,12 @@ public class NodeResource {
 		}
 	}
 	
+	/**
+	 * Delete a certain node
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@DELETE
 	@Path("/{id}")
 	@ApiOperation(value = "Delete a certain node")
@@ -90,6 +107,12 @@ public class NodeResource {
 		}
 	}
 	
+	/**
+	 * Returns a single Node
+	 * @param token
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -115,6 +138,13 @@ public class NodeResource {
 		}
 	}
 	
+	/**
+	 * Creates or deletes like relationships from user to node
+	 * @param token
+	 * @param id
+	 * @param bool
+	 * @return
+	 */
 	@GET
 	@Path("/likes/{id}/{bool}")
 	@Produces(MediaType.APPLICATION_JSON)

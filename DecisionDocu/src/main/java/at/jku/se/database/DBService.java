@@ -40,6 +40,12 @@ import at.jku.se.model.Relationship;
 import at.jku.se.model.RelationshipInterface;
 import at.jku.se.model.User;
 
+
+/**
+ * Class which provides methodes to access the database
+ * @author August
+ *
+ */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class DBService {
 	
@@ -75,10 +81,18 @@ public class DBService {
 		}catch (Exception e){}
 	}
 	
+	/**
+	 * Returns the constructor of the class DBService
+	 * @return The constructor of DBService 
+	 */
 	public static HashMap<String, Constructor<? extends NodeInterface>> getConstructors() {
 		return constructors;
 	}
 
+	/**
+	 * Returns the DBService object ref
+	 * @return
+	 */
 	public static DBService getDBService() {
 		if (ref == null) {
 			ref = new DBService();
@@ -109,14 +123,28 @@ public class DBService {
 	// *** High level database query methods *** 
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Returns all decision nodes of the given user
+	 * @param user
+	 * @return A list of decisions
+	 */
 	public static List<Decision> getAllDecisions (User user){
 		return getAllNodes(Decision.class, user, 2);
 	}
 	
+	/**
+	 * Returns the decision node object of the given Id 
+	 * @param decisionId The id of the decision to return
+	 * @return The decision node object of the given Id
+	 */
 	public static Decision getDecisionById(long decisionId) {
 		return getNodeByID(Decision.class, decisionId, 2);
 	}
 	
+	/**
+	 * Returns all quality attribute names
+	 * @return A list of strings of all quality attribute names
+	 */
 	public static List<String> getAllQualityAttributeNames() {
 		HashSet<String> result = new HashSet<String>();
 		List<NodeInterface> qualityAttributes = getNodesFromQuery("MATCH (n:QualityAttribute) RETURN null as RelNodeId, null as RelId, null as Reltype, id(n)as NodeId, labels(n)as NodeLable, n as Node");
@@ -127,6 +155,11 @@ public class DBService {
 		return new LinkedList<String>(result);
 	}
 	
+	/**
+	 * Returns the user node object identivied by the given email
+	 * @param email Email adress of the user to return
+	 * @return user node obeject for the given email adress
+	 */
 	public static User getUserByEmail(String email){
 		try{
 		return getAllNodes(User.class,0,"{email: \""+email+"\"}",null).get(0);
@@ -136,6 +169,10 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns a list of all users
+	 * @return A list of user obejects
+	 */
 	public static List<User> getAllUser() {
 		try{
 			return getAllNodes(User.class,1);
@@ -145,6 +182,12 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns all decisions of a project
+	 * @param projectid Id of the project
+	 * @param user User object
+	 * @return List of decision objects of the given project and the given user
+	 */
 	public static List<Decision> getAllDecisionsOfProject(long projectid, User user){
 		try{
 			Project project = getAllNodes(Project.class, user, 1, 3, null," id(n1)="+projectid+" ").get(0);
@@ -161,6 +204,10 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns all projects
+	 * @return A list of all project objects
+	 */
 	public static List<Project> getAllProjects(){
 		try{
 			return getAllNodes(Project.class,2);
@@ -170,6 +217,11 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns all projects of a given user
+	 * @param user User node object
+	 * @return A list of project objects of the given user node object
+	 */
 	public static List<Project> getAllProjectsOfUser(User user){
 		try{
 			return getAllNodes(Project.class,user, 1, 2, null, null);
@@ -179,6 +231,10 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns all messages
+	 * @return A list of all message node object
+	 */
 	public static List<Message> getAllMessages() {
 		try {
 			log.debug("Trying to get all chat messages");
@@ -191,6 +247,13 @@ public class DBService {
 	
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Adds a user to a project
+	 * @param user A user node object to add to a project
+	 * @param projectId The Id of the project node object to add the user
+	 * @param projectPassword The project passwort as string
+	 * @return false if an error ocure, true if the user is added
+	 */
 	public static boolean addUserToProject(User user, long projectId, String projectPassword) {
 		Project project = getNodeByID(Project.class,projectId,0);
 		if(project==null||project.getPassword()==null||project.getPassword().length()<=0){
@@ -210,6 +273,14 @@ public class DBService {
 	
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Returns a node by the given id
+	 * @param type Node type of the searched node
+	 * @param nodeid Id of the searched node
+	 * @param user User node object
+	 * @param level Number of levels for the depth of related node objects
+	 * @return A node object of the given parameters
+	 */
 	public static <T extends NodeInterface> T getNodeByID(Class<T> type, long nodeid, User user, int level){
 		try{
 			
@@ -221,6 +292,13 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns a node by the given id
+	 * @param type Node type of the searched node
+	 * @param nodeid Id of the searched node
+	 * @param level Number of levels for the depth of related node objects
+	 * @return A node object of the given parameters
+	 */
 	public static <T extends NodeInterface> T getNodeByID(Class<T> type, long nodeid, int level){
 		try{
 			
@@ -232,17 +310,23 @@ public class DBService {
 		return null;
 	}
 	
+	/**
+	 * Returns all node objects of the given type
+	 * @param type The type of the node object to return
+	 * @param level Number of levels for the depth of related node objects
+	 * @return A list of node object of the given parameters
+	 */
 	public static <T extends NodeInterface> List<T> getAllNodesOfType(Class<T> type, int level){
 		return getAllNodes(type,level);
 	}
 
 	/**
-	 * Returns all nodes of a spesific class, where user has access
+	 * Returns all nodes of a specific class, where user has access
 	 * @param type type of root nodes
 	 * @param userid id of the user from session
 	 * @param level number of levels from the root node, 0 returns just the node without reletionships,
 	 * 1 returns node with the ids of relationships, 2 returns related nodes and the ids of their relationship ... max 5
-	 * @return
+	 * @return A list of node objects
 	 */
 	private static <T extends NodeInterface> List<T> getAllNodes(Class<T> type, User user, int level){
 		return getAllNodes(type, user, level, null, null);
@@ -250,9 +334,9 @@ public class DBService {
 	
 	/**
 	 * getAllNodes with full Permission
-	 * @param type
-	 * @param level
-	 * @return
+	 * @param type Type of the nodes to return
+	 * @param level Number of levels for the depth of related node objects
+	 * @return A list of node objects
 	 */
 	private static <T extends NodeInterface> List<T> getAllNodes(Class<T> type, int level){
 		return getAllNodes(type, level, null, null);
@@ -482,9 +566,9 @@ public class DBService {
 	
 	/**
 	 * Adds Relationship to existing nodes, if relationship already exist does nothing
-	 * @param startnode
-	 * @param type
-	 * @param endnode
+	 * @param startnode Node object the relationship starts
+	 * @param type Type of the node object
+	 * @param endnode Node object the relationship ends
 	 * @return id of created or existing Relationship, if error -1
 	 */
 	public static long addRelationship(long startnode, String type, long endnode){
@@ -513,6 +597,11 @@ public class DBService {
 		}
 	}
 	
+	/**
+	 * Deletes a relationship
+	 * @param relationshipid Id of the relationship to delete
+	 * @return true if deleted, false if not
+	 */
 	public static boolean deleteRelationship(long relationshipid){
 		if(relationshipid<1){
 			return false;
@@ -536,6 +625,14 @@ public class DBService {
 		}
 	}
 	
+	/**
+	 * Creates a relationship
+	 * @param node Node object for the relationship
+	 * @param type Type of the node for the relationship
+	 * @param startNode Id of the node the relationship starts
+	 * @param creatorid Id of the user node object
+	 * @return The created relationship object
+	 */
 	public static <T extends NodeInterface> T createRelationshipWithNode(T node, String type, long startNode, long creatorid){
 		node = updateNode(node, creatorid);
 		if(node==null||node.getId()<1){
@@ -548,6 +645,13 @@ public class DBService {
 		return node;	
 	}
 	
+	/**
+	 * Creates a message node object
+	 * @param message Message for a related object
+	 * @param relatedNode Node object the message is related to
+	 * @param creatorid Node Id of the user who creates the message
+	 * @return The created message node object
+	 */
 	public static Message createMessage(String message, long relatedNode, long creatorid){
 		Message messageNode = new Message(message);
 		messageNode = createRelationshipWithNode(messageNode, RelationString.HAS_MESSAGE, relatedNode, creatorid);
@@ -558,9 +662,9 @@ public class DBService {
 	
 	/**
 	 * If node has id the properties of the node will be updated, otherwise the node will be created
-	 * @param node
-	 * @param creatorid
-	 * @return the created or updated node
+	 * @param node Node object
+	 * @param creatorid Id of the user node object
+	 * @return The created or updated node
 	 */
 	public static <T extends NodeInterface> T updateNode(T node, long creatorid){
 		if(node==null){
@@ -605,6 +709,12 @@ public class DBService {
 		return node;
 	}
 	
+	/**
+	 * Updates a node object and its relationships
+	 * @param node Node object to update
+	 * @param creatorid Id of the user node object
+	 * @return The updated node object
+	 */
 	public static <T extends NodeInterface> T updateNodeWihtRelationships(T node, long creatorid){
 		HashSet<T> uniqueNodes = new HashSet<T>();
 		int amount = updateNodesRecursivly(node, creatorid, uniqueNodes);
@@ -635,6 +745,11 @@ public class DBService {
 		return nodecount;
 	}
 
+	/**
+	 * Deletes the given node
+	 * @param nodeid Id of the node object to delete
+	 * @return true if deleted, false if not deleted
+	 */
 	public static boolean deleteNode (long nodeid){
 		if(nodeid<1){
 			return false;
@@ -660,6 +775,12 @@ public class DBService {
 		}
 	}
 	
+	/**
+	 * Deletes the given node
+	 * @param nodeid Id of the node to delete
+	 * @param user User node object
+	 * @return true if deleted, false if not deleted
+	 */
 	public static boolean deleteNode (long nodeid, User user){
 		log.debug (nodeid);
 		log.debug(user);
@@ -765,6 +886,10 @@ public class DBService {
 			return rs;
 	}
 	
+	/**
+	 * Main method of DBService
+	 * @param args
+	 */
 	public static void main (String[] args){
 		User user = getUserByEmail("user1@u1.com");
 		List<Decision> decs = getAllDecisions(user);

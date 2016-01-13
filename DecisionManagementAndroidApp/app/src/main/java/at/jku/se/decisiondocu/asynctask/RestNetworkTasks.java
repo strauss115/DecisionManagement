@@ -71,6 +71,9 @@ public class RestNetworkTasks {
             mProfile = profil;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Integer doInBackground(Void... params) {
             if (RestClient.registerUser(mfirstname, mlastname, mEmail, mPassword, mProfile)) {
@@ -98,6 +101,9 @@ public class RestNetworkTasks {
             this.bitmap = bitmap;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Integer doInBackground(Void... params) {
             if (name == null || name.length() < 1 || project == null) {
@@ -146,6 +152,9 @@ public class RestNetworkTasks {
             this.imageView = imageView;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Integer doInBackground(Void... params) {
             Bitmap bitmap = RestClient.downloadProfilPicture(id);
@@ -171,6 +180,9 @@ public class RestNetworkTasks {
             this.doc = doc;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Integer doInBackground(Void... params) {
             file = RestClient.downloadDocument(doc);

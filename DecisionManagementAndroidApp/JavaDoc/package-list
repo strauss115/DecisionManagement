@@ -1,0 +1,17 @@
+at.jku.se.decisiondocu
+at.jku.se.decisiondocu.activities
+at.jku.se.decisiondocu.asynctask
+at.jku.se.decisiondocu.beans
+at.jku.se.decisiondocu.beans.adapters
+at.jku.se.decisiondocu.beans.interfaces
+at.jku.se.decisiondocu.chat
+at.jku.se.decisiondocu.dialog
+at.jku.se.decisiondocu.fragments
+at.jku.se.decisiondocu.fragments.dummy
+at.jku.se.decisiondocu.login
+at.jku.se.decisiondocu.restclient
+at.jku.se.decisiondocu.restclient.client
+at.jku.se.decisiondocu.restclient.client.DBStrings
+at.jku.se.decisiondocu.restclient.client.api
+at.jku.se.decisiondocu.restclient.client.model
+at.jku.se.decisiondocu.views

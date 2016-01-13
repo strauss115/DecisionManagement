@@ -43,6 +43,7 @@ import at.jku.se.decisiondocu.restclient.client.model.NodeInterface;
 
 /**
  * Created by martin on 23.12.15.
+ * Search Document Details
  */
 @EActivity(R.layout.activity_search_document_details)
 public class SearchDocumentDetailsActivity extends AppCompatActivity {
@@ -84,6 +85,10 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
     @Bean
     RelationAdapter mAdapter;
 
+    /**
+     * Returns the document node
+     * @return
+     */
     public NodeInterface getmNode() {
         return mNode;
     }
@@ -172,6 +177,9 @@ public class SearchDocumentDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Opens the chat
+     */
     @Click(R.id.document_header)
     public void openChat(){
         try {

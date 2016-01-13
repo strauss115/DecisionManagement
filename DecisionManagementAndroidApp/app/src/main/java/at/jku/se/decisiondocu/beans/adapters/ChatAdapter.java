@@ -56,25 +56,41 @@ public class ChatAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Sets chatInterface
+     * @param chatInterface
+     */
     public void setChatInterface(ChatInterface chatInterface) {
         this.chatInterface = chatInterface;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getCount() {
         return mListItems.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MsgWrapper getItem(int i) {
         return mListItems.get(i);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getItemId(int i) {
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

@@ -14,6 +14,12 @@ import at.jku.se.dm.shared.RelationString;
 import at.jku.se.dm.shared.NodeString;
 import at.jku.se.dm.shared.PropertyString;
 
+/**
+ * Class for User Nodes
+ * It extends Nodes
+ * @author August
+ *
+ */
 public class User extends Node {
 
 	// private List<Team> teams; Teams are stored in Relationships
@@ -23,6 +29,13 @@ public class User extends Node {
 	
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Constructor
+	 * @param email
+	 * @param firstname
+	 * @param lastname
+	 * @param isAdmin
+	 */
 	public User(String email, String firstname, String lastname, boolean isAdmin) {
 		super(firstname);
 		if (email != null && firstname != null && lastname != null) {
@@ -32,6 +45,14 @@ public class User extends Node {
 		}
 	}
 
+	/**
+	 * Constructor
+	 * @param email
+	 * @param firstname
+	 * @param lastname
+	 * @param password
+	 * @param isAdmin
+	 */
 	public User(String email, String firstname, String lastname, String password, boolean isAdmin) {
 		super(firstname);
 		if (email != null && firstname != null && lastname != null) {
@@ -44,12 +65,19 @@ public class User extends Node {
 		}
 	}
 
+	/**
+	 * Default constructor
+	 */
 	public User() {
 		super();
 	}
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns the type of the node
+	 * @return The type of the node as string
+	 */
 	@JsonIgnore
 	@Override
 	public String getNodeType() {
@@ -58,11 +86,19 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns last name of the user
+	 * @return The last name of the user as String
+	 */
 	@JsonIgnore
 	public String getLastname() {
 		return super.getAllDirectProperties().get(PropertyString.LASTNAME);
 	}
 
+	/**
+	 * Sets the last name of the user
+	 * @param lastName
+	 */
 	@JsonIgnore
 	public void setLastname(String lastName) {
 		super.addDirectProperty(PropertyString.LASTNAME, lastName);
@@ -71,11 +107,19 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns the first name of the user
+	 * @return The first name of the user as String
+	 */
 	@JsonIgnore
 	public String getFirstName() {
 		return super.getName();
 	}
 
+	/**
+	 * Sets the first name of the user
+	 * @param firstName
+	 */
 	@JsonIgnore
 	public void setFirstName(String firstName) {
 		super.setName(firstName);
@@ -84,11 +128,19 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns the email of the user
+	 * @return The email of the user as String
+	 */
 	@JsonIgnore
 	public String getEmail() {
 		return super.getAllDirectProperties().get(PropertyString.EMAIL);
 	}
 
+	/**
+	 * Sets the email of the user
+	 * @param email
+	 */
 	@JsonIgnore
 	public void setEmail(String email) {
 		super.addDirectProperty(PropertyString.EMAIL, email);
@@ -97,6 +149,10 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns the password of the user
+	 * @return The password of the user as String
+	 */
 	@JsonIgnore
 	public String getPassword() {
 		// need to get password by direct access as getDirectProperties is overwritten
@@ -108,6 +164,10 @@ public class User extends Node {
 		}
 	}
 
+	/**
+	 * Sets the password of the user
+	 * @param password
+	 */
 	@JsonIgnore
 	public void setPassword(String password) {
 		super.addDirectProperty(PropertyString.PASSWORD, password);
@@ -116,6 +176,10 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns true if user is admin, false if not admin
+	 * @return true if user is admin, false if user is not admin
+	 */
 	@JsonIgnore
 	public boolean isAdmin() {
 		try {
@@ -125,6 +189,10 @@ public class User extends Node {
 		}
 	}
 
+	/**
+	 * Makes the user an admin
+	 * @param admin
+	 */
 	@JsonIgnore
 	public void setAdmin(boolean admin) {
 		super.addDirectProperty(PropertyString.IS_ADMIN, String.valueOf(admin));
@@ -132,17 +200,30 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Returns all projects of the user
+	 * @return All projects of the user
+	 */
 	@JsonIgnore
 	public List<Project> getProjects() {
 		return getNodesByRelationship(RelationString.HAS_PROJECT, Project.class);
 	}
 
+	/**
+	 * Adds a user to a project
+	 * @param project
+	 */
 	@JsonIgnore
 	public void addToProject(Project project) {
 		this.addRelation(RelationString.HAS_PROJECT, project, true);
 		DBService.updateNodeWihtRelationships(this, 0);
 	}
 
+	/**
+	 * Deletes a user from project
+	 * @param project
+	 * @return true if deleted, false if not deleted
+	 */
 	@JsonIgnore
 	public boolean deleteFromProject(Project project) {
 		return deleteRelationByRelatedNode(RelationString.HAS_PROJECT, project);
@@ -150,6 +231,9 @@ public class User extends Node {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Map<String, String> getDirectProperties() {
 		if (super.getDirectProperties() == null)

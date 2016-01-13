@@ -37,6 +37,9 @@ public class PhotoUploadDialog extends DialogFragment {
         this.imageToUpload = imageToUpload;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -98,6 +101,9 @@ public class PhotoUploadDialog extends DialogFragment {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -117,6 +123,9 @@ public class PhotoUploadDialog extends DialogFragment {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == REQUEST_READ_EXTERNAL_STORAGE) {

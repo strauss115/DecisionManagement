@@ -9,6 +9,9 @@ import io.swagger.jaxrs.config.BeanConfig;
 public class Bootstrap extends HttpServlet {
 	private static final long serialVersionUID = 7938583012105290318L;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);

@@ -13,6 +13,11 @@ import org.apache.logging.log4j.Logger;
 import at.jku.se.database.DBService;
 import at.jku.se.model.User;
 
+/**
+ * Class to manage the user sessions
+ * @author August
+ *
+ */
 public class SessionManager {
 
 	private static SecureRandom random = new SecureRandom();
@@ -28,6 +33,11 @@ public class SessionManager {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Adds a new Session of the given user node object
+	 * @param user The user who starts a session
+	 * @return A unique String which identificates the user
+	 */
 	public static String addSession(User user) {
 		Session session = new Session(user);
 		String token = new BigInteger(130, random).toString(32);
@@ -55,6 +65,11 @@ public class SessionManager {
 		}
 	}
 
+	/**
+	 * Verificates the user session
+	 * @param session Session object
+	 * @return true if the session is valid, false if not valid
+	 */
 	public static boolean verifySession(String session) {
 		if (validSessions.containsKey(session)) {
 			try {
@@ -67,6 +82,11 @@ public class SessionManager {
 		return false;
 	}
 
+	/**
+	 * Returns the user identified by its token
+	 * @param token The unique token of the user session
+	 * @return The user node object of the given token
+	 */
 	public static User getUser(String token) {
 		log.debug("Getting user by token '" + token + "'");
 		return validSessions.get(token).getUser();
@@ -74,6 +94,10 @@ public class SessionManager {
 
 	// ------------------------------------------------------------------------
 
+	/**
+	 * Main method of SessionManager
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		for (int i = 0; i < 10; i++) {
 			System.out.println(new BigInteger(130, random).toString(32));

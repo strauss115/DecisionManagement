@@ -46,6 +46,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * API Class for document
+ * @author August
+ *
+ */
 @Api(tags = {"upload"})
 @Path("/upload")
 public class DocumentResource {
@@ -67,6 +72,12 @@ public class DocumentResource {
 	private static String LOCATION_PROFILE_PICTURE = SERVER_UPLOAD_LOCATION_FOLDER+"profilpictures/";
 	private static String LOCATION_DOCUMENT = SERVER_UPLOAD_LOCATION_FOLDER+"documents/";
 	
+	/**
+	 * Get node's profile picture
+	 * @param token
+	 * @param id
+	 * @return The profile picture of the document
+	 */
 	@GET
 	@Path("/profilePicture/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -111,6 +122,12 @@ public class DocumentResource {
 		}
 	}
 	
+	/**
+	 * Get node's document
+	 * @param token
+	 * @param id
+	 * @return Get node's document
+	 */
 	@GET
 	@Path("/document/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -172,6 +189,14 @@ public class DocumentResource {
 		}
 	}
 	
+	/**
+	 * Upload a user's profile picture
+	 * @param token
+	 * @param fileInputStream
+	 * @param fileFormDataContentDisposition
+	 * @param id
+	 * @return Upload a user's profile picture
+	 */
 	@POST
     @Path("/profilePicture/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -212,6 +237,14 @@ public class DocumentResource {
 		}
     }
 	
+	/**
+	 * Upload a document
+	 * @param token
+	 * @param fileInputStream
+	 * @param fileFormDataContentDisposition
+	 * @param id
+	 * @return Upload a document
+	 */
 	@POST
     @Path("/document/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -294,6 +327,12 @@ public class DocumentResource {
         return qualifiedUploadFilePath;
     }
 	
+	/**
+	 * Writes fileInputStream to outputStream
+	 * @param fileInputStream
+	 * @param outputStream
+	 * @throws IOException
+	 */
 	public static void writeFile(InputStream fileInputStream, OutputStream outputStream) throws IOException {
 		try {
 		  byte[] buffer = new byte[1024];
@@ -313,7 +352,10 @@ public class DocumentResource {
 	}
 	
 
-	
+	/**
+	 * Main method of the class
+	 * @param args
+	 */
 	public static void main (String[]args){
 		
 		User admin = DBService.getUserByEmail("admin@example.com");

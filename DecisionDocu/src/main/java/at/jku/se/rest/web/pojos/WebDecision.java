@@ -22,6 +22,7 @@ public class WebDecision extends ResponseData {
 	private String description;
 	private Date creationDate;
 	private String author;
+	private String authorEmail;
 	private List<InfluenceFactor> influenceFactors;
 	private List<Rationale> rationales;
 	private List<Alternative> alternatives;
@@ -35,6 +36,9 @@ public class WebDecision extends ResponseData {
 	
 	// ------------------------------------------------------------------------
 	
+	/**
+	 * Default constructor
+	 */
 	public WebDecision() {
 		this.name = "";
 		this.author = "";
@@ -160,6 +164,12 @@ public class WebDecision extends ResponseData {
 	}
 	public void setLastActivity(String lastActivity) {
 		this.lastActivity = lastActivity;
+	}
+	public String getAuthorEmail() {
+		return authorEmail;
+	}
+	public void setAuthorEmail(String authorEmail) {
+		this.authorEmail = authorEmail;
 	}
 	
 	// ------------------------------------------------------------------------

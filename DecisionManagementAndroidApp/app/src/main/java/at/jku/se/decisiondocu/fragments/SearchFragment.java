@@ -98,11 +98,17 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
         mListView.smoothScrollToPosition(0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         setComparatorForAdapter(position);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {}
 

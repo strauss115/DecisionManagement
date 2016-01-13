@@ -1,5 +1,8 @@
 package at.jku.se.decisiondocu.restclient.client.DBStrings;
 
+/**
+ * Relation Strings
+ */
 public class RelationString {
 
 	// TODO please check if correct relation strings were used for both APIs !!!
