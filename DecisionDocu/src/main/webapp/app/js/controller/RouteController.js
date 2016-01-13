@@ -27,9 +27,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when("/relateDecision", {
 		templateUrl : "pages/relateDecision.html",
 		controller : "RelateDecisionController"
-	}).when("/timeline", {
-		templateUrl : "pages/timeline.html",
-		controller : "PageCtrl"
+	}).when("/showTimeline", {
+		templateUrl : "pages/showTimeline.html",
+		controller : "TimelineController"
 	}).when("/showDependency", {
 		templateUrl : "pages/showDependency.html",
 		controller : "ShowDependencyController"
@@ -38,7 +38,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 		controller : "ShowGroupController"
 	}).when("/showCriteria", {
 		templateUrl : "pages/showCriteria.html",
-		controller : "PageCtrl"
+		controller : "ShowCriteriaController"
 	}).when("/userAdministration", {
 		templateUrl : "pages/userAdministration.html",
 		controller : "UserAdministrationController"
