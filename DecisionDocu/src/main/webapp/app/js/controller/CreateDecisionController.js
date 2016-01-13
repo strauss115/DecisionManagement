@@ -91,14 +91,14 @@ app
 									CreateDecision.save({
 										decisionName : $scope.decisionName
 									}, function(data) {
-										alert(data);
+										//alert(data);
 										var obj = angular.fromJson(data);
-										alert(obj.id);
+										//alert(obj.id);
 										$scope.selectedDecisionId = obj.id;
 									}, function(error) {
 									});
 								} else {
-									alert("Decision name to short!")
+									//alert("Decision name to short!")
 								}
 							}
 
@@ -106,13 +106,13 @@ app
 							$scope.addDecisionAttribute = function() {
 								// alert($scope.selectedDecisionId);
 								// alert($scope.selectedAttribute);
-								alert($scope.attributeValue);
+								//alert($scope.attributeValue);
 								AddAttributeToDecision.save({
 									value : $scope.attributeValue,
 									id : $scope.selectedDecisionId,
 									attribute : $scope.selectedAttribute
 								}, function(data) {
-									alert(data);
+									//alert(data);
 									$scope.updateGraph();
 								}, function(error) {
 								});
@@ -139,7 +139,7 @@ app
 														id : $scope.selectedDecisionId,
 														attribute : "add" + att
 													}, function(data) {
-														alert(data);
+														//alert(data);
 														//$scope.updateGraph();
 													}, function(error) {
 													});

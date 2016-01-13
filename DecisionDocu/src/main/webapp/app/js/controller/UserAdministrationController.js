@@ -9,7 +9,7 @@ app.controller('UserAdministrationController', [ '$scope', 'Users',
  * Method to clear form
  */
 $('#userAdministrationClear').click(function() {
-	alert("clear");
+	//alert("clear");
 });
 
 $('#userAdministrationSave').click(function() {

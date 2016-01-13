@@ -258,7 +258,7 @@ app.directive('goDiagramMindMap', function () {
                       diagram.model.removeNodeData(olddata);
                       diagram.model.addNodeData(newdata);   
                       diagram.commitTransaction("Add Node");   
-                	  alert("EDIT NODE APP.JS");
+                	  //alert("EDIT NODE APP.JS");
                   }
                   jQuery("#addAttributeInputText").val("");
             });

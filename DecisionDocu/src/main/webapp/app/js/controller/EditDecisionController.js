@@ -48,7 +48,7 @@ app.controller('EditDecisionController',
 
 					// function to update selected graph - draw selected graph
 					$scope.updateGraph = function() {
-						alert($scope.selectedDecision);
+						//alert($scope.selectedDecision);
 						// load chosen graph
 						LoadEditGraph.get({
 							id : $scope.selectedDecision
@@ -95,7 +95,7 @@ app.controller('EditDecisionController',
 
 					// function to update selected graph - draw selected graph
 					$scope.updateGraph = function() {
-						alert($scope.selectedDecision);
+						//alert($scope.selectedDecision);
 						// load chosen graph
 						LoadEditGraph.get({
 							id : $scope.selectedDecision
@@ -131,8 +131,7 @@ app.controller('EditDecisionController',
 					}
 					// load attributes from chosen category
 					$scope.changeAttributeCategories = function() {
-						alert("Attribute choose changed"
-								+ $scope.selectedAttribute);
+						//alert("Attribute choose changed" + $scope.selectedAttribute);
 						$scope.attributeValues.push({
 							value : "test",
 							label : "test"
@@ -140,19 +139,18 @@ app.controller('EditDecisionController',
 					}
 					// load attributes category values to edit
 					$scope.changeEditAttributeValues = function() {
-						alert("Attribute value choose changed: "
-								+ $scope.selectedAttributeValue);
+						//alert("Attribute value choose changed: " + $scope.selectedAttributeValue);
 
 					}
 					// function to add attributes to decision
 					$scope.addDecisionAttribute = function() {
-						alert($scope.attributeValue);
+						//alert($scope.attributeValue);
 						AddAttributeToDecision.save({
 							value : $scope.attributeValue,
 							id : $scope.selectedDecisionId,
 							attribute : $scope.selectedAttribute
 						}, function(data) {
-							alert(data);
+							//alert(data);
 							$scope.updateGraph();
 						}, function(error) {
 						});
@@ -209,7 +207,7 @@ app.controller('EditDecisionController',
 								id : $scope.selectedDecisionId,
 								attribute : "add" + att
 							}, function(data) {
-								alert(data);
+								//alert(data);
 							}, function(error) {
 							});
 						}

@@ -80,7 +80,7 @@ app.controller('TeamAdministrationController', [
 					"userId" : $cookies['UserId'],
 					'password' : $scope.teamPassword
 				}, {}, function(data) {
-					alert(data.status);
+					//alert(data.status);
 					$("#registerModal").modal('hide');
 					$('body').removeClass('modal-open');
 					$('.modal-backdrop').remove();
