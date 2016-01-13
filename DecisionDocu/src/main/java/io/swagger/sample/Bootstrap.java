@@ -21,7 +21,7 @@ public class Bootstrap extends HttpServlet {
 		beanConfig.setTitle("DecisionDocu");
 		beanConfig.setDescription("API Backend for decision-related management");
 		beanConfig.setSchemes(new String[]{"http"});
-		beanConfig.setHost("localhost:8080");
+		beanConfig.setHost("ubuntu.mayerb.net:8080");
         beanConfig.setBasePath("/DecisionDocu/api");
         beanConfig.setContact("Benjamin Mayer, Martin Pfoser");
         beanConfig.setResourcePackage("at.jku.se.rest.api");
