@@ -102,7 +102,7 @@ public class GoJsFormatter {
 		String testConnection = "";
 		// add decision nodes
 		for(WebDecision wd : decisions){
-			if(!testConnection.equals("")){
+			if(!"".equals(testConnection)){
 				LinkedList<String> con = new LinkedList<String>();
 				con.add(testConnection);
 				wd.setRelatedDecisions(con);

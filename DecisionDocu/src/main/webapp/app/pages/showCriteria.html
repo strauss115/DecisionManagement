@@ -1,7 +1,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Criteria Seach Report </h1>
+        <h1 class="page-header">Criteria Seach Report midn </h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -13,30 +13,52 @@
                 Search				
             </div>
             <!-- /.panel-heading -->
+            
+           
             <div class="panel-body">
+            
+            
+                <!-- 1. alternative filter -->
                 <div class="form-group">
-                    <div class="col-lg-2">
-                        <label class="control-label" for="">Group</label>
+                    <div class="col-lg-4">
+                        <label class="control-label" for="">Alternatives</label>
                     </div>
-					<div class="col-lg-3">
+					<div class="col-lg-8">
 						<div class="form-group">
-							<div class="col-lg-10">
-								<select ng-model="selectedGroup" ng-change="updateGroupFilter()" class="form-control">
-									<option ng-repeat="g in groups" value="{{g.id}}">{{g.name }}</option>
+							<div class="col-lg-8">
+								<select ng-model="selectedAlternative" ng-change="updateAlternativeFilter()" class="form-control">
+									<option ng-repeat="a in alternatives" value="{{a.id}}">{{a.name }}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+                </div>
+            
+            
+                <!-- 2. quality attributes filter -->
+                <div class="form-group">
+                    <div class="col-lg-4">
+                        <label class="control-label" for="">Quality attributes</label>
+                    </div>
+					<div class="col-lg-8">
+						<div class="form-group">
+							<div class="col-lg-8">
+								<select ng-model="selectedQuality" ng-change="updateQualityFilter()" class="form-control">
+									<option ng-repeat="q in quality" value="{{q.id}}">{{q.name }}</option>
 								</select>
 							</div>
 						</div>
 					</div>
                 </div>
                 
-                
+                <!-- 3. influence factors filter -->
                 <div class="form-group">
-                    <div class="col-lg-2">
+                    <div class="col-lg-4">
                         <label class="control-label" for="">Influence Factors</label>
                     </div>
-					<div class="col-lg-3">
+					<div class="col-lg-8">
 						<div class="form-group">
-							<div class="col-lg-10">
+							<div class="col-lg-8">
 								<select ng-model="selectedInfluence" ng-change="updateInfluenceFilter()" class="form-control">
 									<option ng-repeat="f in factors" value="{{f.id}}">{{f.name }}</option>
 								</select>
@@ -45,14 +67,14 @@
 					</div>
                 </div>
                 
-
+				<!-- 4. consequences filter -->
                 <div class="form-group">
-                    <div class="col-lg-2">
+                    <div class="col-lg-4">
                         <label class="control-label" for="">Consequences</label>
                     </div>
-					<div class="col-lg-3">
+					<div class="col-lg-8">
 						<div class="form-group">
-							<div class="col-lg-10">
+							<div class="col-lg-8">
 								<select ng-model="selectedConsequence" ng-change="updateConsequenceFilter()" class="form-control">
 									<option ng-repeat="c in consequences" value="{{c.id}}">{{c.name }}</option>
 								</select>
@@ -61,15 +83,31 @@
 					</div>
                 </div>
                 
-
+                <!-- 5. rationales filter -->
                 <div class="form-group">
+                    <div class="col-lg-4">
+                        <label class="control-label" for="">Rationales</label>
+                    </div>
+					<div class="col-lg-8">
+						<div class="form-group">
+							<div class="col-lg-8">
+								<select ng-model="selectedRationales" ng-change="updateRationalesFilter()" class="form-control">
+									<option ng-repeat="r in rationales" value="{{r.id}}">{{r.name }}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+                </div>
+
+  
+<!--                 <div class="form-group">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-2">
-                        <button ng-click="showResult() class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                        <button ng-click="showResult()" class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
-                </div>
-                
-                
+                </div> 
+-->
+                               
             </div>
 
         </div>
@@ -78,42 +116,37 @@
     <!-- /.panel -->
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Search Result				
-    </div>
-    <!-- /.panel-heading -->
-    <div class="panel-body">			              
-        <div class="dataTable_wrapper">
-            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                <thead>
-                    <tr>
-                        <th>Decription</th>
-                        <th>Date</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="odd gradeX">
-                        <td>Decision 1</td>
-                        <td>25.10.2015</td>
-                        <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
-                    </tr>
-                    <tr class="even gradeX">
-                        <td>Decision 2</td>
-                        <td>26.10.2015</td>
-                        <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
-                    </tr>
-                    <tr class="odd gradeX">
-                        <td>Decision 3</td>
-                        <td>27.10.2015</td>
-                        <td><button class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
-                    </tr>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Latest activities
+			</div>
+			<div class="panel-body">
+				<div class="dataTable_wrapper">
+					<table class="table table-striped table-bordered table-hover" id="dataTables-home">
+						<thead>
+							<tr>
+								<th>Name of Decision</th>
+								
+								<th>Edit</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="d in decisionsResult" class="odd gradeX">
+								<td>{{ d.name }} </td>
+								
+								<td><button ng-click="navigate(d.id)" class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!-- /.panel-body -->
+
 </div>

@@ -3,12 +3,22 @@
  * Controller for the 'showDependency.html' - load decisions and show connections via GoJs-graph
  */
 
-app.controller('ShowDependencyController', [
-		'$scope',
-		'$cookies',
-		'LoadConnectionsGraph',
-		'DecisionsByTeam',
-		function($scope, $cookies, LoadConnectionsGraph, DecisionsByTeam) {
+app.controller('ShowDependencyController',[
+			'$scope',
+			'$cookies',
+			'$routeParams',
+			'$window',
+			'LoadEditGraph',
+			'LoadConnectionsGraph',
+			'DecisionsByTeam',
+			'AddAttributeToDecision',
+			'GetNode',
+			'GetFile',
+			'fileUpload1',
+			'GetMessages',
+			function($scope, $cookies, $routeParams, $window,
+					LoadEditGraph, LoadConnectionsGraph, DecisionsByTeam, AddAttributeToDecision,
+					GetNode, GetFile, fileUpload1, GetMessages) {
 			
 			
 			/*
@@ -16,10 +26,10 @@ app.controller('ShowDependencyController', [
 			 */
 			$scope.serverresult = new Object();
 			$scope.gojs = new Object();
-			$scope.decisions = [];
+			$scope.decisions = [{"id":1000, "name":"- select decision -"}];
 			$scope.links = [{"id":1000, "name":"select decision first!"}];
 			
-			
+			 
 			
 			/*
 			 * Helper function: JQuery extension for creating unique arrays -  use: $.distinct([0,1,2,2,3,0,1,1,1])
@@ -123,16 +133,18 @@ app.controller('ShowDependencyController', [
 			LoadConnectionsGraph.get({
 				teamId : $cookies['TeamId']
 			}, function(data) {
-				
+				console.log("graph json");
+				console.log(data);
 				$scope.serverresult = angular.fromJson(data);
 				$.each($scope.serverresult.data, function(idx, item){
-					$scope.decisions.push({"id" : item.key, "name" : item.text});
+					if(item.key) {$scope.decisions.push({"id" : item.key, "name" : item.text});}
 				});
+				
 				if ($scope.decisions.length == 0) {
 					$scope.decisions.push({"id": 0, "name": "No decisions available"})};
 				
 			}, function(error) {
-				
+				console.log("Error: could not load graph from server!");
 			});
 			
 			

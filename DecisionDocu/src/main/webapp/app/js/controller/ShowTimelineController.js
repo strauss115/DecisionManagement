@@ -37,7 +37,12 @@ app.controller('TimelineController', [
 						
 			$scope.buildTimelineHTML = function(inputJSON){
 				var res = "";
+				var nth = 0;
 				$.each(inputJSON, function(idx, item){
+					
+					// check for null values faulty decisions
+					if(item.name){
+					nth ++; //cannot rely on idx, because sometimes empty nodes are still present
 					// use any of font-awsome icons http://fortawesome.github.io/Font-Awesome/icons/
 					// note, version 4.5 is not supported yet
 					// if icon does not start with 'fa-', the prefix will be added 
@@ -45,7 +50,7 @@ app.controller('TimelineController', [
 					//console.log(item.icon.indexOf("fa-"));
 					
 					// adds a timeline-inverted class for odd entries to display item on right side of the timeline
-					res += "<li" + (idx % 2 == 0 ? "" : " class=\"timeline-inverted\"")  + ">";
+					res += "<li" + (nth % 2 == 0 ? "" : " class=\"timeline-inverted\"")  + ">";
 					//res += "<div class=\"timeline-badge " + $scope.colourAutocorrect(item.colour) + "\"><i class=\"fa " +  $scope.iconAutocorrect(item.icon) + "\"></i></div>";
 					res += "<div class=\"timeline-badge "  + $scope.cycleColour() + "\"><i class=\"fa fa-" + $scope.cycleIcon() + "\"></i></div>";
 					
@@ -54,10 +59,10 @@ app.controller('TimelineController', [
 					res += "<div class=\"timeline-heading\">";
 					res += "<h4 class=\"timeline-title\">" + item.name + "</h4>";
 					// add date
-					res += "<p><small class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> " + $scope.niceDate(item.creationDate) + "  <i class=\"fa fa-user\"></i>  " + item.author + " </small></p></div>";
+					res += "<p><small class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> " + $scope.niceDate(item.creationDate);
+					if(item.authorEmail) res += " <i class=\"fa fa-user\"></i>  " + item.authorEmail;
 					// add time line description (decision comment)
-					res += "<div class=\"timeline-body\"><p>" 
-						
+					res += "</small></p></div> <div class=\"timeline-body\"><p>";		
 					if(item.influenceFactors.length > 0) {res +=  "<i class=\"fa fa-clock-o\"></i> " + item.influenceFactors.length + " influence factors. ";}	
 					if(item.rationales.length > 0) {res +=  "<i class=\"fa fa-cog\"></i> " + item.rationales.length + " rationales. ";}	
 					if(item.alternatives.length > 0) {res +=  "<i class=\"fa fa-clone\"></i> " + item.alternatives.length + " alternatives. ";}	
@@ -69,6 +74,7 @@ app.controller('TimelineController', [
 					
 					
 					res += "<br> "+ item.lastActivity + "</p></div></div></li>";
+					} // end if - empty nodes check
 					
 				});
 				//console.log(res);
@@ -76,7 +82,7 @@ app.controller('TimelineController', [
 		
 			}
 			
-			DecisionsByTeam.get({}, function(data) {
+			DecisionsByTeam.get({teamId : $cookies['TeamId']}, function(data) {
 				
 				// var decisionTimeLine is synchrosnized with DIV tag in showTimeline.html template by 'ng-bind-html'
 				 console.log(angular.toJson(data));
