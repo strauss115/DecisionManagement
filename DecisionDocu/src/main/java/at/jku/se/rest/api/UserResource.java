@@ -39,34 +39,32 @@ import io.swagger.annotations.ApiResponses;
 
 /**
  * API Class for User
+ * 
  * @author August
  *
  */
-@Api(tags = {"user"})
+@Api(tags = { "user" })
 @Path("/user")
 public class UserResource {
-	
+
 	private static final Logger log = LogManager.getLogger(UserResource.class);
 	private static ObjectMapper mapper = new ObjectMapper();
-		
+
 	/**
 	 * Returns a list of all available users
+	 * 
 	 * @param token
 	 * @return a list of all available users
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Returns a list of all available users", notes = "Returns a list of all available users", response = User.class, responseContainer = "List")
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
-	public Response getAll(
-			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 401, message = "Unauthorized") })
+	public Response getAll(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
 		log.debug("GET all users");
 		try {
-			if(!SessionManager.verifySession(token)){
+			if (!SessionManager.verifySession(token)) {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			return RestResponse.getSuccessResponse(DBService.getAllUser().toArray(new NodeInterface[0]));
@@ -78,6 +76,7 @@ public class UserResource {
 
 	/**
 	 * Returns a certain user
+	 * 
 	 * @param token
 	 * @param eMail
 	 * @return A certain user
@@ -86,17 +85,13 @@ public class UserResource {
 	@Path("/{eMail}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Returns a certain user", notes = "Returns a certain user", response = User.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
-	public Response get(
-			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 401, message = "Unauthorized") })
+	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "EMail of the user to fetch", required = true) @PathParam("eMail") String eMail) {
 		log.debug("GET user '" + eMail + "'");
 		try {
-			if(!SessionManager.verifySession(token)){
+			if (!SessionManager.verifySession(token)) {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			return RestResponse.getSuccessResponse(DBService.getUserByEmail(eMail));
@@ -108,6 +103,7 @@ public class UserResource {
 
 	/**
 	 * Login a certain user
+	 * 
 	 * @param eMail
 	 * @param password
 	 * @return This API method creates an access key (token) for the user
@@ -116,40 +112,35 @@ public class UserResource {
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Login a certain user", notes = "This API method creates an access key (token) for the user", response = User.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 401, message = "Unauthorized") })
 	public Response login(
 			@ApiParam(value = "EMail of the user to login", required = true) @QueryParam("eMail") String eMail,
 			@ApiParam(value = "Password of the user to login", required = true) @QueryParam("password") String password) {
 		log.debug("Login user: " + eMail);
 
-		if (eMail!=null && password!=null) {
+		if (eMail != null && password != null) {
 			User u = DBService.getUserByEmail(eMail);
 			if (u != null && u.getPassword().equals(password)) {
 				log.debug("User found!");
-				
+
 				String token = SessionManager.addSession(u);
 				try {
-					OAuthResponse response = OAuthASResponse
-					        .tokenResponse(HttpServletResponse.SC_OK)
-					        .setAccessToken(token)
-					        .setExpiresIn("3600")
-					        .buildJSONMessage();
+					OAuthResponse response = OAuthASResponse.tokenResponse(HttpServletResponse.SC_OK)
+							.setAccessToken(token).setExpiresIn("3600").buildJSONMessage();
 					return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
 				} catch (OAuthSystemException e) {
 					log.error("login error occured", e);
 					RestResponse.getErrorResponse();
 				}
-			}	
+			}
 		}
 		return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 	}
 
 	/**
 	 * This API method creates a new user on the server
+	 * 
 	 * @param firstName
 	 * @param lastName
 	 * @param password
@@ -160,12 +151,9 @@ public class UserResource {
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Register a new user", notes = "This API method creates a new user on the server", response = User.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 201, message = "Created"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 400, message = "Bad Request"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Created"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
 	public Response register(
 			@ApiParam(value = "First name of the user", required = true) @QueryParam("firstName") String firstName,
 			@ApiParam(value = "Last name of the user", required = true) @QueryParam("lastName") String lastName,
@@ -173,61 +161,58 @@ public class UserResource {
 			@ApiParam(value = "EMail of the user", required = true) @QueryParam("eMail") String eMail) {
 		log.debug("Register '" + eMail + "' invoked");
 
-        try {
-	        if (DBService.getUserByEmail(eMail) != null) {
-	        	return RestResponse.getResponse(HttpCode.HTTP_400_BAD_REQUEST);
-	        }
-        } catch (Exception e) {
-        	log.error(e);
-        }
-        
-        User user = new User();
-        
-        try {
-            user.setAdmin(false);
-            user.setEmail(eMail);
-            user.setName(firstName);
-            user.setLastname(lastName);
-            user.setPassword(password);
-        	user = DBService.updateNode(user, -1);        	
+		try {
+			if (DBService.getUserByEmail(eMail) != null) {
+				return RestResponse.getResponse(HttpCode.HTTP_400_BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+
+		User user = new User();
+
+		try {
+			user.setAdmin(false);
+			user.setEmail(eMail);
+			user.setName(firstName);
+			user.setLastname(lastName);
+			user.setPassword(password);
+			user = DBService.updateNode(user, -1);
 		} catch (Exception e) {
 			log.error(e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 
-        log.debug(user.toString());
+		log.debug(user.toString());
 
-        URI uri = null;
-        try {
-            uri = new URI("/DecisionDocu/api/user/" + user.getId());
-        } catch (URISyntaxException e) {
-        	log.debug("Error occured!", e);
-        }
-        String json = RestResponse.packData(user);
-        return Response.created(uri).entity(json).build();
+		URI uri = null;
+		try {
+			uri = new URI("/DecisionDocu/api/user/" + user.getId());
+		} catch (URISyntaxException e) {
+			log.debug("Error occured!", e);
+		}
+		String json = RestResponse.packData(user);
+		return Response.created(uri).entity(json).build();
 	}
 
 	/**
 	 * This API method edits an existing user
+	 * 
 	 * @param token
 	 * @param json
 	 * @return
 	 */
 	@PUT
 	@ApiOperation(value = "Edit a user", notes = "This API method edits an existing user", response = User.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 401, message = "Unauthorized") })
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response edit(
-			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+	public Response edit(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "JSON Object of the user", required = true) String json) {
 		log.debug("EDIT user : " + json);
 		try {
-			if(!SessionManager.verifySession(token)){
+			if (!SessionManager.verifySession(token)) {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
@@ -241,6 +226,7 @@ public class UserResource {
 
 	/**
 	 * This API method deletes an existing user
+	 * 
 	 * @param token
 	 * @param id
 	 * @return
@@ -248,25 +234,27 @@ public class UserResource {
 	@DELETE
 	@Path("/{id}")
 	@ApiOperation(value = "Delete a user", notes = "This API method deletes an existing user", response = User.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 401, message = "Unauthorized") })
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response delete(
-			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+	public Response delete(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "ID of the user", required = true) @PathParam("id") long id) {
 		log.debug("DELETE user '" + id + "'");
 		try {
-			if(!SessionManager.verifySession(token)){
+			if (!SessionManager.verifySession(token)) {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
-			boolean deleted = DBService.deleteNode(id, user);//can only delete nodes where he is creator, admin can delete everything
-			//boolean deleted = DBService.deleteNode(id);
-			if(deleted){
+			boolean deleted = DBService.deleteNode(id, user);// can only delete
+																// nodes where
+																// he is
+																// creator,
+																// admin can
+																// delete
+																// everything
+			// boolean deleted = DBService.deleteNode(id);
+			if (deleted) {
 				return RestResponse.getSuccessResponse();
 			}
 			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
@@ -277,7 +265,9 @@ public class UserResource {
 	}
 
 	/**
-	 * This API method can change a users permission from user to admin or vice versa
+	 * This API method can change a users permission from user to admin or vice
+	 * versa
+	 * 
 	 * @param token
 	 * @param id
 	 * @param isAdmin
@@ -286,11 +276,8 @@ public class UserResource {
 	@PUT
 	@Path("/{id}/permission")
 	@ApiOperation(value = "Change the user's permission", notes = "This API method can change a users permission from user to admin or vice versa", response = User.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 204, message = "No Content"),
-			@ApiResponse(code = 500, message = "Server Error"),
-			@ApiResponse(code = 401, message = "Unauthorized") }
-	)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"), @ApiResponse(code = 401, message = "Unauthorized") })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setPermission(
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
@@ -298,20 +285,20 @@ public class UserResource {
 			@QueryParam("isAdmin") boolean isAdmin) {
 		log.debug("Set admin user '" + id + "' to '" + isAdmin + "'");
 		try {
-			if(!SessionManager.verifySession(token)){
+			if (!SessionManager.verifySession(token)) {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
-			if(!user.isAdmin()){
+			if (!user.isAdmin()) {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
-			User updateUser = DBService.getUserByEmail(user.getEmail());
-			if(updateUser==null){
-				return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+			User updateUser = DBService.getNodeByID(User.class, id, 0);
+			if (updateUser == null) {
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			user.setAdmin(isAdmin);
-			return RestResponse.getSuccessResponse(DBService.updateNode(user, -1));
-			
+			updateUser.setAdmin(isAdmin);
+			return RestResponse.getSuccessResponse(DBService.updateNode(updateUser, -1));
+
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);

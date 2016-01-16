@@ -136,6 +136,19 @@ public class Project extends Node {
 	}
 	
 	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public List<Activity> getActivites() {
+		return getNodesByRelationship(RelationString.HAS_ACTIVITY, Activity.class);
+	}
+	
+	@JsonIgnore
+	public void addActivity(Activity activity) {
+		this.addRelation(RelationString.HAS_ACTIVITY, activity, true);
+		DBService.updateNodeWihtRelationships(this, 0);
+	}
+	
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Returns all direct properties of the project

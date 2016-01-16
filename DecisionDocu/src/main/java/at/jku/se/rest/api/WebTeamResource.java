@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
+import at.jku.se.model.Activity;
 import at.jku.se.model.Project;
 import at.jku.se.model.User;
 import at.jku.se.rest.response.HttpCode;
@@ -32,6 +33,7 @@ import io.swagger.annotations.ApiResponses;
 
 /**
  * API Class for WebTeam
+ * 
  * @author August
  *
  */
@@ -51,6 +53,7 @@ public class WebTeamResource {
 
 	/**
 	 * Converts a generic team/project to web API team format
+	 * 
 	 * @param team
 	 * @return {@link WebTeam}
 	 */
@@ -88,6 +91,7 @@ public class WebTeamResource {
 
 	/**
 	 * Converts a list of generic teams/projects to web API team format
+	 * 
 	 * @param teams
 	 * @return
 	 */
@@ -106,6 +110,7 @@ public class WebTeamResource {
 
 	/**
 	 * Gets all teams
+	 * 
 	 * @param token
 	 * @return
 	 */
@@ -128,6 +133,7 @@ public class WebTeamResource {
 
 	/**
 	 * Gets team by name
+	 * 
 	 * @param token
 	 * @param id
 	 * @return
@@ -156,6 +162,7 @@ public class WebTeamResource {
 
 	/**
 	 * Creates a new team
+	 * 
 	 * @param token
 	 * @param name
 	 * @param adminUserEmail
@@ -203,6 +210,7 @@ public class WebTeamResource {
 
 	/**
 	 * Adds a user to a team
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @param userId
@@ -237,6 +245,8 @@ public class WebTeamResource {
 						|| team.getPassword().equals(password)) {
 					log.debug("Adding user to team");
 					user.addToProject(team);
+					team.addActivity(new Activity(user.getEmail(), "User joined team"));
+
 					return RestResponse.getSuccessResponse();
 				} else {
 					log.warn("Team password is wrong");
@@ -254,6 +264,7 @@ public class WebTeamResource {
 
 	/**
 	 * Removes a user from a team
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @param userId
@@ -283,6 +294,8 @@ public class WebTeamResource {
 				if (team.getAdmin().getId() == curUser.getId() || curUser.isAdmin()) {
 					log.debug("Removing user from team");
 					user.deleteFromProject(team);
+					team.addActivity(new Activity(user.getEmail(), "User left team"));
+
 					return RestResponse.getSuccessResponse();
 				} else {
 					log.warn("User is not admin of team");
@@ -300,6 +313,7 @@ public class WebTeamResource {
 
 	/**
 	 * Changes name of team
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @param value
@@ -328,6 +342,8 @@ public class WebTeamResource {
 					log.debug("Updating team name");
 					team.setName(value);
 					DBService.updateNode(team, 0);
+					team.addActivity(new Activity(curUser.getEmail(), "Changed team name"));
+
 					return RestResponse.getSuccessResponse();
 				} else {
 					log.warn("User is not admin of team");
@@ -345,6 +361,7 @@ public class WebTeamResource {
 
 	/**
 	 * Changes password of team
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @param value
@@ -374,6 +391,8 @@ public class WebTeamResource {
 					log.debug("Updating team name");
 					team.setPassword(value);
 					DBService.updateNode(team, 0);
+					team.addActivity(new Activity(curUser.getEmail(), "Changed team password"));
+
 					return RestResponse.getSuccessResponse();
 				} else {
 					log.warn("User is not admin of team");
@@ -391,6 +410,7 @@ public class WebTeamResource {
 
 	/**
 	 * Changes admin of team
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @param adminId
@@ -419,6 +439,8 @@ public class WebTeamResource {
 				if (team.getAdmin().getId() == curUser.getId() || curUser.isAdmin()) {
 					log.debug("Updating team admin");
 					team.setAdmin(newAdmin);
+					team.addActivity(new Activity(newAdmin.getEmail(), "Changed team administrator"));
+
 					return RestResponse.getSuccessResponse();
 				} else {
 					log.warn("User is not admin of team");
@@ -436,6 +458,7 @@ public class WebTeamResource {
 
 	/**
 	 * Deletes a team
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @return
@@ -460,7 +483,7 @@ public class WebTeamResource {
 				log.error("Team '" + teamId + "' not found");
 				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 			}
-			
+
 			User curUser = SessionManager.getUser(token);
 
 			if (curUser.isAdmin() || team.getAdmin().getId() == curUser.getId()) {
@@ -474,6 +497,37 @@ public class WebTeamResource {
 		} catch (Exception e) {
 			log.debug("Failed to delete team", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+
+	@GET
+	@Path("/{id}/activities")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Gets all team activites", responseContainer = "List")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"),
+			@ApiResponse(code = 204, message = "Team not found"),
+			@ApiResponse(code = 500, message = "Unexpected server error") })
+	public Response getActivities(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Team id") @PathParam("id") long teamId) {
+		log.debug("GET activities for '" + teamId + "'");
+
+		try {
+			if (!SessionManager.verifySession(token)) {
+				log.info("Unauthorized access");
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Project team = DBService.getNodeByID(Project.class, teamId, 2);
+			if (team != null) {
+				return RestResponse.getSuccessResponse(team.getActivites());
+			} else {
+				log.info("Team '" + teamId + "' not found in database");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+		} catch (Exception e) {
+			log.error("Unable to get activites", e);
+			return RestResponse.getErrorResponse();
 		}
 	}
 

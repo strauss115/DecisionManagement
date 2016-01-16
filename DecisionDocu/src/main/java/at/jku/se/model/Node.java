@@ -277,6 +277,8 @@ public abstract class Node implements NodeInterface {
 			List<RelationshipInterface> relations = this.getRelationships().get(relationship);
 			if (relations != null) {
 				for (RelationshipInterface rel : relations) {
+					NodeInterface n = rel.getRelatedNode();
+					
 					result.add(type.cast(rel.getRelatedNode()));
 				}
 			}

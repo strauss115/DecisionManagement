@@ -13,4 +13,5 @@ public class NodeString {
 	public static final String CONSEQUENCE = "Consequence";
 	public static final String DOCUMENT = "Document";
 	public static final String RATIONALE = "Rationale";
+	public static final String ACTIVITY = "Activity";
 }

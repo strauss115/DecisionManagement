@@ -173,6 +173,26 @@ public class User extends Node {
 		super.addDirectProperty(PropertyString.PASSWORD, password);
 		DBService.updateNode(this, 0);
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	@JsonIgnore
+	public Document getProfilePicture() {
+		List<Document> document = getNodesByRelationship(RelationString.HAS_PICTURE, Document.class);
+		if (!document.isEmpty()) {
+			return document.get(0);
+		}
+		return null;
+	}
+	
+	@JsonIgnore
+	public long getProfilePictureId() {
+		Document d = getProfilePicture();
+		if (d != null) {
+			return d.getId();
+		}
+		return 0;
+	}
 
 	// ------------------------------------------------------------------------
 

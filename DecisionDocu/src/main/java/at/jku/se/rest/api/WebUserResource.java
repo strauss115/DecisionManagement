@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 
 import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
-import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.Node;
 
 import at.jku.se.model.User;
@@ -62,29 +61,26 @@ public class WebUserResource {
 	 * @return {@link WebUser}
 	 */
 	public static WebUser convertUser(User user) {
+		WebUser result = new WebUser();
+		// --
 		try {
 			if (user != null) {
-				WebUser result = new WebUser();
-				// --
 				result.setId(String.valueOf(user.getId()));
 				result.setEMail(user.getEmail());
 				result.setFirstName(user.getName());
 				result.setLastName(user.getLastname());
 				result.setAdmin(user.isAdmin());
 				result.setTeams(Node.getListOfIds(DBService.getAllProjectsOfUser(user)));
-				
-				User u1 = DBService.getNodeByID(User.class, user.getId(), 2);
-				
-				result.setProfilePicture(String.valueOf(u1.getRelationships().get(RelationString.HAS_PICTURE).get(0).getRelatedNode().getId()));
+				result.setProfilePicture(String.valueOf(user.getProfilePictureId()));
 				// --
 				return result;
 			} else {
 				log.error("Unable to convert user because of null reference");
-				return new WebUser();
+				return result;
 			}
 		} catch (Exception e) {
 			log.error("Unexpetected exception when converting user '" + user.getEmail() + "':" + e.getMessage());
-			return new WebUser();
+			return result;
 		}
 	}
 
@@ -129,10 +125,40 @@ public class WebUserResource {
 		return RestResponse.getSuccessResponse(users);
 	}
 
+	
 	/**
-	 * Gets user by e-mail address
+	 * Gets user by id
 	 * @param token
-	 * @param eMail
+	 * @param id
+	 * @return {@link Response}
+	 */
+	@GET
+	@Path("/byId/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Gets user by id", response = WebUser.class)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No user found with given id") })
+	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Id of user to get") @PathParam("id") long id) {
+		log.debug("GET user by id '" + id + "'");
+
+		if (!SessionManager.verifySession(token)) {
+			log.info("Unauthorized access");
+			return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+		}
+
+		WebUser u = convertUser(DBService.getNodeByID(User.class, id, 2));
+		if (u != null) {
+			log.info("GET user returning '" + u.getEMail() + "'");
+			return RestResponse.getSuccessResponse(u);
+		} else {
+			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+		}
+	}
+
+	/**
+	 * Gets user by mail
+	 * @param token
+	 * @param id
 	 * @return {@link Response}
 	 */
 	@GET
@@ -140,9 +166,9 @@ public class WebUserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Gets user by e-mail address", response = WebUser.class)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No user found with given e-mail address") })
-	public Response get(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+	public Response getByEmail(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "E-mail address of user to get") @PathParam("mail") String eMail) {
-		log.debug("GET user '" + eMail + "'");
+		log.debug("GET user by email '" + eMail + "'");
 
 		if (!SessionManager.verifySession(token)) {
 			log.info("Unauthorized access");
@@ -157,7 +183,8 @@ public class WebUserResource {
 			return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
 		}
 	}
-
+	
+	
 	/**
 	 * Login a user and get token
 	 * @param eMail
@@ -238,7 +265,7 @@ public class WebUserResource {
 	public Response setPermission(
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "User id to set permissions", required = true) @PathParam("id") long id,
-			@PathParam("admin") boolean admin) {
+			@ApiParam(value = "True if user should get admin permissions", required = true) @QueryParam("admin") boolean admin) {
 		log.debug("Set admin user '" + id + "' to '" + admin + "'");
 		return api.setPermission(token, id, admin);
 	}
@@ -274,7 +301,7 @@ public class WebUserResource {
 				sessionUser.setPassword(password);
 				return RestResponse.getSuccessResponse();
 			} else {
-				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				User paramUser = DBService.getNodeByID(User.class, userId, 2);
 				if (paramUser != null) {
 					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
 						log.debug("User is admin or changes own password by given id");
@@ -325,7 +352,7 @@ public class WebUserResource {
 				sessionUser.setEmail(email);
 				return RestResponse.getSuccessResponse();
 			} else {
-				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				User paramUser = DBService.getNodeByID(User.class, userId, 2);
 				if (paramUser != null) {
 					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
 						log.debug("User is admin or changes own email by given id");
@@ -377,7 +404,7 @@ public class WebUserResource {
 				sessionUser.setFirstName(firstName);
 				return RestResponse.getSuccessResponse();
 			} else {
-				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				User paramUser = DBService.getNodeByID(User.class, userId, 2);
 				if (paramUser != null) {
 					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
 						log.debug("User is admin or changes own first name by given id");
@@ -429,7 +456,7 @@ public class WebUserResource {
 				sessionUser.setLastname(lastName);
 				return RestResponse.getSuccessResponse();
 			} else {
-				User paramUser = DBService.getNodeByID(User.class, userId, 1);
+				User paramUser = DBService.getNodeByID(User.class, userId, 2);
 				if (paramUser != null) {
 					if (sessionUser.isAdmin() || paramUser.getId() == sessionUser.getId()) {
 						log.debug("User is admin or changes own last name by given id");

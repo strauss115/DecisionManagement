@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.jku.se.dm.shared.RelationString;
 import at.jku.se.dm.shared.NodeString;
 import at.jku.se.dm.shared.PropertyString;
+import at.jku.se.model.Activity;
 import at.jku.se.model.Alternative;
 import at.jku.se.model.Consequence;
 import at.jku.se.model.Message;
@@ -78,6 +79,7 @@ public class DBService {
 			constructors.put(NodeString.CONSEQUENCE, Consequence.class.getConstructor(type));
 			constructors.put(NodeString.DOCUMENT, Document.class.getConstructor(type));
 			constructors.put(NodeString.RATIONALE, Rationale.class.getConstructor(type));
+			constructors.put(NodeString.ACTIVITY, Activity.class.getConstructor(type));
 		}catch (Exception e){}
 	}
 	
