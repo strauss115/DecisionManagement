@@ -242,7 +242,7 @@ app
 								}
 								if ($("#headlineAddAttributePanel").text()
 										.trim().split(" ")[0] == "Add") {
-									alert($scope.selectedDecision);
+									//alert($scope.selectedDecision);
 									AddAttributeToDecision
 											.save(
 													{
@@ -256,7 +256,7 @@ app
 								}
 								if ($("#headlineAddAttributePanel").text()
 										.trim().split(" ")[0] == "Edit") {
-									alert("EDIT - TO-DO - call edit service");
+									//alert("EDIT - TO-DO - call edit service");
 								}
 							}
 							// upload file

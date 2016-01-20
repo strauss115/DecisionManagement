@@ -14,7 +14,7 @@ app.controller('RelateDecisionController', [
 			LoadConnectionsGraph.get({
 				teamId : $cookies['TeamId']
 			}, function(data) {
-				alert(data);
+				//alert(data);
 				$scope.model = new go.GraphLinksModel(data['data'],
 						data['relations']);
 				$scope.model.selectedNodeData = null;

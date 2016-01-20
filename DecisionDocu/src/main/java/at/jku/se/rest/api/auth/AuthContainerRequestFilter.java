@@ -60,6 +60,7 @@ public class AuthContainerRequestFilter implements ContainerRequestFilter {
 			return; // to resource
 		}
 		
+		
 		log.debug("invalid token found --> returning 401");
 		requestContext.abortWith(RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED));
 	}

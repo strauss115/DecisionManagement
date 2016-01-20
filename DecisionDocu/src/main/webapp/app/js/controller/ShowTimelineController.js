@@ -13,7 +13,8 @@ app.controller('TimelineController', [
 			$scope.decisionTimeLine =  $sce.trustAsHtml("Loading data...");
 			
 			$scope.colours = ["danger","warning","info","success", "primary"];
-			$scope.icons = ["check","check-square-o","check-circle","check-square", "check-circle-o", "plus", "plus-circle", "plus-square", "star", "send", "magic"];
+			//$scope.icons = ["check","check-square-o","check-circle","check-square", "check-circle-o", "plus", "plus-circle", "plus-square", "star", "send", "magic"];
+			$scope.icons = ["star"];
 			
 
 			$scope.niceDate = function(date){
@@ -36,9 +37,12 @@ app.controller('TimelineController', [
 			
 						
 			$scope.buildTimelineHTML = function(inputJSON){
-				var res = "";
+				
 				var nth = 0;
+				var timeline = [];
+				var res = "";
 				$.each(inputJSON, function(idx, item){
+					res = "";
 					
 					// check for null values faulty decisions
 					if(item.name){
@@ -63,29 +67,31 @@ app.controller('TimelineController', [
 					if(item.authorEmail) res += " <i class=\"fa fa-user\"></i>  " + item.authorEmail;
 					// add time line description (decision comment)
 					res += "</small></p></div> <div class=\"timeline-body\"><p>";		
-					if(item.influenceFactors.length > 0) {res +=  "<i class=\"fa fa-clock-o\"></i> " + item.influenceFactors.length + " influence factors. ";}	
+					if(item.influenceFactors.length > 0) {res +=  "<i class=\"fa fa-sign-in\"></i> " + item.influenceFactors.length + " influence factors. ";}	
 					if(item.rationales.length > 0) {res +=  "<i class=\"fa fa-cog\"></i> " + item.rationales.length + " rationales. ";}	
 					if(item.alternatives.length > 0) {res +=  "<i class=\"fa fa-clone\"></i> " + item.alternatives.length + " alternatives. ";}	
 					if(item.consequences.length > 0) {res +=  "<i class=\"fa fa-external-link\"></i> " + item.consequences.length + " consequences. ";}	
 					if(item.qualityAttributes.length > 0) {res +=  "<i class=\"fa fa-diamond\"></i> " + item.qualityAttributes.length + " quality attributes. ";}	
 					if(item.relatedDecisions.length > 0) {res +=  "<i class=\"fa fa-exchange\"></i> " + item.relatedDecisions.length + " related decisions. ";}	
-					if(item.responsibles.length > 0) {res +=  "<i class=\"fa fa-male\"></i> " + item.responsibles.length + " responsibles. ";}	
+					//if(item.responsibles.length > 0) {res +=  "<i class=\"fa fa-male\"></i> " + item.responsibles.length + " responsibles. ";}	
 					if(item.documents.length > 0) {res +=  "<i class=\"fa fa-file-image-o\"></i> " + item.documents.length + " documents. ";}	
 					
 					
 					res += "<br> "+ item.lastActivity + "</p></div></div></li>";
+					timeline.push(res);
 					} // end if - empty nodes check
 					
 				});
 				//console.log(res);
-				return res;
+				timeline = timeline.reverse();
+				return timeline.join("");
 		
 			}
 			
 			DecisionsByTeam.get({teamId : $cookies['TeamId']}, function(data) {
 				
 				// var decisionTimeLine is synchrosnized with DIV tag in showTimeline.html template by 'ng-bind-html'
-				 console.log(angular.toJson(data));
+				console.log(angular.toJson(data));
 				$scope.decisionTimeLine =  $sce.trustAsHtml($scope.buildTimelineHTML(data)); // html snipplet must be tagged as trusted in order to be displayed
 				
 			}, function(error) {

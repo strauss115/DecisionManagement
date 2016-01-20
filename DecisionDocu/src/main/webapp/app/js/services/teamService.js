@@ -67,3 +67,29 @@ teamServices
 										}
 									});
 						} ]);
+
+/**
+ * TeamTimeline - Service to show several events for a Team
+ */
+teamServices
+		.factory(
+				'TeamTimeline',
+				[
+						'$resource',
+						'$cookies',
+						function($resource, $cookies) {
+							return $resource(
+									serverAddress
+											+ '/DecisionDocu/api/web/team/:teamId/activities',
+									{
+										teamId : '@teamId'
+									}, {
+										save : {
+											method : 'POST',
+											headers : {
+												'token' : $cookies['Token']
+											}
+										}
+									});
+						} ]);
+
