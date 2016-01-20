@@ -15,5 +15,8 @@ public class PropertyString {
 	
 	// Project
 	public static final String DESCRIPTION = "description";
+	
+	// Activity
+	public static final String USER_EMAIL = "userEMail";
 
 }

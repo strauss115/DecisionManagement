@@ -21,6 +21,7 @@ public class RelationString {
 	// Project -- relations
 	public final static String HAS_DECISION = "hasdecision";
 	public final static String HAS_PROJECTADMIN = "projectadmin";
+	public final static String HAS_ACTIVITY = "hasActivity";
 	
 	// User -- relations
 	public final static String HAS_PROJECT = "hasproject";
@@ -29,4 +30,5 @@ public class RelationString {
 	// Message -- relations
 	public final static String HAS_MESSAGE = "message";
 	public final static String CREATE_DNODE = "createdNode";
+	
 }

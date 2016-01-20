@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -47,6 +48,7 @@ import io.swagger.annotations.ApiResponses;
 
 /**
  * API Class for WebDecision
+ * 
  * @author August
  *
  */
@@ -67,6 +69,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Converts a generic decision to web API decision format
+	 * 
 	 * @param decision
 	 * @return API decision format
 	 */
@@ -89,7 +92,7 @@ public class WebDecisionResource {
 				result.setResponsibles(Node.getListOfIds(decision.getResponsibles()));
 				result.setConsequences(decision.getConsquences());
 				result.setInfluenceFactors(decision.getInfluenceFactors());
-				
+
 				String lastActivity = decision.getLastActivity();
 				if (lastActivity != null && !lastActivity.equals(""))
 					result.setLastActivity(decision.getLastActivity());
@@ -107,7 +110,9 @@ public class WebDecisionResource {
 
 	/**
 	 * Converts a list of generic decision to web API decision format
-	 * @param decisions A List of Desicion
+	 * 
+	 * @param decisions
+	 *            A List of Desicion
 	 * @return List of WebDecision
 	 */
 	public static List<WebDecision> convertDecision(List<Decision> decisions) {
@@ -139,6 +144,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Gets all decisions
+	 * 
 	 * @param token
 	 * @return Only returns decisions that user has access to
 	 */
@@ -163,6 +169,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Gets a decision by id
+	 * 
 	 * @param token
 	 * @param id
 	 * @return
@@ -196,6 +203,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Gets all decisions for a given id
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @return
@@ -232,6 +240,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Creates a new decison
+	 * 
 	 * @param token
 	 * @param name
 	 * @param userEmail
@@ -284,6 +293,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Sets the description for a decision
+	 * 
 	 * @param token
 	 * @param id
 	 * @param description
@@ -319,6 +329,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Gets a JSON formatted graph for web app decision mind map
+	 * 
 	 * @param token
 	 * @param id
 	 * @return
@@ -347,6 +358,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Gets a JSON formatted graph for web app decisions relationships
+	 * 
 	 * @param token
 	 * @param teamId
 	 * @return
@@ -381,6 +393,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Gets all messages for decision
+	 * 
 	 * @param token
 	 * @param id
 	 * @return
@@ -423,13 +436,14 @@ public class WebDecisionResource {
 
 	/**
 	 * Removes attributes which are existence dependent to a decision
+	 * 
 	 * @param token
 	 * @param id
 	 * @param otherNodeId
 	 * @return
 	 */
 	@PUT
-	@Path("/{id}/removeAttribute")
+	@Path("/{id}/removeAttribute/{attrId}")
 	@ApiOperation(value = "Removes attributes which are existence dependent to a decision", notes = "influence factor, rationale, alternatives, consequence, quality attributes, document")
 	@ApiResponses(value = { @ApiResponse(code = 500, message = "Unable to add attribute due to server error"),
 			@ApiResponse(code = 401, message = "Unauthorized or not allowed to delete other node"),
@@ -437,7 +451,7 @@ public class WebDecisionResource {
 	public Response deleteAttribute(
 			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
 			@ApiParam(value = "Decision id", required = true) @PathParam("id") long id,
-			@ApiParam(value = "Attribute node id", required = true) @QueryParam("nodeId") long otherNodeId) {
+			@ApiParam(value = "Attribute node id", required = true) @PathParam("nodeId") long otherNodeId) {
 		log.debug("GET removeAttribute '" + otherNodeId + "'");
 
 		try {
@@ -476,6 +490,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new influence factor
+	 * 
 	 * @param token
 	 * @param id
 	 * @param value
@@ -526,6 +541,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new rationale
+	 * 
 	 * @param token
 	 * @param id
 	 * @param value
@@ -575,6 +591,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new alternative
+	 * 
 	 * @param token
 	 * @param id
 	 * @param value
@@ -625,6 +642,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new Consequence
+	 * 
 	 * @param token
 	 * @param id
 	 * @param value
@@ -675,6 +693,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Returns a list of all quality attributes
+	 * 
 	 * @param token
 	 * @return
 	 */
@@ -702,6 +721,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new QualityAttribute
+	 * 
 	 * @param token
 	 * @param id
 	 * @param value
@@ -752,6 +772,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new related decision
+	 * 
 	 * @param token
 	 * @param id
 	 * @param relatedId
@@ -794,6 +815,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Removes a related decision
+	 * 
 	 * @param token
 	 * @param id
 	 * @param relatedId
@@ -836,6 +858,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new responsible
+	 * 
 	 * @param token
 	 * @param id
 	 * @param relatedId
@@ -878,6 +901,7 @@ public class WebDecisionResource {
 
 	/**
 	 * Adds a new responsible
+	 * 
 	 * @param token
 	 * @param id
 	 * @param relatedId
@@ -915,6 +939,42 @@ public class WebDecisionResource {
 		} catch (Exception e) {
 			log.error("Unable to delete responsible: " + e);
 			return RestResponse.getErrorResponse();
+		}
+	}
+
+	@DELETE
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Deletes a decision, admin permissions required")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Decision deleted successfully"),
+			@ApiResponse(code = 204, message = "Decision not found"),
+			@ApiResponse(code = 500, message = "Unable to delete decision") })
+	public Response delete(@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "Decision id") @PathParam("id") long decisionId) {
+		log.debug("DELETE decision '" + decisionId + "'");
+		try {
+			if (!SessionManager.verifySession(token)) {
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			User curUser = SessionManager.getUser(token);
+			if (!curUser.isAdmin()) {
+				log.warn("User is not admin");
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+
+			Decision decision = DBService.getNodeByID(Decision.class, decisionId, 1);
+			if (decision == null) {
+				log.error("Decision '" + decision + "' not found");
+				return RestResponse.getResponse(HttpCode.HTTP_204_NO_CONTENT);
+			}
+
+			DBService.deleteNode(decision.getId());
+			log.debug("Deleted decision successfully");
+			return RestResponse.getSuccessResponse();
+		} catch (Exception e) {
+			log.debug("Failed to delete team", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 	}
 

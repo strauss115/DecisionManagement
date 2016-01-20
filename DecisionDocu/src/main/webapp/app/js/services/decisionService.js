@@ -178,3 +178,46 @@ decisionServices.factory('GetMessages', [
 				}
 			});
 		} ]);
+
+/**
+ * DeleteAttribute - Service to delete decision attribues
+ */
+decisionServices.factory('DeleteAttribute', [
+		'$resource',
+		'$cookies',
+		function($resource, $cookies) {
+			return $resource(serverAddress
+					+ '/DecisionDocu/api/web/decision/:id/removeAttribute/:attrId', {
+				id : '@id',
+				attrId : '@attrId'
+			}, {
+				get : {
+					method : 'PUT',
+					isArray : false,
+					headers : {
+						'token' : $cookies['Token']
+					}
+				}
+			});
+		} ]);
+
+/**
+ * DeleteDecision - Service to delete decision
+ */
+decisionServices.factory('DeleteDecision', [
+		'$resource',
+		'$cookies',
+		function($resource, $cookies) {
+			return $resource(serverAddress
+					+ '/DecisionDocu/api/web/decision/:id', {
+				id : '@id',
+			}, {
+				get : {
+					method : 'DELETE',
+					isArray : false,
+					headers : {
+						'token' : $cookies['Token']
+					}
+				}
+			});
+		} ]);
