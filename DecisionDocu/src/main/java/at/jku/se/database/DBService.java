@@ -135,6 +135,15 @@ public class DBService {
 	}
 	
 	/**
+	 * Returns all decision nodes of the given user
+	 * @param user
+	 * @return A list of decisions
+	 */
+	public static List<Decision> getAllDecisionsForDashboard (User user){
+		return getAllNodes(Decision.class, user, 2, 0, null, null);
+	}
+	
+	/**
 	 * Returns the decision node object of the given Id 
 	 * @param decisionId The id of the decision to return
 	 * @return The decision node object of the given Id
@@ -227,6 +236,20 @@ public class DBService {
 	public static List<Project> getAllProjectsOfUser(User user){
 		try{
 			return getAllNodes(Project.class,user, 1, 2, null, null);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns all projects of a given user
+	 * @param user User node object
+	 * @return A list of project objects of the given user node object
+	 */
+	public static List<Project> getAllProjectsOfUserMinimum(User user){
+		try{
+			return getAllNodes(Project.class,user, 1, 0, null, null);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -961,6 +984,17 @@ public class DBService {
 		//node.addRelation("Message", m1, true);
 		//DBService.updateNodeWihtRelationships(node, admin.getId());
 		//createMessage("Chatnachricht 7", node.getId(),admin.getId());
+	}
+
+	public static boolean deleteRelationship(long nodeid, long relatednodeid, String type) {
+		String query = "match(n) where id(n)="+nodeid+" match(n2) where id(n2)="+relatednodeid+" match (n)-[r:"+type+"]->(n2) delete r";
+		try {
+			executeQuery(query);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
+		return true;
 	}
 
 }

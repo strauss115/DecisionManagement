@@ -1,5 +1,9 @@
 package at.jku.se.rest.api;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -7,11 +11,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.resource.Delete;
+import org.restlet.resource.Post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,6 +26,7 @@ import at.jku.se.auth.SessionManager;
 import at.jku.se.database.DBService;
 import at.jku.se.dm.shared.RelationString;
 import at.jku.se.model.Decision;
+import at.jku.se.model.Node;
 import at.jku.se.model.NodeInterface;
 import at.jku.se.model.User;
 import at.jku.se.rest.response.HttpCode;
@@ -65,8 +73,14 @@ public class NodeResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
+			try{
+				Map<String,LinkedHashMap> request = mapper.readValue(json, Map.class);
+				json =mapper.writeValueAsString(request.get("node"));
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 			NodeInterface node = mapper.readValue(json, NodeInterface.class);
-			return RestResponse.getSuccessResponse(DBService.updateNodeWihtRelationships(node, user.getId()));
+			return RestResponse.getSuccessResponse(DBService.updateNode(node, user.getId()));
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
@@ -129,9 +143,86 @@ public class NodeResource {
 		try {
 			if(!SessionManager.verifySession(token)){
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
-			}
-			User user = SessionManager.getUser(token);
+			}			
 			return RestResponse.getSuccessResponse(DBService.getNodeByID(NodeInterface.class, id, 2));
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@GET
+	@Path("/min/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a single minimum Node", response = Decision.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") }
+	)
+	public Response getMinNode(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the node to fetch", required = true) @PathParam("id") long id) {
+		log.info("Get Node '" + id + "' called");
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			return RestResponse.getSuccessResponse(DBService.getNodeByID(NodeInterface.class, id, 0));
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@GET
+	@Path("/bytype/{type}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns all minimum Nodes of spesific type", response = Decision.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") }
+	)
+	public Response getAllMinNodeOfType(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the node to fetch", required = true) @PathParam("type") String type) {
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			Class modelclass = Class.forName("at.jku.se.model."+type);
+			System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(DBService.getAllNodesOfType(modelclass,0)));
+			return RestResponse.getSuccessResponse(DBService.getAllNodesOfType(modelclass,0));
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	@Delete
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/{nodeid}/{relatednodeid}/{type}")
+	@ApiOperation(value = "Deletes a Relationship of node", response = Decision.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") }
+	)
+	public Response deleteRelOfNode(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token,
+			@ApiParam(value = "ID of the node to fetch", required = true) @PathParam("nodeid") long nodeid,
+			@ApiParam(value = "ID of the node to delete Relationship between them", required = true) @PathParam("relatednodeid") long relatednodeid,
+			@ApiParam(value = "Type of relationship to delete", required = true) @PathParam("type") String type){
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			if(nodeid<1||relatednodeid<1||type==null||type.length()<1){
+				return RestResponse.getResponse(HttpCode.HTTP_400_BAD_REQUEST);
+			}
+			DBService.deleteRelationship(nodeid,relatednodeid,type);
+			return RestResponse.getSuccessResponse("OK");
 		} catch (Exception e) {
 			log.debug("Error occured!", e);
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);

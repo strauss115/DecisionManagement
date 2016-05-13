@@ -100,6 +100,35 @@ public class ProjectResource {
 	}
 	
 	/**
+	 * With this API method you can retreave all project memberships for a user
+	 * @param token
+	 * @return Returns all project memberships for a user
+	 */
+	@GET
+	@Path("/min")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns all project memberships for a user", notes = "With this API method you can retreave all project memberships for a user", response = Project.class, responseContainer = "List")
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") }
+	)
+	public Response getMinimum(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token) {
+		log.debug("GET project for user with token='" + token + "'");
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			User user = SessionManager.getUser(token);
+			return RestResponse.getSuccessResponse(DBService.getAllProjectsOfUserMinimum(user).toArray(new NodeInterface[0]));
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
+	
+	/**
 	 * With this API method you can retreave a single project
 	 * @param token
 	 * @param id

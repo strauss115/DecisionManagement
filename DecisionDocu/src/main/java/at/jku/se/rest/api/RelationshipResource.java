@@ -3,6 +3,7 @@ package at.jku.se.rest.api;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -139,6 +140,10 @@ public class RelationshipResource {
 				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
 			}
 			User user = SessionManager.getUser(token);
+			try{
+				Map<String,LinkedHashMap> request = mapper.readValue(json, Map.class);
+				json =mapper.writeValueAsString(request.get("node"));
+			}catch (Exception e){}
 			NodeInterface node = mapper.readValue(json, NodeInterface.class);
 			node = DBService.createRelationshipWithNode(node, name, fromNode, user.getId());
 			if(node==null||node.getId()<1){

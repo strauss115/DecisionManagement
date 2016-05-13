@@ -71,6 +71,36 @@ public class DecisionResource {
 			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
 		}
 	}
+	
+	/**
+	 * Get all decision for the user given by the token
+	 * @param token
+	 * @return A list of all available decisions
+	 */
+	@GET
+	@Path("/min")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Returns a list of all available decisions", notes = "Returns a list of all available decisions", response = Decision.class, responseContainer = "List")
+	@ApiResponses(value = {
+			@ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 500, message = "Server Error"),
+			@ApiResponse(code = 401, message = "Unauthorized") }
+	)
+	public Response getAllDecisionsForDashBoard(
+			@ApiParam(value = "token", required = true) @HeaderParam(value = "token") String token
+			) {
+		log.info("Get all Decisions for Dashboard invoked ...");
+		try {
+			if(!SessionManager.verifySession(token)){
+				return RestResponse.getResponse(HttpCode.HTTP_401_UNAUTHORIZED);
+			}
+			User user = SessionManager.getUser(token);
+			return RestResponse.getSuccessResponse(DBService.getAllDecisionsForDashboard(user).toArray(new NodeInterface[0]));
+		} catch (Exception e) {
+			log.debug("Error occured!", e);
+			return RestResponse.getResponse(HttpCode.HTTP_500_SERVER_ERROR);
+		}
+	}
 
 	/**
 	 * Get the decision identified by the given id
